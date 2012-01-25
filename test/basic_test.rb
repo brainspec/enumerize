@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'syck'
 
 describe Enumerize do
   let(:klass) do
@@ -55,5 +54,16 @@ describe Enumerize do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = :a
     YAML.dump(object.foo).must_equal YAML.dump('a')
+  end
+
+  it 'handles default value' do
+    klass.enumerize(:foo, :in => [:a, :b], :default => :b)
+    object.foo.must_equal 'b'
+  end
+
+  it 'raises exception on invalid default value' do
+    proc {
+      klass.enumerize(:foo, :in => [:a, :b], :default => :c)
+    }.must_raise ArgumentError
   end
 end

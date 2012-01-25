@@ -1,3 +1,6 @@
+require 'yaml'
+require 'i18n'
+
 module Enumerize
   class Value < String
     def initialize(attr, value)

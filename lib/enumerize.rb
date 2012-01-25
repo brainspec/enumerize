@@ -1,16 +1,12 @@
 require 'active_support/concern'
-require 'i18n'
 require 'enumerize/version'
 
 module Enumerize
-  autoload :Attribute, 'enumerize/attribute'
-  autoload :Value,     'enumerize/value'
+  autoload :Attribute,    'enumerize/attribute'
+  autoload :Value,        'enumerize/value'
+  autoload :Integrations, 'enumerize/integrations'
 
   extend ActiveSupport::Concern
 
-  module ClassMethods
-    def enumerize(*args, &block)
-      Attribute.new(self, *args).attach!
-    end
-  end
+  include Integrations::Basic
 end

@@ -1,6 +1,6 @@
 module Enumerize
   class Attribute
-    attr_reader :name, :values
+    attr_reader :name, :values, :default_value
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
@@ -8,25 +8,11 @@ module Enumerize
       @klass  = klass
       @name   = name
       @values = Array(options[:in]).map { |v| Value.new(self, v) }
-    end
 
-    def attach!
-      attr = self
-      @klass.singleton_class.class_eval do
-        define_method("#{attr.name}") { attr }
+      if options[:default]
+        @default_value = options[:default] && find_value(options[:default])
+        raise ArgumentError, 'invalid default value' unless @default_value
       end
-
-      @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        attr_reader :#{name}
-
-        def #{name}_text
-          #{name}.text
-        end
-
-        def #{name}=(new_value)
-          @#{name} = self.class.#{name}.find_value(new_value)
-        end
-      RUBY
     end
 
     def find_value(value)
