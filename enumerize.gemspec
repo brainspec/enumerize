@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "enumerize"
   gem.require_paths = ["lib"]
   gem.version       = Enumerize::VERSION
+
+  gem.add_dependency('activesupport', '>= 3.1.3')
 end
