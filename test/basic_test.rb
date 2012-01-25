@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe Enumerize do
+describe Enumerize::Integrations::Basic do
   let(:klass) do
     Class.new do
       include Enumerize
@@ -26,6 +26,12 @@ describe Enumerize do
     object.foo = :a
     object.foo.text.must_equal 'a text'
     object.foo_text.must_equal 'a text'
+  end
+
+  it 'returns nil as translation when value is nil' do
+    I18n.backend.store_translations(:en, :enumerize => {:foo => {:a => 'a text'}})
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo_text.must_equal nil
   end
 
   it 'scopes translation by i18 key' do

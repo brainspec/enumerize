@@ -22,7 +22,7 @@ module Enumerize
             end
 
             def #{attr.name}_text
-              #{attr.name}.text
+              #{attr.name} && #{attr.name}.text
             end
 
             def #{attr.name}=(new_value)

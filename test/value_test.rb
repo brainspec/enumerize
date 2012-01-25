@@ -2,7 +2,7 @@ require 'test_helper'
 require 'yaml'
 
 describe Enumerize::Value do
-  let(:value) { value = Enumerize::Value.new(nil, 'test_value') }
+  let(:value) { Enumerize::Value.new(nil, 'test_value') }
 
   it 'is a string' do
     value.must_be_kind_of String
