@@ -56,10 +56,10 @@ describe Enumerize::Integrations::Basic do
     klass.foo.options.must_equal [['a text', 'a'], ['b text', 'b']]
   end
 
-  it 'dumpes value to yaml using' do
+  it 'stores value as string' do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = :a
-    YAML.dump(object.foo).must_equal YAML.dump('a')
+    object.instance_variable_get(:@foo).must_be_instance_of String
   end
 
   it 'handles default value' do
