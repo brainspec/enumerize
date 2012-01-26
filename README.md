@@ -1,4 +1,4 @@
-# Enumerize [![TravisCI](https://secure.travis-ci.org/twinslash/enumerize.png?branch=master)](http://travis-ci.org/lest/capistrano-deploy)
+# Enumerize [![TravisCI](https://secure.travis-ci.org/twinslash/enumerize.png?branch=master)](http://travis-ci.org/twinslash/enumerize)
 
 Enumerated attributes with I18n and ActiveRecord support
 
