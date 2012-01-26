@@ -9,12 +9,12 @@ describe Enumerize::Integrations::Basic do
 
   let(:object) { klass.new }
 
-  it 'defines method that returns nil' do
+  it 'returns nil when not set' do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo.must_equal nil
   end
 
-  it 'defines setter method' do
+  it 'returns value that was set' do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = :a
     object.foo.must_equal 'a'
