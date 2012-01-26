@@ -50,12 +50,6 @@ describe Enumerize::Integrations::Basic do
     object.foo_text.must_equal 'a text scoped'
   end
 
-  it 'returns options for select' do
-    I18n.backend.store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}})
-    klass.enumerize(:foo, :in => [:a, :b])
-    klass.foo.options.must_equal [['a text', 'a'], ['b text', 'b']]
-  end
-
   it 'stores value as string' do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = :a
