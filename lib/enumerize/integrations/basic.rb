@@ -7,7 +7,7 @@ module Enumerize
 
       module ClassMethods
         def enumerize(*args, &block)
-          attr = Attribute.new(self, *args)
+          attr = Attribute.new(self, *args, &block)
           singleton_class.class_eval do
             define_method(attr.name) { attr }
           end
