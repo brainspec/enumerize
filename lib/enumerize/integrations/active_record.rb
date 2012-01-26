@@ -16,7 +16,7 @@ module Enumerize
 
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{attr.name}
-              super
+              self.class.#{attr.name}.find_value(super)
             end
 
             def #{attr.name}_text
@@ -24,7 +24,7 @@ module Enumerize
             end
 
             def #{attr.name}=(new_value)
-              super self.class.#{attr.name}.find_value(new_value)
+              super self.class.#{attr.name}.find_value(new_value).to_s
             end
           RUBY
 

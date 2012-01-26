@@ -16,9 +16,19 @@ describe Enumerize::Integrations::ActiveRecord do
   end
 
   it 'saves value' do
+    User.delete_all
     user = User.new
     user.sex = :female
     user.save!
     user.sex.must_equal 'female'
+  end
+
+  it 'loads value' do
+    User.delete_all
+    I18n.backend.store_translations(:en, :enumerize => {:sex => {:male => 'Male'}})
+    User.create!(:sex => :male)
+    user = User.first
+    user.sex.must_equal 'male'
+    user.sex_text.must_equal 'Male'
   end
 end
