@@ -8,5 +8,11 @@ module Enumerize
 
   extend ActiveSupport::Concern
 
-  include Integrations::Basic
+  included do
+    if defined?(ActiveRecord::Base) && self < ActiveRecord::Base
+      include Integrations::ActiveRecord
+    else
+      include Integrations::Basic
+    end
+  end
 end

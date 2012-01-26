@@ -31,4 +31,8 @@ describe Enumerize::Integrations::ActiveRecord do
     user.sex.must_equal 'male'
     user.sex_text.must_equal 'Male'
   end
+
+  it 'has default value' do
+    User.new.role.must_equal 'user'
+  end
 end

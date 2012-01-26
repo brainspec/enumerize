@@ -16,6 +16,7 @@ module Enumerize
     end
 
     def find_value(value)
+      return if value.nil?
       value = value.to_s
       values.find { |v| v == value }
     end

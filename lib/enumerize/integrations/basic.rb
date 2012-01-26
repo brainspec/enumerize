@@ -12,21 +12,40 @@ module Enumerize
             define_method(attr.name) { attr }
           end
 
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{attr.name}
-              if defined?(@#{attr.name})
-                @#{attr.name}
-              else
-                @#{attr.name} = self.class.#{attr.name}.default_value
-              end
-            end
+          mod = Module.new
 
+          mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def initialize(*, &_)
+              super
+              self.#{attr.name} = self.class.#{attr.name}.default_value if #{attr.name}.nil?
+            end
+          RUBY
+
+          _define_enumerize_attribute(mod, attr)
+
+          class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{attr.name}_text
               #{attr.name} && #{attr.name}.text
             end
+          RUBY
+
+          include mod
+        end
+
+        private
+
+        def _define_enumerize_attribute(mod, attr)
+          mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{attr.name}
+              if defined?(@#{attr.name})
+                self.class.#{attr.name}.find_value(@#{attr.name})
+              else
+                @#{attr.name} = nil
+              end
+            end
 
             def #{attr.name}=(new_value)
-              @#{attr.name} = self.class.#{attr.name}.find_value(new_value)
+              @#{attr.name} = self.class.#{attr.name}.find_value(new_value).to_s
             end
           RUBY
         end
