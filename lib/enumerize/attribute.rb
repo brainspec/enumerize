@@ -8,6 +8,7 @@ module Enumerize
       @klass  = klass
       @name   = name
       @values = Array(options[:in]).map { |v| Value.new(self, v) }
+      @value_hash = Hash[@values.map { |v| [v.to_s, v] }]
 
       if options[:default]
         @default_value = options[:default] && find_value(options[:default])
@@ -17,8 +18,7 @@ module Enumerize
 
     def find_value(value)
       return if value.nil?
-      value = value.to_s
-      values.find { |v| v == value }
+      @value_hash[value.to_s]
     end
 
     def i18n_suffix
@@ -26,7 +26,7 @@ module Enumerize
     end
 
     def options
-      values.map { |v| [v.text, v.to_s] }
+      @values.map { |v| [v.text, v.to_s] }
     end
   end
 end
