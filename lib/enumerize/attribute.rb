@@ -17,8 +17,7 @@ module Enumerize
     end
 
     def find_value(value)
-      return if value.nil?
-      @value_hash[value.to_s]
+      @value_hash[value.to_s] unless value.nil?
     end
 
     def i18n_suffix
