@@ -51,6 +51,16 @@ en:
         female: "Female"
 ```
 
+or if you use `sex` attribute across several models you can use this:
+
+```ruby
+en:
+  enumerize:
+    sex:
+      male: "Male"
+      female: "Female"
+```
+
 ## Contributing
 
 1. Fork it
