@@ -61,6 +61,20 @@ en:
       female: "Female"
 ```
 
+get attribute value:
+
+```ruby
+  @user.sex_text # or @user.sex.text
+```
+
+use it with forms:
+
+```ruby
+<%= form_for @user do |f| %>
+  <%= f.select :sex, User.sex.options %>
+<% end %>
+```
+
 ## Contributing
 
 1. Fork it
