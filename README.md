@@ -69,7 +69,7 @@ get attribute value:
 
 use it with forms:
 
-```ruby
+```erb
 <%= form_for @user do |f| %>
   <%= f.select :sex, User.sex.options %>
 <% end %>
