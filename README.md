@@ -40,6 +40,17 @@ class User < ActiveRecord::Base
 end
 ```
 
+I18n:
+
+```ruby
+en:
+  enumerize:
+    user:
+      sex:
+        male: "Male"
+        female: "Female"
+```
+
 ## Contributing
 
 1. Fork it
