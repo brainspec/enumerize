@@ -66,4 +66,32 @@ describe Enumerize::Integrations::Basic do
       klass.enumerize(:foo, :in => [:a, :b], :default => :c)
     }.must_raise ArgumentError
   end
+
+  describe 'delegated boolean methods' do
+    it 'raise exception if boolean method is not delegated' do
+      klass.enumerize(:foo, :in => [:a, :b])
+      proc {
+        object.a?
+      }.must_raise NoMethodError
+    end
+
+    it 'raise exception if boolean method is not included in values' do
+      klass.enumerize(:foo, :in => [:a, :b], :delegate => true)
+      proc {
+        object.c?
+      }.must_raise NoMethodError
+    end
+
+    it 'returns true if value equals method name' do
+      klass.enumerize(:foo, :in => [:a, :b], :delegate => true)
+      object.foo = :a
+      object.a?.must_equal true
+    end
+
+    it 'returns false if value do not equal method name' do
+      klass.enumerize(:foo, :in => [:a, :b], :delegate => true)
+      object.foo = :a
+      object.b?.must_equal false
+    end
+  end
 end

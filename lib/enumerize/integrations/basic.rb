@@ -29,6 +29,19 @@ module Enumerize
             end
           RUBY
 
+          class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def method_missing(method, *args)
+              if #{!!attr.delegate}
+                value = method.to_s.gsub(/\\?\\Z/, '')
+                super unless #{attr.values}.include?(value)
+                raise ArgumentError if args.any?
+                value == #{attr.name}
+              else
+                super
+              end
+            end
+          RUBY
+
           include mod
         end
 
