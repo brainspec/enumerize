@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'yaml'
 
 describe Enumerize::Value do
   let(:value) { Enumerize::Value.new(nil, 'test_value') }
