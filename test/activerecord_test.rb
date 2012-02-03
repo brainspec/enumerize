@@ -2,9 +2,11 @@ require 'test_helper'
 require 'active_record'
 require 'logger'
 
-ActiveRecord::Migration.verbose = false
-ActiveRecord::Base.logger = Logger.new(nil)
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+silence_warnings do
+  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.logger = Logger.new(nil)
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+end
 
 ActiveRecord::Base.connection.instance_eval do
   create_table :users do |t|
