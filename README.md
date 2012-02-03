@@ -64,7 +64,7 @@ en:
 get attribute value:
 
 ```ruby
-  @user.sex_text # or @user.sex.text
+@user.sex_text # or @user.sex.text
 ```
 
 use it with forms:
