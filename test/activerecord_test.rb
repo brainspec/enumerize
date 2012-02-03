@@ -5,8 +5,21 @@ require 'logger'
 ActiveRecord::Migration.verbose = false
 ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
-ActiveRecord::Migrator.migrate File.expand_path("../active_record/migrate", __FILE__)
-require File.expand_path('../active_record/models', __FILE__)
+
+ActiveRecord::Base.connection.instance_eval do
+  create_table :users do |t|
+    t.string :sex
+    t.string :role
+  end
+end
+
+class User < ActiveRecord::Base
+  include Enumerize
+
+  enumerize :sex, :in => [:male, :female]
+
+  enumerize :role, :in => [:user, :admin], :default => :user
+end
 
 describe Enumerize::Integrations::ActiveRecord do
   it 'sets nil if invalid value is passed' do
