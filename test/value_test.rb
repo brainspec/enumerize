@@ -37,8 +37,8 @@ describe Enumerize::Value do
 
     it 'raises ArgumentError if arguments are passed' do
       proc {
-        value.some_method?('<3')
-      }.must_raise NoMethodError
+        value.other_value?('<3')
+      }.must_raise ArgumentError
     end
   end
 end
