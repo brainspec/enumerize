@@ -75,6 +75,16 @@ use it with forms:
 <% end %>
 ```
 
+Boolean methods:
+
+```ruby
+user.sex = :male
+user.sex.male? #=> true
+user.sex.female? #=> false
+```
+
+
+
 ## Contributing
 
 1. Fork it
