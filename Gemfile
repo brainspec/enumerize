@@ -8,3 +8,5 @@ gem 'mocha'
 
 gem 'activerecord'
 gem 'sqlite3'
+
+gem 'mongoid'
