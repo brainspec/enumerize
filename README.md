@@ -40,6 +40,18 @@ class User < ActiveRecord::Base
 end
 ```
 
+Mongoid:
+
+```ruby
+class User
+  include Mongoid::Document
+  include Enumerize
+
+  field :role
+  enumerize :role, :in => [:user, :admin], :default => :user
+end
+```
+
 I18n:
 
 ```ruby
