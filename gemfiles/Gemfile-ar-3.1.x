@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gemspec
+gem 'enumerize', :path => '..'
 
 gem 'rake'
 gem 'minitest', '~> 2.11.0'
 gem 'mocha'
 
-gem 'activerecord', '~> 3.2.0'
+gem 'activerecord', '~> 3.1.0'
 gem 'sqlite3'
 
 gem 'mongoid'

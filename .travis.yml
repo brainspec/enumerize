@@ -2,6 +2,9 @@ language: ruby
 rvm:
   - 1.9.2
   - 1.9.3
+gemfile:
+  - gemfiles/Gemfile-ar-3.1.x
+  - Gemfile
 notifications:
   email:
     recipients:
