@@ -1,4 +1,4 @@
-## 0.1.0 (unreleased) ##
+## 0.0.3 (February 8, 2012) ##
 
 ### enhancements
   * Mongoid support (by @lest)
