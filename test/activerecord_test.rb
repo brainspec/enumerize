@@ -49,5 +49,6 @@ describe Enumerize::Integrations::ActiveRecord do
 
   it 'has default value' do
     User.new.role.must_equal 'user'
+    User.new.attributes['role'].must_equal 'user'
   end
 end
