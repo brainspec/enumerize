@@ -23,7 +23,7 @@ module Enumerize
 
           _define_enumerize_attribute(mod, attr)
 
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{attr.name}_text
               #{attr.name} && #{attr.name}.text
             end
