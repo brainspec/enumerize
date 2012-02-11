@@ -4,15 +4,16 @@ require 'enumerize/version'
 module Enumerize
   autoload :Attribute,    'enumerize/attribute'
   autoload :Value,        'enumerize/value'
-  autoload :Integrations, 'enumerize/integrations'
+  autoload :Base,         'enumerize/base'
+  autoload :ActiveRecord, 'enumerize/activerecord'
 
   extend ActiveSupport::Concern
 
-  include Integrations::Basic
+  include Enumerize::Base
 
   included do
-    if defined?(ActiveRecord::Base) && self < ActiveRecord::Base
-      include Integrations::ActiveRecord
+    if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
+      include Enumerize::ActiveRecord
     end
   end
 end

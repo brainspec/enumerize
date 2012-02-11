@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   enumerize :role, :in => [:user, :admin], :default => :user
 end
 
-describe Enumerize::Integrations::ActiveRecord do
+describe Enumerize::ActiveRecord do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid

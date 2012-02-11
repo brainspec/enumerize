@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe Enumerize::Integrations::Basic do
+describe Enumerize::Base do
   let(:klass) do
     Class.new do
       include Enumerize
