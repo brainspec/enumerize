@@ -14,6 +14,8 @@ module Enumerize
         @default_value = find_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
       end
+
+      @klass.validates_inclusion_of @name, :in => @value_hash
     end
 
     def find_value(value)
