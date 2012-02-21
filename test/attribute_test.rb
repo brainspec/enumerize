@@ -15,8 +15,9 @@ describe Enumerize::Attribute do
   end
 
   it 'returns options for select' do
-    I18n.backend.store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}})
-    build_attr nil, :foo, :in => %w[a b]
-    attr.options.must_equal [['a text', 'a'], ['b text', 'b']]
+    store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+      build_attr nil, :foo, :in => %w[a b]
+      attr.options.must_equal [['a text', 'a'], ['b text', 'b']]
+    end
   end
 end
