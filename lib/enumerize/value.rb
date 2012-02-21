@@ -13,6 +13,7 @@ module Enumerize
       i18n_keys = ['']
       i18n_keys.unshift "#{@attr.i18n_suffix}." if @attr.i18n_suffix
       i18n_keys.map! { |k| :"enumerize.#{k}#{@attr.name}.#{self}" }
+      i18n_keys.push(self.humanize) # humanize value if there are no translations
       I18n.t(i18n_keys.shift, :default => i18n_keys)
     end
 
