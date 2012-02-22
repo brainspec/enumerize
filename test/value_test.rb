@@ -12,10 +12,6 @@ describe Enumerize::Value do
     value.must_be :==, 'test_value'
   end
 
-  it 'is frozen' do
-    value.must_be :frozen?
-  end
-
   describe 'boolean methods comparison' do
     before do
       attr.stubs(:values).returns([value, Enumerize::Value.new(attr, 'other_value')])
