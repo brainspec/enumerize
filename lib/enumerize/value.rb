@@ -6,14 +6,9 @@ module Enumerize
       @attr = attr
 
       super(value.to_s)
-      freeze
     end
 
     def text
-      i18n_keys = ['']
-      i18n_keys.unshift "#{@attr.i18n_suffix}." if @attr.i18n_suffix
-      i18n_keys.map! { |k| :"enumerize.#{k}#{@attr.name}.#{self}" }
-      i18n_keys.push(self.humanize) # humanize value if there are no translations
       I18n.t(i18n_keys.shift, :default => i18n_keys)
     end
 
@@ -22,6 +17,25 @@ module Enumerize
       super unless @attr.values.include?(value)
       raise ArgumentError if args.any?
       value == self
+    end
+
+    private
+
+    def i18n_keys
+      @i18n_keys ||= begin
+        i18n_keys = []
+        i18n_keys << i18n_scope
+        i18n_keys << i18n_scope(i18n_suffix)
+        i18n_keys << self.humanize # humanize value if there are no translations
+      end
+    end
+
+    def i18n_scope(suffix = nil)
+      :"enumerize.#{suffix}#{@attr.name}.#{self}"
+    end
+
+    def i18n_suffix
+      "#{@attr.i18n_suffix}." if @attr.i18n_suffix
     end
   end
 end
