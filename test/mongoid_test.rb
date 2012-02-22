@@ -42,11 +42,12 @@ describe Enumerize do
 
   it 'loads value' do
     model.delete_all
-    I18n.backend.store_translations(:en, :enumerize => {:sex => {:male => 'Male'}})
     model.create!(:sex => :male)
-    user = model.first
-    user.sex.must_equal 'male'
-    user.sex_text.must_equal 'Male'
+    store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
+      user = model.first
+      user.sex.must_equal 'male'
+      user.sex_text.must_equal 'Male'
+    end
   end
 
   it 'has default value' do

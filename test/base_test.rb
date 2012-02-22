@@ -21,21 +21,22 @@ describe Enumerize::Base do
   end
 
   it 'returns translation' do
-    I18n.backend.store_translations(:en, :enumerize => {:foo => {:a => 'a text'}})
-    klass.enumerize(:foo, :in => [:a, :b])
-    object.foo = :a
-    object.foo.text.must_equal 'a text'
-    object.foo_text.must_equal 'a text'
+    store_translations(:en, :enumerize => {:foo => {:a => 'a text'}}) do
+      klass.enumerize(:foo, :in => [:a, :b])
+      object.foo = :a
+      object.foo.text.must_equal 'a text'
+      object.foo_text.must_equal 'a text'
+    end
   end
 
   it 'returns nil as translation when value is nil' do
-    I18n.backend.store_translations(:en, :enumerize => {:foo => {:a => 'a text'}})
-    klass.enumerize(:foo, :in => [:a, :b])
-    object.foo_text.must_equal nil
+    store_translations(:en, :enumerize => {:foo => {:a => 'a text'}}) do
+      klass.enumerize(:foo, :in => [:a, :b])
+      object.foo_text.must_equal nil
+    end
   end
 
   it 'scopes translation by i18 key' do
-    I18n.backend.store_translations(:en, :enumerize => {:example_class => {:foo => {:a => 'a text scoped'}}})
     def klass.model_name
       name = "ExampleClass"
       def name.i18n_key
@@ -44,10 +45,21 @@ describe Enumerize::Base do
 
       name
     end
-    klass.enumerize(:foo, :in => [:a, :b])
-    object.foo = :a
-    object.foo.text.must_equal 'a text scoped'
-    object.foo_text.must_equal 'a text scoped'
+
+    store_translations(:en, :enumerize => {:example_class => {:foo => {:a => 'a text scoped'}}}) do
+      klass.enumerize(:foo, :in => [:a, :b])
+      object.foo = :a
+      object.foo.text.must_equal 'a text scoped'
+      object.foo_text.must_equal 'a text scoped'
+    end
+  end
+
+  it 'returns humanized value if there are no translations' do
+    store_translations(:en, :enumerize => {}) do
+      klass.enumerize(:foo, :in => [:a, :b])
+      object.foo = :a
+      object.foo_text.must_equal 'A'
+    end
   end
 
   it 'stores value as string' do
