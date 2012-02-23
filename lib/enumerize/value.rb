@@ -13,10 +13,15 @@ module Enumerize
     end
 
     def method_missing(method, *args)
-      value = method.to_s.gsub(/\?\Z/, '')
-      super unless @attr.values.include?(value)
       raise ArgumentError if args.any?
-      value == self
+
+      value = method[0..-2]
+
+      if method[-1, 1] == '?' && @attr.values.include?(value)
+        self == value
+      else
+        super
+      end
     end
 
     private
