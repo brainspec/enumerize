@@ -25,6 +25,12 @@ describe Enumerize::Value do
       value.other_value?.must_equal false
     end
 
+    it 'raises NoMethodError if it calls boolean method without "?"' do
+      proc {
+        value.other_value
+      }.must_raise NoMethodError
+    end
+
     it 'raises NoMethodError if there are no values like boolean method' do
       proc {
         value.some_method?
