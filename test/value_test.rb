@@ -36,5 +36,14 @@ describe Enumerize::Value do
         value.other_value?('<3')
       }.must_raise ArgumentError
     end
+
+    it 'responds to methods for existing values' do
+      value.must_respond_to :test_value?
+      value.must_respond_to :other_value?
+    end
+
+    it "doesn't respond to a method for not existing value" do
+      value.wont_respond_to :some_method?
+    end
   end
 end

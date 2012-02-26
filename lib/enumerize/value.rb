@@ -12,14 +12,37 @@ module Enumerize
       I18n.t(i18n_keys.shift, :default => i18n_keys)
     end
 
-    def method_missing(method, *args)
-      value = method.to_s.gsub(/\?\Z/, '')
-      super unless @attr.values.include?(value)
-      raise ArgumentError if args.any?
-      value == self
+    def method_missing(method, *args, &block)
+      if method[-1] == '?' && @attr.values.include?(method[0..-2])
+        define_query_methods
+        send(method, *args, &block)
+      else
+        super
+      end
+    end
+
+    def respond_to?(method, include_private=false)
+      if super
+        true
+      elsif method[-1] == '?' && @attr.values.include?(method[0..-2])
+        define_query_methods
+        super
+      end
     end
 
     private
+
+    def define_query_methods
+      @attr.values.each do |value|
+        unless methods.include?(:"#{value}?")
+          singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{value}?
+              #{value == self}
+            end
+          RUBY
+        end
+      end
+    end
 
     def i18n_keys
       @i18n_keys ||= begin
