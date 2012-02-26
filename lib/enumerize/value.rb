@@ -34,7 +34,7 @@ module Enumerize
 
     def define_query_methods
       @attr.values.each do |value|
-        unless methods.include?(:"#{value}?")
+        unless singleton_methods.include?(:"#{value}?")
           singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{value}?
               #{value == self}
