@@ -16,4 +16,10 @@ module Enumerize
       include Enumerize::ActiveRecord
     end
   end
+
+  begin
+    require 'simple_form'
+    require 'enumerize/hooks/simple_form'
+  rescue LoadError
+  end
 end
