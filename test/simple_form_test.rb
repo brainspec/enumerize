@@ -7,11 +7,11 @@ describe 'SimpleForm hook' do
 
   it 'renders select with enumerized values' do
     concat(simple_form_for(user) do |f|
-      f.input(:sex, :as => :select)
+      f.input(:sex)
     end)
 
-    assert_select 'select option[value=male]', 'Male'
-    assert_select 'select option[value=female]', 'Female'
+    assert_select 'select option[value=male]'
+    assert_select 'select option[value=female]'
   end
 
   it 'renders radio buttons with enumerated values' do
@@ -21,5 +21,13 @@ describe 'SimpleForm hook' do
 
     assert_select 'input[type=radio][value=male]'
     assert_select 'input[type=radio][value=female]'
+  end
+
+  it 'does not affect not enumerized attributes' do
+    concat(simple_form_for(user) do |f|
+      f.input(:name)
+    end)
+
+    assert_select 'input.string'
   end
 end
