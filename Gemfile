@@ -10,3 +10,4 @@ gem 'activerecord', '~> 3.2.0'
 gem 'sqlite3'
 
 gem 'mongoid'
+gem 'simple_form'

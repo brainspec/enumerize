@@ -87,6 +87,22 @@ use it with forms:
 <% end %>
 ```
 
+If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:
+
+```erb
+<%= simple_form_for @user do |f| %>
+  <%= f.input :sex %>
+<% end %>
+```
+
+and if you want it as radio buttons:
+
+```erb
+<%= simple_form_for @user do |f| %>
+  <%= f.input :sex, :as => :radio_buttons %>
+<% end %>
+```
+
 Boolean methods:
 
 ```ruby
