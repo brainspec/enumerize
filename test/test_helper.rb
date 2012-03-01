@@ -7,6 +7,10 @@ $VERBOSE=true
 
 require 'enumerize'
 
+Dir["#{File.dirname(__FILE__)}/support/*.rb"].each do |file|
+  require file
+end
+
 module MiscHelpers
   def store_translations(locale, translations, &block)
     begin

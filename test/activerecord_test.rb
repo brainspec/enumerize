@@ -12,6 +12,7 @@ ActiveRecord::Base.connection.instance_eval do
   create_table :users do |t|
     t.string :sex
     t.string :role
+    t.string :name
   end
 end
 
