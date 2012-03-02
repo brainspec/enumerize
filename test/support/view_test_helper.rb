@@ -20,7 +20,7 @@ module ViewTestHelper
     super unless method.to_s =~ /_path$/
   end
 
-  def respond_to?
+  def respond_to?(method)
     method.to_s =~ /_path$/ || super
   end
 
