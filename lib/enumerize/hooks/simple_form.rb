@@ -10,7 +10,8 @@ module Enumerize
       end
 
       def input_with_enumerize(attribute_name, options={}, &block)
-        if object.class.send(attribute_name).instance_of?(Enumerize::Attribute)
+        klass = object.class
+        if klass.respond_to?(attribute_name) && klass.send(attribute_name).instance_of?(Enumerize::Attribute)
           options[:collection] ||= object.class.send(attribute_name).options
           options[:as]         ||= :select
         end

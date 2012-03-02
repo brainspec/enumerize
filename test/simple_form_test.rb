@@ -4,7 +4,7 @@ require 'simple_form/version'
 class SimpleFormSpec < MiniTest::Spec
   include ViewTestHelper
 
-  class User < Struct.new(:sex, :name)
+  class User < Struct.new(:sex, :age)
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
@@ -41,7 +41,7 @@ class SimpleFormSpec < MiniTest::Spec
 
   it 'does not affect not enumerized attributes' do
     concat(simple_form_for(user) do |f|
-      f.input(:name)
+      f.input(:age)
     end)
 
     assert_select 'input.string'
