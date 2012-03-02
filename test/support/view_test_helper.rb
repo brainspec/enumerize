@@ -16,10 +16,13 @@ module ViewTestHelper
     @controller = MockController.new
   end
 
-  def user_path(*args)
-    '/users'
+  def method_missing(method, *args)
+    super unless method.to_s =~ /_path$/
   end
-  alias :users_path :user_path
+
+  def respond_to?
+    method.to_s =~ /_path$/ || super
+  end
 
   def protect_against_forgery?
     false

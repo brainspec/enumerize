@@ -1,7 +1,20 @@
 require 'test_helper'
 
-describe 'SimpleForm hook' do
+class SimpleFormSpec < MiniTest::Spec
   include ViewTestHelper
+
+  class User < Struct.new(:sex, :name)
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion
+
+    include Enumerize
+
+    enumerize :sex, :in => [:male, :female]
+
+    def persisted?
+      false
+    end
+  end
 
   let(:user) { User.new }
 
