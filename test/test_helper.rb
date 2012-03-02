@@ -5,6 +5,14 @@ require 'active_support/core_ext/kernel/reporting'
 
 $VERBOSE=true
 
+module SimpleForm
+  module Rails
+    def self.env
+      ActiveSupport::StringInquirer.new("test")
+    end
+  end
+end
+
 require 'enumerize'
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each do |file|

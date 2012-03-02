@@ -6,6 +6,7 @@ rvm:
   - 1.9.3
 gemfile:
   - gemfiles/Gemfile-ar-3.1.x
+  - gemfiles/Gemfile-simple-form.1.5.x
   - Gemfile
 notifications:
   email:
