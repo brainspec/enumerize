@@ -6,7 +6,7 @@ module Enumerize
       raise ArgumentError, ':in option is required' unless options[:in]
 
       @klass  = klass
-      @name   = name
+      @name   = name.to_sym
       @values = Array(options[:in]).map { |v| Value.new(self, v) }
       @value_hash = Hash[@values.map { |v| [v.to_s, v] }]
 

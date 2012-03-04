@@ -14,6 +14,11 @@ describe Enumerize::Attribute do
     attr.values.must_equal %w[a b]
   end
 
+  it 'converts name to symbol' do
+    build_attr nil, 'foo', :in => %w[a b]
+    attr.name.must_equal :foo
+  end
+
   it 'returns options for select' do
     store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
       build_attr nil, :foo, :in => %w[a b]
