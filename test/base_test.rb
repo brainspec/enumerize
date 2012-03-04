@@ -78,4 +78,16 @@ describe Enumerize::Base do
       klass.enumerize(:foo, :in => [:a, :b], :default => :c)
     }.must_raise ArgumentError
   end
+
+  it 'has enumerized attributes' do
+    klass.enumerized_attributes.must_equal({})
+    klass.enumerize(:foo, :in => %w[a b])
+    klass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
+  end
+
+  it "doesn't override existing method" do
+    method = klass.method(:name)
+    klass.enumerize(:name, :in => %w[a b], :default => 'a')
+    klass.method(:name).must_equal method
+  end
 end
