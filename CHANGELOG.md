@@ -3,6 +3,7 @@
 ### enhancements
   * Return humanized value if there are no translations (by [@nashby](https://github.com/nashby))
   * Integration with SimpleForm (by [@nashby](https://github.com/nashby))
+  * Integration with Formtastic (by [@lest](https://github.com/lest))
 
 ## 0.0.4 (February 8, 2012) ##
 
