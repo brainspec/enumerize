@@ -11,9 +11,8 @@ module Enumerize
 
       def input_with_enumerize(attribute_name, options={}, &block)
         klass = object.class
-        if klass.respond_to?(attribute_name) && klass.send(attribute_name).instance_of?(Enumerize::Attribute)
-          options[:collection] ||= object.class.send(attribute_name).options
-          options[:as]         ||= :select
+        if klass.respond_to?(:enumerized_attributes) && klass.enumerized_attributes[attribute_name].instance_of?(Enumerize::Attribute)
+          options[:collection] ||= klass.send(attribute_name).options
         end
 
         input_without_enumerize(attribute_name, options, &block)
