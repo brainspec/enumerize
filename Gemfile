@@ -11,3 +11,4 @@ gem 'sqlite3'
 
 gem 'mongoid'
 gem 'simple_form'
+gem 'formtastic'

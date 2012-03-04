@@ -1,9 +1,19 @@
 require 'test_helper'
-require 'simple_form/version'
 
-class SimpleFormSpec < MiniTest::Spec
+module Formtastic
+  module Helpers
+    module InputHelper
+      remove_method :input_class
+      def input_class(as)
+        input_class_with_const_defined(as)
+      end
+    end
+  end
+end
+
+class FormtasticSpec < MiniTest::Spec
   include ViewTestHelper
-  include SimpleForm::ActionViewExtensions::FormHelper
+  include Formtastic::Helpers::FormHelper
 
   class User < Struct.new(:sex, :age)
     extend ActiveModel::Naming
@@ -18,22 +28,23 @@ class SimpleFormSpec < MiniTest::Spec
     end
   end
 
+  before { $VERBOSE = nil }
+  after  { $VERBOSE = true }
+
   let(:user) { User.new }
 
   it 'renders select with enumerized values' do
-    concat(simple_form_for(user) do |f|
-      f.input(:sex)
+    concat(semantic_form_for(user) do |f|
+      f.input :sex
     end)
 
     assert_select 'select option[value=male]'
     assert_select 'select option[value=female]'
   end
 
-  it 'renders radio buttons with enumerated values' do
-    as = SimpleForm::VERSION > '2.0' ? :radio_buttons : :radio
-
-    concat(simple_form_for(user) do |f|
-      f.input(:sex, :as => as)
+  it 'renders radio buttons with enumerized values' do
+    concat(semantic_form_for(user) do |f|
+      f.input :sex, :as => :radio
     end)
 
     assert_select 'input[type=radio][value=male]'
@@ -41,10 +52,10 @@ class SimpleFormSpec < MiniTest::Spec
   end
 
   it 'does not affect not enumerized attributes' do
-    concat(simple_form_for(user) do |f|
+    concat(semantic_form_for(user) do |f|
       f.input(:age)
     end)
 
-    assert_select 'input.string'
+    assert_select 'input[type=text]'
   end
 end

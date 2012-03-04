@@ -6,7 +6,6 @@ module ViewTestHelper
 
   include ActiveSupport::Testing::SetupAndTeardown
   include ActionView::TestCase::Behavior
-  include SimpleForm::ActionViewExtensions::FormHelper
 
   included do
     setup :set_controller
