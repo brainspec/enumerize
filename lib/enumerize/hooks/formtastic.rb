@@ -3,8 +3,8 @@ module Enumerize
     module FormtasticFormBuilderExtension
       def input(method, options={})
         klass = object.class
-        if klass.respond_to?(method) && klass.send(method).instance_of?(Enumerize::Attribute)
-          options[:collection] ||= object.class.send(method).options
+        if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[method])
+          options[:collection] ||= attr.options
         end
 
         super(method, options)
