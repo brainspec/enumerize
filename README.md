@@ -103,6 +103,22 @@ and if you want it as radio buttons:
 <% end %>
 ```
 
+If you are using Formtastic gem you also don't need to specify input type (`:select` by default) and collection:
+
+```erb
+<%= semantic_form_for @user do |f| %>
+  <%= f.input :sex %>
+<% end %>
+```
+
+and if you want it as radio buttons:
+
+```erb
+<%= semantic_form_for @user do |f| %>
+  <%= f.input :sex, :as => :radio %>
+<% end %>
+```
+
 Boolean methods:
 
 ```ruby
