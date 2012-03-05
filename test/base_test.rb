@@ -26,6 +26,7 @@ describe Enumerize::Base do
       object.foo = :a
       object.foo.text.must_equal 'a text'
       object.foo_text.must_equal 'a text'
+      object.foo_text.must_equal 'a text'
     end
   end
 
