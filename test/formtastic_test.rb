@@ -1,11 +1,13 @@
 require 'test_helper'
 
-module Formtastic
-  module Helpers
-    module InputHelper
-      remove_method :input_class
-      def input_class(as)
-        input_class_with_const_defined(as)
+if defined? Formtastic::Helpers::InputHelper
+  module Formtastic
+    module Helpers
+      module InputHelper
+        remove_method :input_class
+        def input_class(as)
+          input_class_with_const_defined(as)
+        end
       end
     end
   end
@@ -13,7 +15,11 @@ end
 
 class FormtasticSpec < MiniTest::Spec
   include ViewTestHelper
-  include Formtastic::Helpers::FormHelper
+  if defined? Formtastic::SemanticFormHelper
+    include Formtastic::SemanticFormHelper
+  else
+    include Formtastic::Helpers::FormHelper
+  end
 
   class User < Struct.new(:sex, :age)
     extend ActiveModel::Naming
