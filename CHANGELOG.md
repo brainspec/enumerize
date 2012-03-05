@@ -1,3 +1,8 @@
+## 0.1.1 (unreleased) ##
+
+### bug fix
+  * I18n regression: Multiple calls to value #text return different results (by [@cgunther](https://github.com/cgunther) and [@lest](https://github.com/lest))
+
 ## 0.1.0 (March 5, 2012) ##
 
 ### enhancements
