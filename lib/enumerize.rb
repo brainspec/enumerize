@@ -22,4 +22,10 @@ module Enumerize
     require 'enumerize/hooks/simple_form'
   rescue LoadError
   end
+
+  begin
+    require 'formtastic'
+    require 'enumerize/hooks/formtastic'
+  rescue LoadError
+  end
 end
