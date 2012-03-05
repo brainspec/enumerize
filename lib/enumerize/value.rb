@@ -9,7 +9,7 @@ module Enumerize
     end
 
     def text
-      I18n.t(i18n_keys.shift, :default => i18n_keys)
+      I18n.t(i18n_keys[0], :default => i18n_keys[1..-1])
     end
 
     def method_missing(method, *args, &block)
