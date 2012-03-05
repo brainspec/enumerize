@@ -1,4 +1,4 @@
-## Unreleased ##
+## 0.1.0 (March 5, 2012) ##
 
 ### enhancements
   * Return humanized value if there are no translations (by [@nashby](https://github.com/nashby))
