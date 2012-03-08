@@ -6,6 +6,9 @@ describe Enumerize::Base do
       include Enumerize
     end
   end
+  let(:subklass) do
+    Class.new(klass)
+  end
 
   let(:object) { klass.new }
 
@@ -90,5 +93,10 @@ describe Enumerize::Base do
     method = klass.method(:name)
     klass.enumerize(:name, :in => %w[a b], :default => 'a')
     klass.method(:name).must_equal method
+  end
+
+  it "inherits enumerized attributes from a parent class" do
+    klass.enumerize(:foo, :in => %w[a b])
+    subklass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
   end
 end
