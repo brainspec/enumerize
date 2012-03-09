@@ -6,6 +6,7 @@ describe Enumerize::Base do
       include Enumerize
     end
   end
+
   let(:subklass) do
     Class.new(klass)
   end
@@ -98,5 +99,17 @@ describe Enumerize::Base do
   it "inherits enumerized attributes from a parent class" do
     klass.enumerize(:foo, :in => %w[a b])
     subklass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
+  end
+
+  it "inherits enumerized attributes from a grandparent class" do
+    klass.enumerize(:foo, :in => %w[a b])
+    Class.new(subklass).enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
+  end
+
+  it "doesn't add enumerized attributes to parent class" do
+    klass.enumerize(:foo, :in => %w[a b])
+    subklass.enumerize(:bar, :in => %w[c d])
+
+    klass.enumerized_attributes[:bar].must_equal nil
   end
 end
