@@ -4,13 +4,6 @@ module Enumerize
   module Base
     extend ActiveSupport::Concern
 
-    included do
-      @enumerized_attributes = {}
-      class << self
-        attr_reader :enumerized_attributes
-      end
-    end
-
     module ClassMethods
       def enumerize(*args, &block)
         attr = Attribute.new(self, *args, &block)
@@ -40,6 +33,16 @@ module Enumerize
         RUBY
 
         include mod
+      end
+
+      def enumerized_attributes
+        @enumerized_attributes ||= {}
+
+        if superclass && superclass.respond_to?(:enumerized_attributes)
+          superclass.enumerized_attributes.merge(@enumerized_attributes)
+        else
+          @enumerized_attributes
+        end
       end
 
       private
