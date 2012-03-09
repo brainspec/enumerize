@@ -24,7 +24,7 @@ module Enumerize
     def respond_to?(method, include_private=false)
       if super
         true
-      elsif method[-1] == '?' && @attr.values.include?(method[0..-2])
+      elsif method.to_s[-1] == '?' && @attr.values.include?(method[0..-2])
         define_query_methods
         super
       end
