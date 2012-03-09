@@ -1,3 +1,8 @@
+## Unreleased ##
+
+### bug fix
+  * Inheriting enumerized attributes (by [@cgunther](https://github.com/cgunther) and [@nashby](https://github.com/nashby))
+
 ## 0.1.1 (March 6, 2012) ##
 
 ### bug fix
