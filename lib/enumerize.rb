@@ -10,13 +10,13 @@ module Enumerize
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   def self.included(base)
-    base.extend Enumerize::Base
+    base.send :include, Enumerize::Base
     if defined?(::ActiveRecord::Base) && base < ::ActiveRecord::Base
       base.extend Enumerize::ActiveRecord
     end
 
     if Module === base
-      base.extend Enumerize::Base
+      base.extend Enumerize::Base::ClassMethods
       base.extend Enumerize::ModuleAttributes
     end
 

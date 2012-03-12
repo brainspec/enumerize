@@ -2,6 +2,7 @@
 
 ### enhancements
   * Ability to enumerize attributes in a module and then include it into classes (by [@lest](https://github.com/lest))
+  * Add error to a model when attribute value is not included in allowed list (by [@lest](https://github.com/lest))
 
 ### bug fix
   * Inheriting enumerized attributes (by [@cgunther](https://github.com/cgunther) and [@nashby](https://github.com/nashby))

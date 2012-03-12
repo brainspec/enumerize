@@ -6,11 +6,11 @@ module Enumerize
     end
 
     def [](name)
-      @attributes[name]
+      @attributes[name.to_s]
     end
 
     def <<(attr)
-      @attributes[attr.name] = attr
+      @attributes[attr.name.to_s] = attr
       @dependants.each do |dependant|
         dependant << attr
       end

@@ -53,4 +53,10 @@ describe Enumerize::ActiveRecord do
     User.new.role.must_equal 'user'
     User.new.attributes['role'].must_equal 'user'
   end
+
+  it 'validates inclusion' do
+    user = User.new
+    user.role = 'wrong'
+    user.wont_be :valid?
+  end
 end

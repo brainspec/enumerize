@@ -53,4 +53,10 @@ describe Enumerize do
   it 'has default value' do
     model.new.role.must_equal 'user'
   end
+
+  it 'validates inclusion' do
+    user = model.new
+    user.role = 'wrong'
+    user.wont_be :valid?
+  end
 end

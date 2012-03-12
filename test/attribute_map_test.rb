@@ -42,6 +42,12 @@ module Enumerize
       subject[:a].must_equal attr
     end
 
+    it 'reads attribute by name using string' do
+      attr = make_attr(:a)
+      subject << attr
+      subject['a'].must_equal attr
+    end
+
     it 'updates dependants' do
       attr = make_attr(:a)
       dependant = mock
