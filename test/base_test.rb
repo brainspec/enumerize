@@ -85,7 +85,7 @@ describe Enumerize::Base do
   end
 
   it 'has enumerized attributes' do
-    klass.enumerized_attributes.must_equal({})
+    klass.enumerized_attributes.must_be_empty
     klass.enumerize(:foo, :in => %w[a b])
     klass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
   end
@@ -111,5 +111,11 @@ describe Enumerize::Base do
     subklass.enumerize(:bar, :in => %w[c d])
 
     klass.enumerized_attributes[:bar].must_equal nil
+  end
+
+  it 'adds new parent class attributes to subclass' do
+    subklass = Class.new(klass)
+    klass.enumerize :foo, :in => %w[a b]
+    subklass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
   end
 end

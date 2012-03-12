@@ -1,5 +1,8 @@
 ## Unreleased ##
 
+### enhancements
+  * Ability to enumerize attributes in a module and then include it into classes (by [@lest](https://github.com/lest))
+
 ### bug fix
   * Inheriting enumerized attributes (by [@cgunther](https://github.com/cgunther) and [@nashby](https://github.com/nashby))
 

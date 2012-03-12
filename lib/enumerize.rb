@@ -3,18 +3,24 @@ require 'enumerize/version'
 
 module Enumerize
   autoload :Attribute,    'enumerize/attribute'
+  autoload :AttributeMap, 'enumerize/attribute_map'
   autoload :Value,        'enumerize/value'
   autoload :Base,         'enumerize/base'
   autoload :ActiveRecord, 'enumerize/activerecord'
+  autoload :ModuleAttributes, 'enumerize/module_attributes'
 
-  extend ActiveSupport::Concern
-
-  include Enumerize::Base
-
-  included do
-    if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
-      include Enumerize::ActiveRecord
+  def self.included(base)
+    base.extend Enumerize::Base
+    if defined?(::ActiveRecord::Base) && base < ::ActiveRecord::Base
+      base.extend Enumerize::ActiveRecord
     end
+
+    if Module === base
+      base.extend Enumerize::Base
+      base.extend Enumerize::ModuleAttributes
+    end
+
+    super
   end
 
   begin
