@@ -10,14 +10,14 @@ module Enumerize
         enumerized_attributes << attr
 
         unless methods.include?(attr.name)
-          singleton_class.class_eval do
-            define_method(attr.name) { attr }
-          end
+          _enumerize_module._class_methods.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{attr.name}
+              enumerized_attributes[:#{attr.name}]
+            end
+          RUBY
         end
 
-        mod = Module.new
-
-        mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def initialize(*, &_)
             @_enumerized_values_for_validation = {}
             super
@@ -25,15 +25,13 @@ module Enumerize
           end
         RUBY
 
-        _define_enumerize_attribute(mod, attr)
+        _define_enumerize_attribute(attr)
 
-        mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{attr.name}_text
             #{attr.name} && #{attr.name}.text
           end
         RUBY
-
-        include mod
 
         if respond_to?(:validates)
           validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => true}
@@ -51,8 +49,22 @@ module Enumerize
 
       private
 
-      def _define_enumerize_attribute(mod, attr)
-        mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def _enumerize_module
+        @_enumerize_module ||= begin
+          mod = Module.new do
+            @_class_methods = Module.new
+            class << self
+              attr_reader :_class_methods
+            end
+          end
+          include mod
+          extend mod._class_methods
+          mod
+        end
+      end
+
+      def _define_enumerize_attribute(attr)
+        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{attr.name}
             if respond_to?(:read_attribute, true)
               self.class.enumerized_attributes[:#{attr.name}].find_value(read_attribute(:#{attr.name}))
