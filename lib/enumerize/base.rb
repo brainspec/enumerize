@@ -17,13 +17,6 @@ module Enumerize
           RUBY
         end
 
-        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def initialize(*, &_)
-            super
-            self.#{attr.name} = self.class.enumerized_attributes[:#{attr.name}].default_value if #{attr.name}.nil?
-          end
-        RUBY
-
         _define_enumerize_attribute(attr)
 
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -89,8 +82,11 @@ module Enumerize
       end
     end
 
-    def _enumerized_values_for_validation
-      @_enumerized_values_for_validation ||= {}
+    def initialize(*)
+      super
+      self.class.enumerized_attributes.each do |attr|
+        public_send("#{attr.name}=", attr.default_value) if public_send(attr.name).nil?
+      end
     end
 
     def read_attribute_for_validation(key)
@@ -99,6 +95,12 @@ module Enumerize
       else
         super
       end
+    end
+
+    private
+
+    def _enumerized_values_for_validation
+      @_enumerized_values_for_validation ||= {}
     end
   end
 end
