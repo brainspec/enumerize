@@ -19,7 +19,6 @@ module Enumerize
 
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def initialize(*, &_)
-            @_enumerized_values_for_validation = {}
             super
             self.#{attr.name} = self.class.enumerized_attributes[:#{attr.name}].default_value if #{attr.name}.nil?
           end
@@ -78,7 +77,7 @@ module Enumerize
           end
 
           def #{attr.name}=(new_value)
-            @_enumerized_values_for_validation[:#{attr.name}] = new_value.to_s
+            _enumerized_values_for_validation[:#{attr.name}] = new_value.to_s
 
             if respond_to?(:write_attribute, true)
               write_attribute :#{attr.name}, self.class.enumerized_attributes[:#{attr.name}].find_value(new_value).to_s
@@ -90,9 +89,13 @@ module Enumerize
       end
     end
 
+    def _enumerized_values_for_validation
+      @_enumerized_values_for_validation ||= {}
+    end
+
     def read_attribute_for_validation(key)
       if self.class.enumerized_attributes[key].instance_of? Enumerize::Attribute
-        @_enumerized_values_for_validation[key]
+        _enumerized_values_for_validation[key]
       else
         super
       end
