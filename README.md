@@ -79,6 +79,12 @@ get attribute value:
 @user.sex_text # or @user.sex.text
 ```
 
+get all values for enumerized attribute:
+
+```ruby
+User.sex.values # or User.enumerized_attributes[:sex].values
+```
+
 use it with forms:
 
 ```erb
