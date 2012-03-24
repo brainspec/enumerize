@@ -6,6 +6,8 @@ module Enumerize
 
     module ClassMethods
       def enumerize(name, options={})
+        allow_nil = options.has_key?(:allow_nil) ? options.delete(:allow_nil) : true
+        allow_blank = options.has_key?(:allow_blank) ? options.delete(:allow_blank) : false
         attr = Attribute.new(self, name, options)
         enumerized_attributes << attr
 
@@ -26,7 +28,7 @@ module Enumerize
         RUBY
 
         if respond_to?(:validates)
-          validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => true}
+          validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => allow_nil, :allow_blank => allow_blank}
         end
       end
 
@@ -70,12 +72,15 @@ module Enumerize
           end
 
           def #{attr.name}=(new_value)
-            _enumerized_values_for_validation[:#{attr.name}] = new_value.to_s
+            _enumerized_values_for_validation[:#{attr.name}] = new_value.nil? ? nil : new_value.to_s
+
+            allowed_value_or_nil = self.class.enumerized_attributes[:#{attr.name}].find_value(new_value)
+            allowed_value_or_nil = allowed_value_or_nil.to_s unless allowed_value_or_nil.nil?
 
             if respond_to?(:write_attribute, true)
-              write_attribute :#{attr.name}, self.class.enumerized_attributes[:#{attr.name}].find_value(new_value).to_s
+              write_attribute :#{attr.name}, allowed_value_or_nil
             else
-              @#{attr.name} = self.class.enumerized_attributes[:#{attr.name}].find_value(new_value).to_s
+              @#{attr.name} = allowed_value_or_nil
             end
           end
         RUBY

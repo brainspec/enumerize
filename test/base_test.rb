@@ -118,4 +118,22 @@ describe Enumerize::Base do
     klass.enumerize :foo, :in => %w[a b]
     subklass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
   end
+
+  it 'stores nil value' do
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo = nil
+    object.instance_variable_get(:@foo).must_equal nil
+  end
+
+  it 'casts value to string for validation' do
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo = :c
+    object.read_attribute_for_validation(:foo).must_equal 'c'
+  end
+
+  it "doesn't cast nil to string for validation" do
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo = nil
+    object.read_attribute_for_validation(:foo).must_equal nil
+  end
 end
