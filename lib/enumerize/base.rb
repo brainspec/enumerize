@@ -90,7 +90,7 @@ module Enumerize
     end
 
     def read_attribute_for_validation(key)
-      if self.class.enumerized_attributes[key].instance_of? Enumerize::Attribute
+      if self.class.enumerized_attributes[key].instance_of?(Enumerize::Attribute) && _enumerized_values_for_validation.has_key?(key)
         _enumerized_values_for_validation[key]
       else
         super
