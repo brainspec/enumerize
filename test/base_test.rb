@@ -118,4 +118,10 @@ describe Enumerize::Base do
     klass.enumerize :foo, :in => %w[a b]
     subklass.enumerized_attributes[:foo].must_be_instance_of Enumerize::Attribute
   end
+
+  it 'stores nil value' do
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo = nil
+    object.instance_variable_get(:@foo).must_equal nil
+  end
 end
