@@ -6,6 +6,8 @@ module Enumerize
 
     module ClassMethods
       def enumerize(name, options={})
+        allow_nil = options.has_key?(:allow_nil) ? options.delete(:allow_nil) : true
+        allow_blank = options.has_key?(:allow_blank) ? options.delete(:allow_blank) : false
         attr = Attribute.new(self, name, options)
         enumerized_attributes << attr
 
@@ -26,7 +28,7 @@ module Enumerize
         RUBY
 
         if respond_to?(:validates)
-          validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => true}
+          validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => allow_nil, :allow_blank => allow_blank}
         end
       end
 
