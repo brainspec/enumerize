@@ -60,7 +60,7 @@ describe Enumerize::ActiveRecord do
     user.wont_be :valid?
   end
 
-  it "uses persisted value for validation if it hasn't has been set" do
+  it "uses persisted value for validation if it hasn't been set" do
     user = User.create! :sex => :male
     User.find(user).read_attribute_for_validation(:sex).must_equal 'male'
   end
