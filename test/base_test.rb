@@ -136,4 +136,10 @@ describe Enumerize::Base do
     object.foo = nil
     object.read_attribute_for_validation(:foo).must_equal nil
   end
+
+  it 'casts empty string to nil for validation' do
+    klass.enumerize(:foo, :in => [:a, :b])
+    object.foo = ''
+    object.read_attribute_for_validation(:foo).must_equal nil
+  end
 end
