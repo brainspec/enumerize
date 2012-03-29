@@ -64,4 +64,16 @@ describe Enumerize::ActiveRecord do
     user = User.create! :sex => :male
     User.find(user).read_attribute_for_validation(:sex).must_equal 'male'
   end
+
+  it 'is valid with empty string assigned' do
+    user = User.new
+    user.role = ''
+    user.must_be :valid?
+  end
+
+  it 'stores nil when empty string assigned' do
+    user = User.new
+    user.role = ''
+    user.read_attribute(:role).must_equal nil
+  end
 end
