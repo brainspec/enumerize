@@ -1,4 +1,4 @@
-## Unreleased ##
+## 0.2.0 (March 29, 2012) ##
 
 ### enhancements
   * Ability to enumerize attributes in a module and then include it into classes (by [@lest](https://github.com/lest))
