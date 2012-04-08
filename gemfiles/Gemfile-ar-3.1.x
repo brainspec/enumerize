@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'enumerize', :path => '..'
 
 gem 'rake'
-gem 'minitest', '~> 2.11.0'
+gem 'minitest', '~> 2.12.0'
 gem 'mocha'
 
 gem 'activerecord', '~> 3.1.0'
