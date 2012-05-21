@@ -1,3 +1,8 @@
+## 0.2.1 (May 21, 2012) ##
+
+### bug fix
+  * Call super in attribute accessors if available (by [@lest](https://github.com/lest))
+
 ## 0.2.0 (March 29, 2012) ##
 
 ### enhancements
