@@ -136,4 +136,35 @@ describe Enumerize::Base do
     object.foo = nil
     object.read_attribute_for_validation(:foo).must_equal nil
   end
+
+  it 'calls super in the accessor method' do
+    accessors = Module.new do
+      def attributes
+        @attributes ||= {}
+      end
+
+      def foo
+        attributes[:foo]
+      end
+
+      def foo=(v)
+        attributes[:foo] = v
+      end
+    end
+
+    klass = Class.new do
+      include accessors
+      include Enumerize
+
+      enumerize :foo, :in => %w[test]
+    end
+
+    object = klass.new
+    object.foo.must_be_nil
+    object.attributes.must_equal({:foo => nil})
+
+    object.foo = 'test'
+    object.foo.must_equal 'test'
+    object.attributes.must_equal(:foo => 'test')
+  end
 end

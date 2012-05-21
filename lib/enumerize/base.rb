@@ -58,7 +58,9 @@ module Enumerize
       def _define_enumerize_attribute(attr)
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{attr.name}
-            if respond_to?(:read_attribute, true)
+            if defined?(super)
+              self.class.enumerized_attributes[:#{attr.name}].find_value(super)
+            elsif respond_to?(:read_attribute, true)
               self.class.enumerized_attributes[:#{attr.name}].find_value(read_attribute(:#{attr.name}))
             else
               if defined?(@#{attr.name})
@@ -75,7 +77,9 @@ module Enumerize
             allowed_value_or_nil = self.class.enumerized_attributes[:#{attr.name}].find_value(new_value)
             allowed_value_or_nil = allowed_value_or_nil.to_s unless allowed_value_or_nil.nil?
 
-            if respond_to?(:write_attribute, true)
+            if defined?(super)
+              super allowed_value_or_nil
+            elsif respond_to?(:write_attribute, true)
               write_attribute :#{attr.name}, allowed_value_or_nil
             else
               @#{attr.name} = allowed_value_or_nil
