@@ -60,6 +60,12 @@ describe Enumerize::ActiveRecord do
     user.wont_be :valid?
   end
 
+  it 'validates inclusion on mass assignment' do
+    assert_raises ActiveRecord::RecordInvalid do
+      User.create!(role: 'wrong')
+    end
+  end
+
   it "uses persisted value for validation if it hasn't been set" do
     user = User.create! :sex => :male
     User.find(user).read_attribute_for_validation(:sex).must_equal 'male'

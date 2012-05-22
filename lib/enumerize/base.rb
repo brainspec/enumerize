@@ -92,7 +92,7 @@ module Enumerize
     def initialize(*)
       super
       self.class.enumerized_attributes.each do |attr|
-        public_send("#{attr.name}=", attr.default_value) if public_send(attr.name).nil?
+        public_send("#{attr.name}=", attr.default_value) unless _enumerized_values_for_validation.key?(attr.name)
       end
     end
 
