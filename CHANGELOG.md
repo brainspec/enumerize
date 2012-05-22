@@ -1,3 +1,8 @@
+## 0.2.2 (May 22, 2012) ##
+
+### bug fix
+  * Correctly assign default value to handle mass assignment in Active Record (by [@lest](https://github.com/lest))
+
 ## 0.2.1 (May 21, 2012) ##
 
 ### bug fix
