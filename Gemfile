@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'minitest', '~> 2.12.0'
+gem 'minitest', '~> 3.0.0'
 gem 'mocha'
 
 gem 'activerecord', '~> 3.2.0'
