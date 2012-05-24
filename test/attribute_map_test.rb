@@ -50,10 +50,11 @@ module Enumerize
 
     it 'updates dependants' do
       attr = make_attr(:a)
-      dependant = mock
-      dependant.expects(:<<).with(attr)
+      dependant = MiniTest::Mock.new
+      dependant.expect(:<<, nil, [attr])
       subject.add_dependant dependant
       subject << attr
+      dependant.verify
     end
 
     it 'adds attrs to dependant' do

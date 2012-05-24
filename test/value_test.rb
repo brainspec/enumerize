@@ -1,7 +1,7 @@
 require 'test_helper'
 
 describe Enumerize::Value do
-  let(:attr)  { Object.new }
+  let(:attr)  { Struct.new(:values).new([]) }
   let(:value) { Enumerize::Value.new(attr, 'test_value') }
 
   it 'is a string' do
@@ -14,7 +14,7 @@ describe Enumerize::Value do
 
   describe 'boolean methods comparison' do
     before do
-      attr.stubs(:values).returns([value, Enumerize::Value.new(attr, 'other_value')])
+      attr.values = [value, Enumerize::Value.new(attr, 'other_value')]
     end
 
     it 'returns true if value equals method' do

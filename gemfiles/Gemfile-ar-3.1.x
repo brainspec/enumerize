@@ -4,7 +4,6 @@ gem 'enumerize', :path => '..'
 
 gem 'rake'
 gem 'minitest', '~> 3.0.0'
-gem 'mocha'
 
 gem 'activerecord', '~> 3.1.0'
 gem 'sqlite3'
