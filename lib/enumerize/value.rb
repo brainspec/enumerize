@@ -2,10 +2,15 @@ require 'i18n'
 
 module Enumerize
   class Value < String
-    def initialize(attr, value)
-      @attr = attr
+    def initialize(attr, name, value=nil)
+      @attr  = attr
+      @value = value || name.to_s
 
-      super(value.to_s)
+      super(name.to_s)
+    end
+
+    def value
+      @value
     end
 
     def text

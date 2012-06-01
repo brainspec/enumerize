@@ -1,3 +1,8 @@
+## dev
+
+### enhancements
+  * Accept a values hash to store an attribute using custom values (e.g. integers) (by [@lest](https://github.com/lest))
+
 ## 0.2.2 (May 22, 2012) ##
 
 ### bug fix

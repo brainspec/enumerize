@@ -75,7 +75,7 @@ module Enumerize
             _enumerized_values_for_validation[:#{attr.name}] = new_value.nil? ? nil : new_value.to_s
 
             allowed_value_or_nil = self.class.enumerized_attributes[:#{attr.name}].find_value(new_value)
-            allowed_value_or_nil = allowed_value_or_nil.to_s unless allowed_value_or_nil.nil?
+            allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
 
             if defined?(super)
               super allowed_value_or_nil

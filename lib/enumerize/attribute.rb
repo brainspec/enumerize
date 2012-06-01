@@ -7,8 +7,9 @@ module Enumerize
 
       @klass  = klass
       @name   = name.to_sym
-      @values = Array(options[:in]).map { |v| Value.new(self, v) }
-      @value_hash = Hash[@values.map { |v| [v.to_s, v] }]
+      @values = Array(options[:in]).map { |v| Value.new(self, *v) }
+      @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
+      @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
 
       if options[:default]
         @default_value = find_value(options[:default])

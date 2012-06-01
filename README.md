@@ -151,6 +151,13 @@ class User
 end
 ```
 
+It's also possible to store enumerized attribute value using custom values (e.g. integers). You can pass a hash as `:in` option to achieve this:
+
+```ruby
+class User < ActiveRecord::Base
+  enumerize :role, :in => {:user => 1, :admin => 2}
+end
+```
 
 ## Contributing
 
