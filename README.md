@@ -93,38 +93,6 @@ use it with forms:
 <% end %>
 ```
 
-If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:
-
-```erb
-<%= simple_form_for @user do |f| %>
-  <%= f.input :sex %>
-<% end %>
-```
-
-and if you want it as radio buttons:
-
-```erb
-<%= simple_form_for @user do |f| %>
-  <%= f.input :sex, :as => :radio_buttons %>
-<% end %>
-```
-
-If you are using Formtastic gem you also don't need to specify input type (`:select` by default) and collection:
-
-```erb
-<%= semantic_form_for @user do |f| %>
-  <%= f.input :sex %>
-<% end %>
-```
-
-and if you want it as radio buttons:
-
-```erb
-<%= semantic_form_for @user do |f| %>
-  <%= f.input :sex, :as => :radio %>
-<% end %>
-```
-
 Boolean methods:
 
 ```ruby
@@ -157,6 +125,42 @@ It's also possible to store enumerized attribute value using custom values (e.g.
 class User < ActiveRecord::Base
   enumerize :role, :in => {:user => 1, :admin => 2}
 end
+```
+
+### SimpleForm
+
+If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:
+
+```erb
+<%= simple_form_for @user do |f| %>
+  <%= f.input :sex %>
+<% end %>
+```
+
+and if you want it as radio buttons:
+
+```erb
+<%= simple_form_for @user do |f| %>
+  <%= f.input :sex, :as => :radio_buttons %>
+<% end %>
+```
+
+### Formtastic
+
+If you are using Formtastic gem you also don't need to specify input type (`:select` by default) and collection:
+
+```erb
+<%= semantic_form_for @user do |f| %>
+  <%= f.input :sex %>
+<% end %>
+```
+
+and if you want it as radio buttons:
+
+```erb
+<%= semantic_form_for @user do |f| %>
+  <%= f.input :sex, :as => :radio %>
+<% end %>
 ```
 
 ## Contributing
