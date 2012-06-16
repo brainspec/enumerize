@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'minitest', '~> 3.0.0'
+gem 'minitest', '~> 3.1'
 
 gem 'activerecord', '~> 3.2.0'
 gem 'sqlite3'
