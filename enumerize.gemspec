@@ -3,10 +3,10 @@ require File.expand_path('../lib/enumerize/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Sergey Nartimov"]
-  gem.email         = "info@twinslash.com"
+  gem.email         = "team@brainspec.com"
   gem.description   = %q{Enumerated attributes with I18n and ActiveRecord/Mongoid support}
   gem.summary       = %q{Enumerated attributes with I18n and ActiveRecord/Mongoid support}
-  gem.homepage      = "https://github.com/twinslash/enumerize"
+  gem.homepage      = "https://github.com/brainspec/enumerize"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")

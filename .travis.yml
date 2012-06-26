@@ -10,6 +10,6 @@ gemfile:
 notifications:
   email:
     recipients:
-      - sergey.nartimov@twinslash.com
-      - vasily.ermolovich@twinslash.com
+      - lest@brainspec.com
+      - nashby@brainspec.com
       - dreamfall@brainspec.com
