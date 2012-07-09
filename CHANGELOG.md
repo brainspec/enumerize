@@ -1,4 +1,4 @@
-## dev
+## 0.3.0 (July 9, 2012) ##
 
 ### enhancements
   * Accept a values hash to store an attribute using custom values (e.g. integers) (by [@lest](https://github.com/lest))
