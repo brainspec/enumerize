@@ -21,8 +21,4 @@ module Enumerize
   end
 end
 
-if defined? ::Formtastic::SemanticFormBuilder
-  ::Formtastic::SemanticFormBuilder.send :include, Enumerize::Hooks::FormtasticFormBuilderExtension
-else
-  ::Formtastic::FormBuilder.send :include, Enumerize::Hooks::FormtasticFormBuilderExtension
-end
+::Formtastic::FormBuilder.send :include, Enumerize::Hooks::FormtasticFormBuilderExtension

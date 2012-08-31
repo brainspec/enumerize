@@ -60,8 +60,6 @@ module Enumerize
           def #{attr.name}
             if defined?(super)
               self.class.enumerized_attributes[:#{attr.name}].find_value(super)
-            elsif respond_to?(:read_attribute, true)
-              self.class.enumerized_attributes[:#{attr.name}].find_value(read_attribute(:#{attr.name}))
             else
               if defined?(@#{attr.name})
                 self.class.enumerized_attributes[:#{attr.name}].find_value(@#{attr.name})
@@ -79,8 +77,6 @@ module Enumerize
 
             if defined?(super)
               super allowed_value_or_nil
-            elsif respond_to?(:write_attribute, true)
-              write_attribute :#{attr.name}, allowed_value_or_nil
             else
               @#{attr.name} = allowed_value_or_nil
             end

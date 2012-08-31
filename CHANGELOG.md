@@ -1,3 +1,13 @@
+## 0.4.0 (dev) ##
+
+Legacy support was dropped. The following versions are supported:
+
+* Ruby 1.9.3+ (including JRuby and Rubinius)
+* Rails 3.2+
+* Formtastic 2.2+
+* SimpleForm 2+
+* Mongoid 3+
+
 ## 0.3.0 (July 9, 2012) ##
 
 ### enhancements

@@ -5,7 +5,7 @@ silence_warnings do
 end
 
 Mongoid.configure do |config|
-  config.master  = Mongo::Connection.new('127.0.0.1', 27017).db('enumerize-test-suite')
+  config.sessions = { :default => { :database => 'enumerize-test-suite', hosts: ['127.0.0.1:27017'] } }
   config.use_utc = true
   config.include_root_in_json = true
 end
