@@ -1,12 +1,15 @@
 language: ruby
+services:
+  - mongodb
 before_install:
   - gem install bundler
 rvm:
-  - 1.9.2
   - 1.9.3
-gemfile:
-  - gemfiles/Gemfile-ar-3.1.x
-  - Gemfile
+  - jruby-19mode
+  - rbx-19mode
+matrix:
+  allow_failures:
+    - rvm: jruby-19mode
 notifications:
   email:
     recipients:
