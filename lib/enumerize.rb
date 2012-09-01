@@ -7,10 +7,13 @@ module Enumerize
   autoload :Value,        'enumerize/value'
   autoload :Base,         'enumerize/base'
   autoload :ActiveRecord, 'enumerize/activerecord'
+  autoload :Predicates,   'enumerize/predicates'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   def self.included(base)
     base.send :include, Enumerize::Base
+    base.extend Enumerize::Predicates
+
     if defined?(::ActiveRecord::Base) && base < ::ActiveRecord::Base
       base.extend Enumerize::ActiveRecord
     end
