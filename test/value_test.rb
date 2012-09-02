@@ -42,6 +42,10 @@ describe Enumerize::Value do
       value.must_respond_to :other_value?
     end
 
+    it 'returns a method object' do
+      value.method(:test_value?).must_be_instance_of Method
+    end
+
     it "doesn't respond to a method for not existing value" do
       value.wont_respond_to :some_method?
     end
