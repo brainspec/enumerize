@@ -18,7 +18,7 @@ module Enumerize
     end
 
     def method_missing(method, *args, &block)
-      if method[-1] == '?' && @attr.values.include?(method[0..-2])
+      if boolean_method?(method)
         define_query_methods
         send(method, *args, &block)
       else
@@ -26,13 +26,8 @@ module Enumerize
       end
     end
 
-    def respond_to?(method, include_private=false)
-      if super
-        true
-      elsif method[-1] == '?' && @attr.values.include?(method[0..-2])
-        define_query_methods
-        super
-      end
+    def respond_to_missing?(method, include_private=false)
+      boolean_method?(method)
     end
 
     private
@@ -64,6 +59,10 @@ module Enumerize
 
     def i18n_suffix
       "#{@attr.i18n_suffix}." if @attr.i18n_suffix
+    end
+
+    def boolean_method?(method)
+      method[-1] == '?' && @attr.values.include?(method[0..-2])
     end
   end
 end
