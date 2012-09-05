@@ -1,5 +1,8 @@
 ## 0.4.0 (dev) ##
 
+### enchancements
+  * Ability to define predicate methods on enumerized object. (by [@lest](https://github.com/lest))
+
 Legacy support was dropped. The following versions are supported:
 
 * Ruby 1.9.3+ (including JRuby and Rubinius)
