@@ -101,6 +101,39 @@ user.sex.male? #=> true
 user.sex.female? #=> false
 ```
 
+Predicate methods:
+
+```ruby
+class User
+  include Enumerize
+  enumerize :sex, in: %w(male female), predicates: true
+end
+
+user = User.new
+
+user.male?   # => false
+user.female? # => false
+
+user.sex = 'male'
+
+user.male?   # => true
+user.female? # => false
+```
+
+Using prefix:
+
+```ruby
+class User
+  include Enumerize
+  enumerize :sex, in: %w(male female), predicates: { prefix: true }
+end
+
+user = User.new
+user.sex = 'female'
+user.sex_female? # => true
+```
+Use `:only` and `:except` options to specify what values create predicate methods for.
+
 To make some attributes shared across different classes it's possible to define them in a separate module and then include it into classes:
 
 ```ruby
