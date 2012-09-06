@@ -1,7 +1,4 @@
-## 0.4.0 (dev) ##
-
-### enchancements
-  * Ability to define predicate methods on enumerized object. (by [@lest](https://github.com/lest))
+## 0.4.0 (September 6, 2012) ##
 
 Legacy support was dropped. The following versions are supported:
 
@@ -10,6 +7,9 @@ Legacy support was dropped. The following versions are supported:
 * Formtastic 2.2+
 * SimpleForm 2+
 * Mongoid 3+
+
+### enchancements
+  * Ability to define predicate methods on enumerized object. (by [@lest](https://github.com/lest))
 
 ## 0.3.0 (July 9, 2012) ##
 
