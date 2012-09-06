@@ -26,7 +26,7 @@ module Enumerize
         RUBY
 
         if respond_to?(:validates)
-          validates name, :inclusion => {:in => enumerized_attributes[name].values.map(&:to_s), :allow_nil => true, :allow_blank => true}
+          validates name, :inclusion => { :in => enumerized_attributes[name].values, :allow_nil => true, :allow_blank => true }
         end
       end
 
