@@ -30,10 +30,8 @@ class SimpleFormSpec < MiniTest::Spec
   end
 
   it 'renders radio buttons with enumerated values' do
-    as = SimpleForm::VERSION > '2.0' ? :radio_buttons : :radio
-
     concat(simple_form_for(user) do |f|
-      f.input(:sex, :as => as)
+      f.input(:sex, :as => :radio_buttons)
     end)
 
     assert_select 'input[type=radio][value=male]'
