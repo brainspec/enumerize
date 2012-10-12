@@ -5,6 +5,7 @@ module Enumerize
   autoload :Attribute,    'enumerize/attribute'
   autoload :AttributeMap, 'enumerize/attribute_map'
   autoload :Value,        'enumerize/value'
+  autoload :Set,          'enumerize/set'
   autoload :Base,         'enumerize/base'
   autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'

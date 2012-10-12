@@ -160,6 +160,27 @@ class User < ActiveRecord::Base
 end
 ```
 
+Array-like attributes with plain ruby objects:
+
+```ruby
+class User
+  include Enumerize
+  enumerize :interests, :in => [:music, :sports], :multiple => true
+end
+
+user = User.new
+user.interests << :music
+user.interests << :sports
+```
+
+and with ActiveRecord:
+
+```ruby
+  include Enumerize
+  serialize :interests, Array
+  enumerize :interests, :in => [:music, :sports], :multiple => true
+```
+
 ### SimpleForm
 
 If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:

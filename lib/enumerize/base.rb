@@ -4,6 +4,12 @@ module Enumerize
   module Base
     extend ActiveSupport::Concern
 
+    included do
+      if respond_to?(:validate)
+        validate :_validate_enumerized_attributes
+      end
+    end
+
     module ClassMethods
       def enumerize(name, options={})
         attr = Attribute.new(self, name, options)
@@ -17,17 +23,13 @@ module Enumerize
           RUBY
         end
 
-        _define_enumerize_attribute(attr)
+        attr.define_methods!(_enumerize_module)
 
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{attr.name}_text
             #{attr.name} && #{attr.name}.text
           end
         RUBY
-
-        if respond_to?(:validates)
-          validates name, :inclusion => { :in => enumerized_attributes[name].values, :allow_nil => true, :allow_blank => true }
-        end
       end
 
       def enumerized_attributes
@@ -54,35 +56,6 @@ module Enumerize
           mod
         end
       end
-
-      def _define_enumerize_attribute(attr)
-        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{attr.name}
-            if defined?(super)
-              self.class.enumerized_attributes[:#{attr.name}].find_value(super)
-            else
-              if defined?(@#{attr.name})
-                self.class.enumerized_attributes[:#{attr.name}].find_value(@#{attr.name})
-              else
-                @#{attr.name} = nil
-              end
-            end
-          end
-
-          def #{attr.name}=(new_value)
-            _enumerized_values_for_validation[:#{attr.name}] = new_value.nil? ? nil : new_value.to_s
-
-            allowed_value_or_nil = self.class.enumerized_attributes[:#{attr.name}].find_value(new_value)
-            allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
-
-            if defined?(super)
-              super allowed_value_or_nil
-            else
-              @#{attr.name} = allowed_value_or_nil
-            end
-          end
-        RUBY
-      end
     end
 
     def initialize(*)
@@ -104,6 +77,21 @@ module Enumerize
 
     def _enumerized_values_for_validation
       @_enumerized_values_for_validation ||= {}
+    end
+
+    def _validate_enumerized_attributes
+      self.class.enumerized_attributes.each do |attr|
+        value = read_attribute_for_validation(attr.name)
+        next if value.blank?
+
+        allowed = attr.values
+
+        if attr.kind_of? Multiple
+          errors.add attr.name unless value.respond_to?(:all?) && value.all? { |v| v.blank? || allowed.include?(v) }
+        else
+          errors.add attr.name unless allowed.include?(value)
+        end
+      end
     end
   end
 end
