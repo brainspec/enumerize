@@ -19,7 +19,7 @@ module Enumerize
 
     def <<(value)
       @values << value
-      @values = @obj.public_send("#{@attr.name}=", @values).values
+      mutate!
     end
 
     alias_method :push, :<<
@@ -36,6 +36,17 @@ module Enumerize
 
     def include?(value)
       @values.include?(@attr.find_value(value))
+    end
+
+    def delete(value)
+      @values.delete(@attr.find_value(value))
+      mutate!
+    end
+
+    private
+
+    def mutate!
+      @values = @obj.public_send("#{@attr.name}=", @values).values
     end
   end
 end

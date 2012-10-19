@@ -18,6 +18,21 @@ describe Enumerize::Set do
     @set
   end
 
+  def assert_called(object, method)
+    called = false
+
+    object.singleton_class.class_eval do
+      define_method method do |*args, &block|
+        called = true
+        super(*args, &block)
+      end
+    end
+
+    yield
+
+    assert called, "Expected ##{method} to be called"
+  end
+
   before do
     build_set %w(a)
   end
@@ -43,6 +58,25 @@ describe Enumerize::Set do
     it 'appends values' do
       set.push :b
       set.must_include :b
+    end
+
+    it 'reassigns attribute' do
+      assert_called object, :foo= do
+        set.push :b
+      end
+    end
+  end
+
+  describe '#delete' do
+    it 'deletes value' do
+      set.delete :a
+      set.wont_include :a
+    end
+
+    it 'reassigns attribute' do
+      assert_called object, :foo= do
+        set.delete :a
+      end
     end
   end
 end
