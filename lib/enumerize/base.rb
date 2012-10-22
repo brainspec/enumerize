@@ -27,7 +27,7 @@ module Enumerize
 
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{attr.name}_text
-            #{attr.name} && #{attr.name}.text
+            self.#{attr.name} && self.#{attr.name}.text
           end
         RUBY
       end
