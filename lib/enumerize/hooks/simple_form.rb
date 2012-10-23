@@ -11,8 +11,14 @@ module Enumerize
 
       def input_with_enumerize(attribute_name, options={}, &block)
         klass = object.class
-        if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[attribute_name])
+        attr  = klass.enumerized_attributes[attribute_name]
+
+        if klass.respond_to?(:enumerized_attributes) && attr
           options[:collection] ||= attr.options
+        end
+
+        if attr.kind_of?(Enumerize::Multiple) && options[:as] != :check_boxes
+          options[:input_html] = options.fetch(:input_html, {}).merge(:multiple => true)
         end
 
         input_without_enumerize(attribute_name, options, &block)

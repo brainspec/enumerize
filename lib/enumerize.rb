@@ -30,6 +30,7 @@ module Enumerize
   begin
     require 'simple_form'
     require 'enumerize/hooks/simple_form'
+    require 'enumerize/form_helper'
   rescue LoadError
   end
 
