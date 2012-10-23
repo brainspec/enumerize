@@ -24,12 +24,6 @@ module Enumerize
         end
 
         attr.define_methods!(_enumerize_module)
-
-        _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{attr.name}_text
-            self.#{attr.name} && self.#{attr.name}.text
-          end
-        RUBY
       end
 
       def enumerized_attributes

@@ -57,6 +57,10 @@ module Enumerize
             @#{name} = allowed_value_or_nil
           end
         end
+
+        def #{name}_text
+          self.#{name} && self.#{name}.text
+        end
       RUBY
     end
   end

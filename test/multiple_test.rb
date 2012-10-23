@@ -23,4 +23,9 @@ describe Enumerize::Base do
     object.foos = %w(a c)
     object.foos.must_equal %w(a c)
   end
+
+  it "doesn't define _text method" do
+    klass.enumerize :foos, in: %w(a b c), multiple: true
+    object.wont_respond_to :foos_text
+  end
 end
