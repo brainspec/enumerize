@@ -5,6 +5,15 @@ class SimpleFormSpec < MiniTest::Spec
   include ViewTestHelper
   include SimpleForm::ActionViewExtensions::FormHelper
 
+  class Thing < Struct.new(:name)
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion
+
+    def persisted?
+      false
+    end
+  end
+
   class User < Struct.new(:sex, :age)
     extend ActiveModel::Naming
     include ActiveModel::Conversion
@@ -98,6 +107,14 @@ class SimpleFormSpec < MiniTest::Spec
   it 'does not affect not enumerized attributes' do
     concat(simple_form_for(user) do |f|
       f.input(:age)
+    end)
+
+    assert_select 'input.string'
+  end
+
+  it 'does not affect not enumerized classes' do
+    concat(simple_form_for(Thing.new) do |f|
+      f.input(:name)
     end)
 
     assert_select 'input.string'
