@@ -13,6 +13,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :sex
     t.string :role
     t.string :name
+    t.string :interests
   end
 end
 
@@ -22,6 +23,9 @@ class User < ActiveRecord::Base
   enumerize :sex, :in => [:male, :female]
 
   enumerize :role, :in => [:user, :admin], :default => :user
+
+  serialize :interests, Array
+  enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 end
 
 describe Enumerize::ActiveRecord do
@@ -81,5 +85,45 @@ describe Enumerize::ActiveRecord do
     user = User.new
     user.role = ''
     user.read_attribute(:role).must_equal nil
+  end
+
+  it 'supports multiple attributes' do
+    user = User.new
+    user.interests.must_be_empty
+    user.interests << :music
+    user.interests.must_equal %w(music)
+    user.save!
+
+    user = User.find(user.id)
+    user.interests.must_equal %w(music)
+    user.interests << :sports
+    user.interests.must_equal %w(music sports)
+
+    user.interests = []
+    interests = user.interests
+    interests << :music
+    interests.must_equal %w(music)
+    interests << :dancing
+    interests.must_equal %w(music dancing)
+  end
+
+  it 'returns invalid multiple value for validation' do
+    user = User.new
+    user.interests << :music
+    user.interests << :invalid
+    values = user.read_attribute_for_validation(:interests)
+    values.must_equal %w(music invalid)
+  end
+
+  it 'validates multiple attributes' do
+    user = User.new
+    user.interests << :invalid
+    user.wont_be :valid?
+
+    user.interests = Object.new
+    user.wont_be :valid?
+
+    user.interests = ['music', '']
+    user.must_be :valid?
   end
 end
