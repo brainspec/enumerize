@@ -43,6 +43,10 @@ module Enumerize
       mutate!
     end
 
+    def inspect
+      "#<Enumerize::Set {#{@values.to_a.join(', ')}}>"
+    end
+
     private
 
     def mutate!

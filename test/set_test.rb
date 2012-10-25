@@ -79,4 +79,11 @@ describe Enumerize::Set do
       end
     end
   end
+
+  describe '#inspect' do
+    it 'returns custom string' do
+      set << :b
+      set.inspect.must_equal '#<Enumerize::Set {a, b}>'
+    end
+  end
 end
