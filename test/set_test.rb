@@ -102,4 +102,11 @@ describe Enumerize::Set do
       set.to_ary.must_be_instance_of Array
     end
   end
+
+  describe '#join' do
+    it 'joins values' do
+      set << :b
+      set.join(', ').must_equal 'a, b'
+    end
+  end
 end

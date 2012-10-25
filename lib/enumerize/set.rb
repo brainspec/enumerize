@@ -30,6 +30,8 @@ module Enumerize
       @values.to_a
     end
 
+    delegate :join, to: :to_ary
+
     def ==(other)
       other.size == size && other.all? { |v| @values.include?(@attr.find_value(v)) }
     end
@@ -46,7 +48,7 @@ module Enumerize
     end
 
     def inspect
-      "#<Enumerize::Set {#{@values.to_a.join(', ')}}>"
+      "#<Enumerize::Set {#{join(', ')}}>"
     end
 
     private
