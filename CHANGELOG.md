@@ -2,6 +2,7 @@
 
 ### enhancements
   * SimpleForm support for multiple attributes. (by [@nashby](https://github.com/nashby))
+  * Formtastic support for multiple attributes. (by [@nashby](https://github.com/nashby))
   * Array-like multiple attributes. (by [@lest](https://github.com/lest))
 
 ## 0.4.0 (September 6, 2012) ##
