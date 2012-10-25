@@ -24,12 +24,12 @@ module Enumerize
 
     alias_method :push, :<<
 
-    delegate :each, :empty?, to: :values
+    delegate :each, :empty?, :size, to: :values
 
     alias_method :to_ary, :values
 
     def ==(other)
-      @values.to_a == other.map { |v| @attr.find_value(v) }
+      other.size == size && other.all? { |v| @values.include?(@attr.find_value(v)) }
     end
 
     alias_method :eql?, :==

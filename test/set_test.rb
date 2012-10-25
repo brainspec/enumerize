@@ -54,6 +54,16 @@ describe Enumerize::Set do
     set.must_equal %w(a)
   end
 
+  it 'equals to array with different value order' do
+    set << :b
+    set.must_equal %w(b a)
+  end
+
+  it "isn't equal to a part of values" do
+    set << :b
+    set.wont_equal %w(a)
+  end
+
   describe '#push' do
     it 'appends values' do
       set.push :b
