@@ -15,7 +15,7 @@ Legacy support was dropped. The following versions are supported:
 * SimpleForm 2+
 * Mongoid 3+
 
-### enchancements
+### enhancements
   * Ability to define predicate methods on enumerized object. (by [@lest](https://github.com/lest))
 
 ## 0.3.0 (July 9, 2012) ##
