@@ -26,7 +26,9 @@ module Enumerize
 
     delegate :each, :empty?, :size, to: :values
 
-    alias_method :to_ary, :values
+    def to_ary
+      @values.to_a
+    end
 
     def ==(other)
       other.size == size && other.all? { |v| @values.include?(@attr.find_value(v)) }

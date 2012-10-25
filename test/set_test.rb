@@ -96,4 +96,10 @@ describe Enumerize::Set do
       set.inspect.must_equal '#<Enumerize::Set {a, b}>'
     end
   end
+
+  describe '#to_ary' do
+    it 'returns array' do
+      set.to_ary.must_be_instance_of Array
+    end
+  end
 end
