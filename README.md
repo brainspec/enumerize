@@ -106,6 +106,7 @@ Predicate methods:
 ```ruby
 class User
   extend Enumerize
+
   enumerize :sex, in: %w(male female), predicates: true
 end
 
@@ -125,6 +126,7 @@ Using prefix:
 ```ruby
 class User
   extend Enumerize
+
   enumerize :sex, in: %w(male female), predicates: { prefix: true }
 end
 
@@ -156,6 +158,8 @@ It's also possible to store enumerized attribute value using custom values (e.g.
 
 ```ruby
 class User < ActiveRecord::Base
+  extend Enumerize
+
   enumerize :role, :in => {:user => 1, :admin => 2}
 end
 ```
@@ -165,6 +169,7 @@ Array-like attributes with plain ruby objects:
 ```ruby
 class User
   extend Enumerize
+
   enumerize :interests, :in => [:music, :sports], :multiple => true
 end
 
@@ -176,9 +181,12 @@ user.interests << :sports
 and with ActiveRecord:
 
 ```ruby
+class User < ActiveRecord::Base
   extend Enumerize
+
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports], :multiple => true
+end
 ```
 
 ### SimpleForm
