@@ -22,7 +22,7 @@ Basic:
 
 ```ruby
 class User
-  include Enumerize
+  extend Enumerize
 
   enumerize :sex, :in => [:male, :female]
 end
@@ -32,7 +32,7 @@ ActiveRecord:
 
 ```ruby
 class User < ActiveRecord::Base
-  include Enumerize
+  extend Enumerize
 
   enumerize :sex, :in => [:male, :female]
 
@@ -45,7 +45,7 @@ Mongoid:
 ```ruby
 class User
   include Mongoid::Document
-  include Enumerize
+  extend Enumerize
 
   field :role
   enumerize :role, :in => [:user, :admin], :default => :user
@@ -105,7 +105,7 @@ Predicate methods:
 
 ```ruby
 class User
-  include Enumerize
+  extend Enumerize
   enumerize :sex, in: %w(male female), predicates: true
 end
 
@@ -124,7 +124,7 @@ Using prefix:
 
 ```ruby
 class User
-  include Enumerize
+  extend Enumerize
   enumerize :sex, in: %w(male female), predicates: { prefix: true }
 end
 
@@ -138,7 +138,7 @@ To make some attributes shared across different classes it's possible to define 
 
 ```ruby
 module PersonEnumerations
-  include Enumerize
+  extend Enumerize
 
   enumerize :sex, :in => %w[male female]
 end
@@ -164,7 +164,7 @@ Array-like attributes with plain ruby objects:
 
 ```ruby
 class User
-  include Enumerize
+  extend Enumerize
   enumerize :interests, :in => [:music, :sports], :multiple => true
 end
 
@@ -176,7 +176,7 @@ user.interests << :sports
 and with ActiveRecord:
 
 ```ruby
-  include Enumerize
+  extend Enumerize
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports], :multiple => true
 ```

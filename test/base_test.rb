@@ -3,7 +3,7 @@ require 'test_helper'
 describe Enumerize::Base do
   let(:klass) do
     Class.new do
-      include Enumerize
+      extend Enumerize
     end
   end
 
@@ -154,7 +154,7 @@ describe Enumerize::Base do
 
     klass = Class.new do
       include accessors
-      include Enumerize
+      extend Enumerize
 
       enumerize :foo, :in => %w[test]
     end

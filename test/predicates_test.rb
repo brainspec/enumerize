@@ -3,7 +3,7 @@ require 'test_helper'
 describe Enumerize::Predicates do
   let(:klass) do
     Class.new do
-      include Enumerize
+      extend Enumerize
     end
   end
 
