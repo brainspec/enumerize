@@ -1,5 +1,8 @@
 ## dev ##
 
+The previous method of adding enumerize to a class was deprecated. Please use
+`extend Enumerize` instead of `include Enumerize`.
+
 ### enhancements
   * SimpleForm support for multiple attributes. (by [@nashby](https://github.com/nashby))
   * Formtastic support for multiple attributes. (by [@nashby](https://github.com/nashby))

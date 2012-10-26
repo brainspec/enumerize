@@ -3,7 +3,7 @@ require 'test_helper'
 describe Enumerize::Set do
   let(:klass) do
     Class.new do
-      include Enumerize
+      extend Enumerize
       enumerize :foo, :in => %w(a b c), :multiple => true
     end
   end

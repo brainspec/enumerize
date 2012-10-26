@@ -18,7 +18,7 @@ class SimpleFormSpec < MiniTest::Spec
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
-    include Enumerize
+    extend Enumerize
 
     enumerize :sex, :in => [:male, :female]
 
@@ -31,7 +31,7 @@ class SimpleFormSpec < MiniTest::Spec
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
-    include Enumerize
+    extend Enumerize
 
     enumerize :categories, :in => [:music, :games], :multiple => true
 
