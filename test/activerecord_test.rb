@@ -18,7 +18,7 @@ ActiveRecord::Base.connection.instance_eval do
 end
 
 class User < ActiveRecord::Base
-  include Enumerize
+  extend Enumerize
 
   enumerize :sex, :in => [:male, :female]
 

@@ -13,7 +13,7 @@ end
 describe Enumerize do
   class MongoidUser
     include Mongoid::Document
-    include Enumerize
+    extend Enumerize
 
     field :sex
     field :role

@@ -4,7 +4,7 @@ module Enumerize
   # Basic usage:
   #
   #     class User
-  #       include Enumerize
+  #       extend Enumerize
   #       enumerize :sex, in: %w(male female), predicates: true
   #     end
   #
@@ -21,7 +21,7 @@ module Enumerize
   # Using prefix:
   #
   #     class User
-  #       include Enumerize
+  #       extend Enumerize
   #       enumerize :sex, in: %w(male female), predicates: { prefix: true }
   #     end
   #

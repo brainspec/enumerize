@@ -12,6 +12,11 @@ module Enumerize
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   def self.included(base)
+    ActiveSupport::Deprecation.warn '`include Enumerize` was deprecated. Please use `extend Enumerize`.', caller
+    extended(base)
+  end
+
+  def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
 

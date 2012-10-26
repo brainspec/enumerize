@@ -3,7 +3,7 @@ require 'test_helper'
 class ModuleAttributesSpec < MiniTest::Spec
   it 'inherits attribute from the module' do
     mod = Module.new do
-      include Enumerize
+      extend Enumerize
       enumerize :sex, :in => %w[male female], :default => 'male'
     end
 
@@ -16,7 +16,7 @@ class ModuleAttributesSpec < MiniTest::Spec
 
   it 'uses new attributes from the module' do
     mod = Module.new do
-      include Enumerize
+      extend Enumerize
     end
 
     klass = Class.new
