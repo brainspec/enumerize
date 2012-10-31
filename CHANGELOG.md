@@ -1,4 +1,4 @@
-## dev ##
+## 0.5.0 (October 31, 2012) ##
 
 The previous method of adding enumerize to a class was deprecated. Please use
 `extend Enumerize` instead of `include Enumerize`.
