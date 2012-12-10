@@ -24,7 +24,7 @@ Basic:
 class User
   extend Enumerize
 
-  enumerize :sex, :in => [:male, :female]
+  enumerize :sex, in: [:male, :female]
 end
 ```
 
@@ -34,9 +34,9 @@ ActiveRecord:
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :sex, :in => [:male, :female]
+  enumerize :sex, in: [:male, :female]
 
-  enumerize :role, :in => [:user, :admin], :default => :user
+  enumerize :role, in: [:user, :admin], default: :user
 end
 ```
 
@@ -48,7 +48,7 @@ class User
   extend Enumerize
 
   field :role
-  enumerize :role, :in => [:user, :admin], :default => :user
+  enumerize :role, in: [:user, :admin], default: :user
 end
 ```
 
@@ -142,7 +142,7 @@ To make some attributes shared across different classes it's possible to define 
 module PersonEnumerations
   extend Enumerize
 
-  enumerize :sex, :in => %w[male female]
+  enumerize :sex, in: %w[male female]
 end
 
 class Person
@@ -160,7 +160,7 @@ It's also possible to store enumerized attribute value using custom values (e.g.
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :role, :in => {:user => 1, :admin => 2}
+  enumerize :role, in: {:user => 1, :admin => 2}
 end
 ```
 
@@ -170,7 +170,7 @@ Array-like attributes with plain ruby objects:
 class User
   extend Enumerize
 
-  enumerize :interests, :in => [:music, :sports], :multiple => true
+  enumerize :interests, in: [:music, :sports], multiple: true
 end
 
 user = User.new
@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
   extend Enumerize
 
   serialize :interests, Array
-  enumerize :interests, :in => [:music, :sports], :multiple => true
+  enumerize :interests, in: [:music, :sports], multiple: true
 end
 ```
 
