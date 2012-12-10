@@ -69,9 +69,7 @@ module Enumerize
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{name}
-          if defined?(@_#{name}_enumerized_set)
-            @_#{name}_enumerized_set
-          else
+          unless defined?(@_#{name}_enumerized_set)
             if defined?(super)
               self.#{name} = super
             else
@@ -82,6 +80,8 @@ module Enumerize
               end
             end
           end
+
+          @_#{name}_enumerized_set
         end
 
         def #{name}=(values)

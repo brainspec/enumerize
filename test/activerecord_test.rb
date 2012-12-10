@@ -95,6 +95,7 @@ describe Enumerize::ActiveRecord do
     user.save!
 
     user = User.find(user.id)
+    user.interests.must_be_instance_of Enumerize::Set
     user.interests.must_equal %w(music)
     user.interests << :sports
     user.interests.must_equal %w(music sports)
