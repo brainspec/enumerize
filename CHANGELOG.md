@@ -1,3 +1,9 @@
+## 0.5.1 (December 10, 2012) ##
+
+### bug fix
+
+  * Always return Enumerize::Set for multiple attributes (by [@nashby](https://github.com/nashby))
+
 ## 0.5.0 (October 31, 2012) ##
 
 The previous method of adding enumerize to a class was deprecated. Please use
