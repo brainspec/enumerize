@@ -127,4 +127,15 @@ describe Enumerize::ActiveRecord do
     user.interests = ['music', '']
     user.must_be :valid?
   end
+
+  it 'has text values in model changes' do
+    User.delete_all
+    User.create!(:sex => :male)
+    user = User.first
+    user.sex = 'female'
+
+    before, after = user.changes['sex']
+    after.text.must_equal 'Female'
+    before.text.must_equal 'Male'
+  end
 end
