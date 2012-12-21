@@ -14,6 +14,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :role
     t.string :name
     t.string :interests
+    t.string :status
   end
 end
 
@@ -26,6 +27,8 @@ class User < ActiveRecord::Base
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
+
+  enumerize :status, :in => { active: 1, blocked: 2 }
 end
 
 describe Enumerize::ActiveRecord do
@@ -126,5 +129,14 @@ describe Enumerize::ActiveRecord do
 
     user.interests = ['music', '']
     user.must_be :valid?
+  end
+
+  it 'adds scope' do
+    user_1 = User.create!(status: :active)
+    user_2 = User.create!(status: :blocked)
+
+    User.with_status(:active).must_equal [user_1]
+    User.with_status(:blocked).must_equal [user_2]
+    User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
   end
 end

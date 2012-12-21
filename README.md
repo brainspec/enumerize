@@ -164,6 +164,22 @@ class User < ActiveRecord::Base
 end
 ```
 
+ActiveRecord scopes:
+
+```ruby
+class User < ActiveRecord::Base
+  extend Enumerize
+  enumerize :sex, :in => [:male, :female]
+  enumerize :status, :in => { active: 1, blocked: 2 }
+end
+
+User.with_sex(:female)
+# SELECT "users".* FROM "users" WHERE "users"."sex" IN ('female')
+
+User.with_status(:blocked).with_sex(:male, :female)
+# SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
+```
+
 Array-like attributes with plain ruby objects:
 
 ```ruby

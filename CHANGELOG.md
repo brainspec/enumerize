@@ -1,3 +1,8 @@
+## dev ##
+
+### enhancements
+  * ActiveRecord scopes. (by [@lest](https://github.com/lest))
+
 ## 0.5.1 (December 10, 2012) ##
 
 ### bug fix
