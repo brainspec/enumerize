@@ -141,9 +141,9 @@ describe Enumerize::ActiveRecord do
   end
 
   it 'allows either key or value as valid' do
-    user_1 = User.create(status: :active)
-    user_2 = User.create(status: 1)
-    user_3 = User.create(status: '1')
+    user_1 = User.new(status: :active)
+    user_2 = User.new(status: 1)
+    user_3 = User.new(status: '1')
 
     user_1.status.must_equal 'active'
     user_2.status.must_equal 'active'
