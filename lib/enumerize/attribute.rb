@@ -46,12 +46,10 @@ module Enumerize
         end
 
         def #{name}=(new_value)
-          _enumerized_values_for_validation[:#{name}] = new_value.nil? ? nil : new_value.to_s
 
           allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(new_value)
-          _enumerized_values_for_validation[:#{name}] = allowed_value_or_nil.to_s unless allowed_value_or_nil.nil?
+          _enumerized_values_for_validation[:#{name}] = allowed_value_or_nil.nil? ? ( new_value.nil? nil : new_value.to_s ) : allowed_value_or_nil.to_s
           allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
-          #_enumerized_values_for_validation[:#{name}] = allowed_value_or_nil.nil? ? nil : (allowed_value_or_nil.nil? ? new_value.to_s : allowed_value_or_nil)
 
           if defined?(super)
             super allowed_value_or_nil
