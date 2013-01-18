@@ -3,6 +3,9 @@
 ### enhancements
   * ActiveRecord scopes. (by [@lest](https://github.com/lest))
 
+### bug fix
+  * Allow either key or value as valid (by [aghull](https://github.com/aghull) and [@lest](https://github.com/lest))
+
 ## 0.5.1 (December 10, 2012) ##
 
 ### bug fix
