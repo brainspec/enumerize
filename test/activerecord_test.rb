@@ -139,4 +139,18 @@ describe Enumerize::ActiveRecord do
     User.with_status(:blocked).must_equal [user_2]
     User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
   end
+
+  it 'allows either key or value as valid' do
+    user_1 = User.new(status: :active)
+    user_2 = User.new(status: 1)
+    user_3 = User.new(status: '1')
+
+    user_1.status.must_equal 'active'
+    user_2.status.must_equal 'active'
+    user_3.status.must_equal 'active'
+
+    user_1.must_be :valid?
+    user_2.must_be :valid?
+    user_3.must_be :valid?
+  end
 end

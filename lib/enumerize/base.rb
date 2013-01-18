@@ -81,9 +81,9 @@ module Enumerize
         allowed = attr.values
 
         if attr.kind_of? Multiple
-          errors.add attr.name unless value.respond_to?(:all?) && value.all? { |v| v.blank? || allowed.include?(v) }
+          errors.add attr.name unless value.respond_to?(:all?) && value.all? { |v| v.blank? || attr.find_value(v) }
         else
-          errors.add attr.name unless allowed.include?(value)
+          errors.add attr.name unless attr.find_value(value)
         end
       end
     end
