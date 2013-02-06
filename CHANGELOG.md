@@ -2,6 +2,7 @@
 
 ### enhancements
   * ActiveRecord scopes. (by [@lest](https://github.com/lest))
+  * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
 ### bug fix
   * Allow either key or value as valid (by [aghull](https://github.com/aghull) and [@lest](https://github.com/lest))
