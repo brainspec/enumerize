@@ -2,6 +2,7 @@
 
 ### enhancements
   * ActiveRecord scopes. (by [@lest](https://github.com/lest))
+  * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
 ### bug fix
   * Return correct default value for enumerized attribute using `default_scope` with generated scope [@nashby](https://github.com/nashby)

@@ -241,6 +241,13 @@ and if you want it as radio buttons:
 <% end %>
 ```
 
+### Other Integrations
+
+Enumerize integrates with the following automatically:
+
+* [RailsAdmin](https://github.com/sferik/rails_admin/)
+
+
 ## Contributing
 
 1. Fork it
