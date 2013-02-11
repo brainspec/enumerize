@@ -29,6 +29,9 @@ class User < ActiveRecord::Base
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
   enumerize :status, :in => { active: 1, blocked: 2 }
+
+  enumerize_scope :status
+  enumerize_scope :status, :prefix => 'custom'
 end
 
 describe Enumerize::ActiveRecord do
@@ -138,6 +141,10 @@ describe Enumerize::ActiveRecord do
     User.with_status(:active).must_equal [user_1]
     User.with_status(:blocked).must_equal [user_2]
     User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
+
+    User.custom_status(:active).must_equal [user_1]
+    User.custom_status(:blocked).must_equal [user_2]
+    User.custom_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
   end
 
   it 'allows either key or value as valid' do
