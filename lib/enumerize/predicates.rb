@@ -65,7 +65,7 @@ module Enumerize
       end
 
       def build(klass)
-        klass.delegate(*names, to: @attr.name, prefix: @options[:prefix], allow_nil: true)
+        klass.delegate(*names.map{|n|n.to_s.gsub('-', '_')}, to: @attr.name, prefix: @options[:prefix], allow_nil: true)
       end
     end
   end

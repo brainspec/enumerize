@@ -50,4 +50,17 @@ describe Enumerize::Value do
       value.wont_respond_to :some_method?
     end
   end
+
+  describe 'boolean methods comparison with value with dash' do
+    let(:value) { Enumerize::Value.new(attr, 'test-value') }
+
+    before do
+      attr.values = [value]
+    end
+
+    it 'define boolean method' do
+      value.must_respond_to :test_value?
+      value.method(:test_value?).must_be_instance_of Method
+    end
+  end
 end
