@@ -5,9 +5,12 @@ module Enumerize
     def enumerize(name, options={})
       super
 
-      scope "with_#{name}", ->(*values) {
-        where(name => values.map { |value| enumerized_attributes[name].find_value(value).value })
-      }
+      if options[:scope]
+        scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
+        scope scope_name, ->(*values) {
+          where(name => values.map { |value| enumerized_attributes[name].find_value(value).value })
+        }
+      end
     end
   end
 end

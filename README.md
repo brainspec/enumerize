@@ -169,14 +169,14 @@ ActiveRecord scopes:
 ```ruby
 class User < ActiveRecord::Base
   extend Enumerize
-  enumerize :sex, :in => [:male, :female]
-  enumerize :status, :in => { active: 1, blocked: 2 }
+  enumerize :sex, :in => [:male, :female], scope: true
+  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :having_status
 end
 
 User.with_sex(:female)
 # SELECT "users".* FROM "users" WHERE "users"."sex" IN ('female')
 
-User.with_status(:blocked).with_sex(:male, :female)
+User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
 ```
 
