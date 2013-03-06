@@ -41,14 +41,8 @@ module Enumerize
 
       def _enumerize_module
         @_enumerize_module ||= begin
-          mod = Module.new do
-            @_class_methods = Module.new
-            class << self
-              attr_reader :_class_methods
-            end
-          end
+          mod = Module.new
           include mod
-          extend mod._class_methods
           mod
         end
       end

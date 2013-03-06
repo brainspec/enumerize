@@ -7,6 +7,7 @@ module Enumerize
   autoload :Value,        'enumerize/value'
   autoload :Set,          'enumerize/set'
   autoload :Base,         'enumerize/base'
+  autoload :Module,       'enumerize/module'
   autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
@@ -24,7 +25,7 @@ module Enumerize
       base.extend Enumerize::ActiveRecord
     end
 
-    if Module === base
+    if ::Module === base
       base.extend Enumerize::Base::ClassMethods
       base.extend Enumerize::ModuleAttributes
     end
