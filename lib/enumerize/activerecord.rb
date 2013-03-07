@@ -6,10 +6,14 @@ module Enumerize
       super
 
       if options[:scope]
-        scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
-        scope scope_name, ->(*values) {
-          where(name => values.map { |value| enumerized_attributes[name].find_value(value).value })
-        }
+        _enumerize_module.dependent_eval do
+          if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
+            scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
+            scope scope_name, ->(*values) {
+              where(name => values.map { |value| enumerized_attributes[name].find_value(value).value })
+            }
+          end
+        end
       end
     end
   end
