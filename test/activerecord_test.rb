@@ -18,12 +18,16 @@ ActiveRecord::Base.connection.instance_eval do
   end
 end
 
+module RoleEnum
+  extend Enumerize
+  enumerize :role, :in => [:user, :admin], :default => :user, scope: :having_role
+end
+
 class User < ActiveRecord::Base
   extend Enumerize
+  include RoleEnum
 
   enumerize :sex, :in => [:male, :female]
-
-  enumerize :role, :in => [:user, :admin], :default => :user, scope: :having_role
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true

@@ -20,10 +20,7 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
-
-    if defined?(::ActiveRecord::Base) && base < ::ActiveRecord::Base
-      base.extend Enumerize::ActiveRecord
-    end
+    base.extend Enumerize::ActiveRecord
 
     if ::Module === base
       base.extend Enumerize::Base::ClassMethods
