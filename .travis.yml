@@ -3,6 +3,9 @@ services:
   - mongodb
 before_install:
   - gem install bundler
+gemfile:
+  - Gemfile
+  - Gemfile.rails4
 rvm:
   - 1.9.3
   - ruby-head
