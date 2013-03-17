@@ -12,6 +12,8 @@ module Enumerize
 
     module ClassMethods
       def enumerize(name, options={})
+        raise ArgumentError, "Enumerized attribute #{name} is already defined" if enumerized_attributes[name]
+
         attr = Attribute.new(self, name, options)
         enumerized_attributes << attr
 
@@ -39,14 +41,8 @@ module Enumerize
 
       def _enumerize_module
         @_enumerize_module ||= begin
-          mod = Module.new do
-            @_class_methods = Module.new
-            class << self
-              attr_reader :_class_methods
-            end
-          end
+          mod = Module.new
           include mod
-          extend mod._class_methods
           mod
         end
       end

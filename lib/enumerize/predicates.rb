@@ -36,7 +36,7 @@ module Enumerize
       super
 
       if options[:predicates]
-        Builder.new(enumerized_attributes[name], options[:predicates]).build(self)
+        Builder.new(enumerized_attributes[name], options[:predicates]).build(_enumerize_module)
       end
     end
 

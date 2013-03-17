@@ -3,7 +3,6 @@ module Enumerize
     def included(base)
       base.extend Enumerize
       base.send :include, _enumerize_module
-      base.extend _enumerize_module._class_methods
       enumerized_attributes.add_dependant base.enumerized_attributes
       super
     end

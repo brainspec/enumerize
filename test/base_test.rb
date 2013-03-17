@@ -179,4 +179,11 @@ describe Enumerize::Base do
     object.instance_variable_get(:@foo).must_equal 2
     object.foo.must_equal 'b'
   end
+
+  it 'raises exception when enumerized attribute is already defined' do
+    klass.enumerize :foo, in: %w(a b)
+    proc {
+      klass.enumerize :foo, in: %w(a b)
+    }.must_raise ArgumentError
+  end
 end
