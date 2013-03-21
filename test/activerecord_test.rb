@@ -143,6 +143,9 @@ describe Enumerize::ActiveRecord do
     User.with_status(:blocked).must_equal [user_2]
     User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
 
+    User.without_status(:active).must_equal [user_2]
+    User.without_status(:blocked).must_equal [user_1]
+
     User.having_role(:admin).must_equal [user_1]
   end
 
