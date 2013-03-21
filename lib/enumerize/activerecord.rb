@@ -10,7 +10,10 @@ module Enumerize
           if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
             scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
             scope scope_name, ->(*values) {
-              where(name => values.map { |value| enumerized_attributes[name].find_value(value).value })
+              values = values.map { |value| enumerized_attributes[name].find_value(value).value }
+              values = values.first if values.size == 1
+
+              where(name => values)
             }
           end
         end

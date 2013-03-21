@@ -65,6 +65,15 @@ describe Enumerize::ActiveRecord do
     User.new.attributes['role'].must_equal 'user'
   end
 
+  it 'has default value with default scope' do
+    UserWithDefaultScope = Class.new(User) do
+      default_scope -> { having_role(:user) }
+    end
+
+    UserWithDefaultScope.new.role.must_equal 'user'
+    UserWithDefaultScope.new.attributes['role'].must_equal 'user'
+  end
+
   it 'validates inclusion' do
     user = User.new
     user.role = 'wrong'
