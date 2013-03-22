@@ -27,8 +27,21 @@ module Enumerize
       @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
     end
 
-    def options
-      @values.map { |v| [v.text, v.to_s] }
+    # options returns an Array, to be used with forms
+    #
+    # optional parameters:
+    # * only: [:list, :of, :items] return only the specified values
+    # * except: [:not, :this, :value] return all values except the one specified
+    #
+    # :only and :except are exclusive and cannot be specified together
+    def options(options = {})
+      vals = @values.dup
+      if options[:only].is_a? Array
+        vals &= options[:only].map {|v| v.to_s}
+      elsif options[:except].is_a? Array
+        vals -= options[:except].map {|v| v.to_s}
+      end
+      vals.map { |v| [v.text, v.to_s] }
     end
 
     def define_methods!(mod)
