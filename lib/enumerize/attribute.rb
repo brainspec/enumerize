@@ -53,6 +53,8 @@ module Enumerize
 
           if defined?(super)
             super allowed_value_or_nil
+          elsif respond_to?(:write_attribute, true)
+            write_attribute '#{name}', allowed_value_or_nil
           else
             @#{name} = allowed_value_or_nil
           end
@@ -92,6 +94,8 @@ module Enumerize
 
           if defined?(super)
             super string_values
+          elsif respond_to?(:write_attribute, true)
+            write_attribute '#{name}', string_values
           else
             @#{name} = string_values
           end
