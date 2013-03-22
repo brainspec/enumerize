@@ -64,13 +64,6 @@ module Enumerize
           self.#{name} && self.#{name}.text
         end
       RUBY
-      if defined?(RailsAdmin)
-        mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{name}_enum
-            self.class.enumerized_attributes[:#{name}].values.map { |value| [value.text, value.to_s] }
-          end
-        RUBY
-      end
     end
   end
 

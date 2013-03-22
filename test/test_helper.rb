@@ -19,6 +19,9 @@ module Formtastic
   end
 end
 
+module RailsAdmin
+end
+
 require 'enumerize'
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each do |file|

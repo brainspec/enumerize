@@ -22,6 +22,11 @@ module Enumerize
     base.extend Enumerize::Predicates
     base.extend Enumerize::ActiveRecord
 
+    if defined?(::RailsAdmin)
+      require 'enumerize/integrations/rails_admin'
+      base.extend Enumerize::Integrations::RailsAdmin
+    end
+
     if ::Module === base
       base.extend Enumerize::Base::ClassMethods
       base.extend Enumerize::ModuleAttributes
