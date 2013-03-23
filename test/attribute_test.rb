@@ -19,10 +19,37 @@ describe Enumerize::Attribute do
     attr.name.must_equal :foo
   end
 
-  it 'returns options for select' do
-    store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
-      build_attr nil, :foo, :in => %w[a b]
-      attr.options.must_equal [['a text', 'a'], ['b text', 'b']]
+  describe 'options for select' do
+    it 'returns all options for select' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => %w[a b]
+        attr.options.must_equal [['a text', 'a'], ['b text', 'b']]
+      end
+    end
+
+    it 'returns requested options for select via :only' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => %w[a b]
+        attr.options(:only => [:a]).must_equal [['a text', 'a']]
+        attr.options(:only => [:b]).must_equal [['b text', 'b']]
+        attr.options(:only => []).must_equal []
+      end
+    end
+
+    it 'returns requested options for select via :except' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => %w[a b]
+        attr.options(:except => [:a]).must_equal [['b text', 'b']]
+        attr.options(:except => [:b]).must_equal [['a text', 'a']]
+        attr.options(:except => []).must_equal [['a text', 'a'], ['b text', 'b']]
+      end
+    end
+
+    it 'should not work with both :only and :except' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => %w[a b]
+        proc { attr.options(:except => [], :only => []) }.must_raise ArgumentError
+      end
     end
   end
 
