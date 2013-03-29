@@ -51,7 +51,9 @@ module Enumerize
     def initialize(*)
       super
       self.class.enumerized_attributes.each do |attr|
-        public_send("#{attr.name}=", attr.default_value) unless _enumerized_values_for_validation.key?(attr.name)
+        if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
+          public_send("#{attr.name}=", attr.default_value)
+        end
       end
     end
 

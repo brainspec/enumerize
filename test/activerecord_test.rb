@@ -15,6 +15,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :name
     t.string :interests
     t.string :status
+    t.string :account_type, :default => :basic
   end
 end
 
@@ -33,6 +34,8 @@ class User < ActiveRecord::Base
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
   enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+  enumerize :account_type, :in => [:basic, :premium]
 end
 
 describe Enumerize::ActiveRecord do
@@ -63,6 +66,10 @@ describe Enumerize::ActiveRecord do
   it 'has default value' do
     User.new.role.must_equal 'user'
     User.new.attributes['role'].must_equal 'user'
+  end
+
+  it 'uses default value from db column' do
+    User.new.account_type.must_equal 'basic'
   end
 
   it 'has default value with default scope' do

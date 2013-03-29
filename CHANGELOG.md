@@ -7,6 +7,7 @@
 ### bug fix
   * Return correct default value for enumerized attribute using `default_scope` with generated scope [@nashby](https://github.com/nashby)
   * Allow either key or value as valid (by [aghull](https://github.com/aghull) and [@lest](https://github.com/lest))
+  * Use default enum value from db column (by [@lest](https://github.com/lest))
 
 ## 0.5.1 (December 10, 2012) ##
 
