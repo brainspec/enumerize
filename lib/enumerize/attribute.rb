@@ -27,8 +27,23 @@ module Enumerize
       @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
     end
 
-    def options
-      @values.map { |v| [v.text, v.to_s] }
+    def options(options = {})
+      only = options[:only]
+      except = options[:except]
+
+      raise ArgumentError, 'Options cannot have both :only and :except' if !only.nil? and !except.nil?
+
+      values = @values.select do |value|
+        if only
+          only.include?(value.to_sym)
+        elsif except
+          not except.include?(value.to_sym)
+        else
+          true
+        end
+      end
+
+      values.map { |v| [v.text, v.to_s] }
     end
 
     def define_methods!(mod)
