@@ -1,6 +1,6 @@
 module Enumerize
   class Attribute
-    attr_reader :name, :values, :default_value
+    attr_reader :name, :values, :value_hash, :default_value
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
