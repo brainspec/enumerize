@@ -28,18 +28,20 @@ module Enumerize
     end
 
     def options(options = {})
-      only = options[:only]
-      except = options[:except]
+      values = if options.empty?
+        @values
+      else
+        raise ArgumentError, 'Options cannot have both :only and :except' if options[:only] && options[:except]
 
-      raise ArgumentError, 'Options cannot have both :only and :except' if !only.nil? and !except.nil?
+        only = Array(options[:only]).map(&:to_s)
+        except = Array(options[:except]).map(&:to_s)
 
-      values = @values.select do |value|
-        if only
-          only.include?(value.to_sym)
-        elsif except
-          not except.include?(value.to_sym)
-        else
-          true
+        @values.reject do |value|
+          if options[:only]
+            !only.include?(value)
+          elsif options[:except]
+            except.include?(value)
+          end
         end
       end
 
