@@ -85,7 +85,7 @@ get all values for enumerized attribute:
 User.sex.values # or User.enumerized_attributes[:sex].values
 ```
 
-use it with forms:
+use it with forms (it supports `:only` and `:except` options):
 
 ```erb
 <%= form_for @user do |f| %>
