@@ -15,6 +15,13 @@ module Enumerize
 
               where(name => values)
             }
+
+            if options[:scope] == true
+              scope "without_#{name}", ->(*values) {
+                values = values.map { |value| enumerized_attributes[name].find_value(value).value }
+                where(arel_table[name].not_in(values))
+              }
+            end
           end
         end
       end

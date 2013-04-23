@@ -176,6 +176,9 @@ end
 User.with_sex(:female)
 # SELECT "users".* FROM "users" WHERE "users"."sex" IN ('female')
 
+User.without_sex(:male)
+# SELECT "users".* FROM "users" WHERE "users"."sex" NOT IN ('male')
+
 User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
 ```
