@@ -17,6 +17,20 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :status
     t.string :account_type, :default => :basic
   end
+
+  create_table :documents do |t|
+    t.string :visibility
+  end
+end
+
+class BaseEntity < ActiveRecord::Base
+  self.abstract_class = true
+
+  extend Enumerize
+  enumerize :visibility, :in => [:public, :private, :protected], :default => :public
+end
+
+class Document < BaseEntity
 end
 
 module RoleEnum
@@ -177,5 +191,11 @@ describe Enumerize::ActiveRecord do
     user_1.must_be :valid?
     user_2.must_be :valid?
     user_3.must_be :valid?
+  end
+
+  it 'supports defining enumerized attributes on abstract class' do
+    document = Document.new
+    document.visibility = :protected
+    document.visibility.must_equal 'protected'
   end
 end

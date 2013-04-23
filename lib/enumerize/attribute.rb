@@ -53,6 +53,8 @@ module Enumerize
         def #{name}
           if defined?(super)
             self.class.enumerized_attributes[:#{name}].find_value(super)
+          elsif respond_to?(:read_attribute)
+            self.class.enumerized_attributes[:#{name}].find_value(read_attribute(:#{name}))
           else
             if defined?(@#{name})
               self.class.enumerized_attributes[:#{name}].find_value(@#{name})
