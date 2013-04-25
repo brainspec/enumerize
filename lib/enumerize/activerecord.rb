@@ -9,18 +9,18 @@ module Enumerize
         _enumerize_module.dependent_eval do
           if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
             scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
-            scope scope_name, ->(*values) {
+            define_singleton_method scope_name do |*values|
               values = values.map { |value| enumerized_attributes[name].find_value(value).value }
               values = values.first if values.size == 1
 
               where(name => values)
-            }
+            end
 
             if options[:scope] == true
-              scope "without_#{name}", ->(*values) {
+              define_singleton_method "without_#{name}" do |*values|
                 values = values.map { |value| enumerized_attributes[name].find_value(value).value }
                 where(arel_table[name].not_in(values))
-              }
+              end
             end
           end
         end
