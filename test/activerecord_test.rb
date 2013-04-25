@@ -27,7 +27,7 @@ class BaseEntity < ActiveRecord::Base
   self.abstract_class = true
 
   extend Enumerize
-  enumerize :visibility, :in => [:public, :private, :protected], :default => :public
+  enumerize :visibility, :in => [:public, :private, :protected], :scope => true, :default => :public
 end
 
 class Document < BaseEntity
@@ -197,5 +197,12 @@ describe Enumerize::ActiveRecord do
     document = Document.new
     document.visibility = :protected
     document.visibility.must_equal 'protected'
+  end
+
+  it 'supports defining enumerized scopes on abstract class' do
+    document_1 = Document.create!(visibility: :public)
+    document_2 = Document.create!(visibility: :private)
+
+    Document.with_visibility(:public).must_equal [document_1]
   end
 end
