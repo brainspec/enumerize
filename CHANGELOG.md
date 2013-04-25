@@ -2,7 +2,7 @@
 
 ### enhancements
   * Add `:only` and `except` options to the `Attribute#options` method. (by [@thehappycoder](https://github.com/thehappycoder))
-  * ActiveRecord scopes. (by [@lest](https://github.com/lest) and [@banyan](https://github.com/banyan))
+  * ActiveRecord scopes. (by [@lest](https://github.com/lest), [@banyan](https://github.com/banyan) and [@nashby](https://github.com/nashby))
   * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
 ### bug fix
