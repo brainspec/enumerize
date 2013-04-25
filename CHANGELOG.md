@@ -6,7 +6,6 @@
   * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
 ### bug fix
-  * Support defining enumerized attributes in abstract AR classes (by [@lest](https://github.com/lest) and [@nashby](https://github.com/nashby))
   * Return correct default value for enumerized attribute using `default_scope` with generated scope [@nashby](https://github.com/nashby)
   * Allow either key or value as valid (by [aghull](https://github.com/aghull) and [@lest](https://github.com/lest))
   * Use default enum value from db column (by [@lest](https://github.com/lest))
