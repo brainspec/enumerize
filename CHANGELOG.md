@@ -1,10 +1,14 @@
 ## dev ##
 
 ### enhancements
-  * ActiveRecord scopes. (by [@lest](https://github.com/lest))
+  * Add `:only` and `except` options to the `Attribute#options` method. (by [@thehappycoder](https://github.com/thehappycoder))
+  * ActiveRecord scopes. (by [@lest](https://github.com/lest), [@banyan](https://github.com/banyan) and [@nashby](https://github.com/nashby))
+  * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
 ### bug fix
+  * Return correct default value for enumerized attribute using `default_scope` with generated scope [@nashby](https://github.com/nashby)
   * Allow either key or value as valid (by [aghull](https://github.com/aghull) and [@lest](https://github.com/lest))
+  * Use default enum value from db column (by [@lest](https://github.com/lest))
 
 ## 0.5.1 (December 10, 2012) ##
 

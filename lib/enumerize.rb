@@ -7,6 +7,7 @@ module Enumerize
   autoload :Value,        'enumerize/value'
   autoload :Set,          'enumerize/set'
   autoload :Base,         'enumerize/base'
+  autoload :Module,       'enumerize/module'
   autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
@@ -19,12 +20,14 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
+    base.extend Enumerize::ActiveRecord
 
-    if defined?(::ActiveRecord::Base) && base < ::ActiveRecord::Base
-      base.extend Enumerize::ActiveRecord
+    if defined?(::RailsAdmin)
+      require 'enumerize/integrations/rails_admin'
+      base.extend Enumerize::Integrations::RailsAdmin
     end
 
-    if Module === base
+    if ::Module === base
       base.extend Enumerize::Base::ClassMethods
       base.extend Enumerize::ModuleAttributes
     end

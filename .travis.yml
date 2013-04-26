@@ -3,14 +3,18 @@ services:
   - mongodb
 before_install:
   - gem install bundler
+gemfile:
+  - Gemfile
+  - Gemfile.rails4
 rvm:
   - 1.9.3
+  - 2.0.0
   - ruby-head
   - jruby-19mode
   - rbx-19mode
 matrix:
   allow_failures:
-    - rvm: rbx-19mode
+    - rvm: jruby-19mode
 notifications:
   email:
     recipients:

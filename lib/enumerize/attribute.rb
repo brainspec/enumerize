@@ -27,8 +27,25 @@ module Enumerize
       @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
     end
 
-    def options
-      @values.map { |v| [v.text, v.to_s] }
+    def options(options = {})
+      values = if options.empty?
+        @values
+      else
+        raise ArgumentError, 'Options cannot have both :only and :except' if options[:only] && options[:except]
+
+        only = Array(options[:only]).map(&:to_s)
+        except = Array(options[:except]).map(&:to_s)
+
+        @values.reject do |value|
+          if options[:only]
+            !only.include?(value)
+          elsif options[:except]
+            except.include?(value)
+          end
+        end
+      end
+
+      values.map { |v| [v.text, v.to_s] }
     end
 
     def define_methods!(mod)
@@ -36,6 +53,8 @@ module Enumerize
         def #{name}
           if defined?(super)
             self.class.enumerized_attributes[:#{name}].find_value(super)
+          elsif respond_to?(:read_attribute)
+            self.class.enumerized_attributes[:#{name}].find_value(read_attribute(:#{name}))
           else
             if defined?(@#{name})
               self.class.enumerized_attributes[:#{name}].find_value(@#{name})
@@ -53,6 +72,8 @@ module Enumerize
 
           if defined?(super)
             super allowed_value_or_nil
+          elsif respond_to?(:write_attribute, true)
+            write_attribute '#{name}', allowed_value_or_nil
           else
             @#{name} = allowed_value_or_nil
           end
@@ -92,6 +113,8 @@ module Enumerize
 
           if defined?(super)
             super string_values
+          elsif respond_to?(:write_attribute, true)
+            write_attribute '#{name}', string_values
           else
             @#{name} = string_values
           end

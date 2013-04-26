@@ -17,5 +17,9 @@ class MockController
     self
   end
 
-  def hash_for_users_path(*args); end
+  def url_options
+    {}
+  end
+
+  def hash_for_users_path(*); end
 end

@@ -15,20 +15,41 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :name
     t.string :interests
     t.string :status
+    t.string :account_type, :default => :basic
   end
+
+  create_table :documents do |t|
+    t.string :visibility
+  end
+end
+
+class BaseEntity < ActiveRecord::Base
+  self.abstract_class = true
+
+  extend Enumerize
+  enumerize :visibility, :in => [:public, :private, :protected], :scope => true, :default => :public
+end
+
+class Document < BaseEntity
+end
+
+module RoleEnum
+  extend Enumerize
+  enumerize :role, :in => [:user, :admin], :default => :user, scope: :having_role
 end
 
 class User < ActiveRecord::Base
   extend Enumerize
+  include RoleEnum
 
   enumerize :sex, :in => [:male, :female]
-
-  enumerize :role, :in => [:user, :admin], :default => :user
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
-  enumerize :status, :in => { active: 1, blocked: 2 }
+  enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+  enumerize :account_type, :in => [:basic, :premium]
 end
 
 describe Enumerize::ActiveRecord do
@@ -59,6 +80,19 @@ describe Enumerize::ActiveRecord do
   it 'has default value' do
     User.new.role.must_equal 'user'
     User.new.attributes['role'].must_equal 'user'
+  end
+
+  it 'uses default value from db column' do
+    User.new.account_type.must_equal 'basic'
+  end
+
+  it 'has default value with default scope' do
+    UserWithDefaultScope = Class.new(User) do
+      default_scope -> { having_role(:user) }
+    end
+
+    UserWithDefaultScope.new.role.must_equal 'user'
+    UserWithDefaultScope.new.attributes['role'].must_equal 'user'
   end
 
   it 'validates inclusion' do
@@ -132,12 +166,17 @@ describe Enumerize::ActiveRecord do
   end
 
   it 'adds scope' do
-    user_1 = User.create!(status: :active)
+    user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
 
     User.with_status(:active).must_equal [user_1]
     User.with_status(:blocked).must_equal [user_2]
     User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
+
+    User.without_status(:active).must_equal [user_2]
+    User.without_status(:active, :blocked).must_equal []
+
+    User.having_role(:admin).must_equal [user_1]
   end
 
   it 'allows either key or value as valid' do
@@ -152,5 +191,18 @@ describe Enumerize::ActiveRecord do
     user_1.must_be :valid?
     user_2.must_be :valid?
     user_3.must_be :valid?
+  end
+
+  it 'supports defining enumerized attributes on abstract class' do
+    document = Document.new
+    document.visibility = :protected
+    document.visibility.must_equal 'protected'
+  end
+
+  it 'supports defining enumerized scopes on abstract class' do
+    document_1 = Document.create!(visibility: :public)
+    document_2 = Document.create!(visibility: :private)
+
+    Document.with_visibility(:public).must_equal [document_1]
   end
 end
