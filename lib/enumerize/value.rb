@@ -34,9 +34,10 @@ module Enumerize
 
     def define_query_methods
       @attr.values.each do |value|
-        unless singleton_methods.include?(:"#{value}?")
+        method = value.gsub('-', '_')
+        unless singleton_methods.include?(:"#{method}?")
           singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{value}?
+            def #{method}?
               #{value == self}
             end
           RUBY
@@ -62,7 +63,7 @@ module Enumerize
     end
 
     def boolean_method?(method)
-      method[-1] == '?' && @attr.values.include?(method[0..-2])
+      method[-1] == '?' && @attr.values.map{|v|v.gsub('-', '_')}.include?(method[0..-2])
     end
   end
 end
