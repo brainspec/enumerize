@@ -99,6 +99,7 @@ describe Enumerize::ActiveRecord do
     user = User.new
     user.role = 'wrong'
     user.wont_be :valid?
+    user.errors[:role].must_include 'is not included in the list'
   end
 
   it 'validates inclusion on mass assignment' do
