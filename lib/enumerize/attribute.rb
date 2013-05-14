@@ -18,7 +18,11 @@ module Enumerize
         raise ArgumentError, 'invalid default value' unless @default_value
       end
     end
-
+    
+    def empty?
+      false
+    end
+    
     def find_value(value)
       @value_hash[value.to_s] unless value.nil?
     end
