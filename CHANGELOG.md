@@ -1,4 +1,4 @@
-## dev ##
+## 0.6.0 (May 16, 2013) ##
 
 ### enhancements
   * Use inclusion error message for invalid values (by [@lest](https://github.com/lest))
