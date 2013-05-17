@@ -48,7 +48,11 @@ module Enumerize
       super
       self.class.enumerized_attributes.each do |attr|
         if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
-          public_send("#{attr.name}=", attr.default_value)
+          value = attr.default_value
+          if value.respond_to? :call
+            value = value.arity == 0 ? value.call : value.call(self)
+          end
+          public_send("#{attr.name}=", value)
         end
       end
     end

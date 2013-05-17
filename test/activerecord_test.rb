@@ -12,6 +12,7 @@ ActiveRecord::Base.connection.instance_eval do
   create_table :users do |t|
     t.string :sex
     t.string :role
+    t.string :lambda_role
     t.string :name
     t.string :interests
     t.string :status
@@ -36,6 +37,7 @@ end
 module RoleEnum
   extend Enumerize
   enumerize :role, :in => [:user, :admin], :default => :user, scope: :having_role
+  enumerize :lambda_role, :in => [:user, :admin], :default => lambda { :admin }
 end
 
 class User < ActiveRecord::Base
@@ -80,6 +82,11 @@ describe Enumerize::ActiveRecord do
   it 'has default value' do
     User.new.role.must_equal 'user'
     User.new.attributes['role'].must_equal 'user'
+  end
+
+  it 'has default value with lambda' do
+    User.new.lambda_role.must_equal 'admin'
+    User.new.attributes['lambda_role'].must_equal 'admin'
   end
 
   it 'uses default value from db column' do
