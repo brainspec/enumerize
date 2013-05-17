@@ -34,7 +34,7 @@ ActiveRecord:
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female]
+  enumerize :sex, in: [:male, :female], default: lambda { |user| SexIdentifier.sex_for_name(user.name).to_sym }
 
   enumerize :role, in: [:user, :admin], default: :user
 end

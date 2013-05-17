@@ -78,6 +78,16 @@ describe Enumerize::Base do
     object.foo.must_equal 'b'
   end
 
+  it 'handles default value with lambda' do
+    klass.enumerize(:foo, :in => [:a, :b], :default => lambda { :b })
+    object.foo.must_equal 'b'
+  end
+
+  it 'injects object instance into lamda default value' do
+    klass.enumerize(:foo, :in => [:a, :b], :default => lambda { |obj| :b if obj.is_a? klass })
+    object.foo.must_equal 'b'
+  end
+
   it 'raises exception on invalid default value' do
     proc {
       klass.enumerize(:foo, :in => [:a, :b], :default => :c)
