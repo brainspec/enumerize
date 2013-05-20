@@ -1,3 +1,8 @@
+## 0.6.1 (May 20, 2013) ##
+
+### bug fix
+  * Don't raise error when enumerized attribute is already defined. (by [@lest](https://github.com/lest))
+
 ## 0.6.0 (May 16, 2013) ##
 
 ### enhancements
