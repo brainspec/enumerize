@@ -12,8 +12,6 @@ module Enumerize
 
     module ClassMethods
       def enumerize(name, options={})
-        raise ArgumentError, "Enumerized attribute #{name} is already defined" if enumerized_attributes[name]
-
         attr = Attribute.new(self, name, options)
         enumerized_attributes << attr
 
