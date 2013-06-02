@@ -28,4 +28,9 @@ describe Enumerize::Base do
     klass.enumerize :foos, in: %w(a b c), multiple: true
     object.wont_respond_to :foos_text
   end
+
+  it "doesn't define _value method" do
+    klass.enumerize :foos, in: %w(a b c), multiple: true
+    object.wont_respond_to :foos_value
+  end
 end
