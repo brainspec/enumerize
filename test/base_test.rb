@@ -174,9 +174,13 @@ describe Enumerize::Base do
     object.foo = :a
     object.instance_variable_get(:@foo).must_equal 1
     object.foo.must_equal 'a'
+    object.foo.value.must_equal 1
+    object.foo_value.must_equal 1
 
     object.foo = :b
     object.instance_variable_get(:@foo).must_equal 2
     object.foo.must_equal 'b'
+    object.foo.value.must_equal 2
+    object.foo_value.must_equal 2
   end
 end
