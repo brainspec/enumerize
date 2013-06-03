@@ -168,19 +168,25 @@ describe Enumerize::Base do
     object.attributes.must_equal(:foo => 'test')
   end
 
-  it 'returns stores hash values' do
+  it 'stores hash values' do
     klass.enumerize(:foo, :in => {:a => 1, :b => 2})
 
     object.foo = :a
     object.instance_variable_get(:@foo).must_equal 1
     object.foo.must_equal 'a'
-    object.foo.value.must_equal 1
-    object.foo_value.must_equal 1
 
     object.foo = :b
     object.instance_variable_get(:@foo).must_equal 2
     object.foo.must_equal 'b'
-    object.foo.value.must_equal 2
+  end
+
+  it 'returns custom value' do
+    klass.enumerize(:foo, :in => {:a => 1, :b => 2})
+
+    object.foo = :a
+    object.foo_value.must_equal 1
+
+    object.foo = :b
     object.foo_value.must_equal 2
   end
 end
