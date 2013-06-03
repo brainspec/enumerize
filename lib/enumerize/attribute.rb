@@ -82,6 +82,10 @@ module Enumerize
         def #{name}_text
           self.#{name} && self.#{name}.text
         end
+
+        def #{name}_value
+          self.#{name} && self.#{name}.value
+        end
       RUBY
     end
   end
