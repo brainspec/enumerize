@@ -162,6 +162,11 @@ class User < ActiveRecord::Base
 
   enumerize :role, in: {:user => 1, :admin => 2}
 end
+
+user = User.new
+user.role = :user
+user.role #=> 'user'
+user.role_value #=> 1
 ```
 
 ActiveRecord scopes:

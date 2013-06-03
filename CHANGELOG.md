@@ -1,3 +1,9 @@
+### master
+
+### enhancements
+  * Add `*_value` method that returns actual value of the enumerized attribute (useful for attributes with custom values)
+    (by [@tkyowa](https://github.com/tkyowa))
+
 ## 0.6.1 (May 20, 2013) ##
 
 ### bug fix
