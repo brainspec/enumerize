@@ -93,14 +93,6 @@ use it with forms (it supports `:only` and `:except` options):
 <% end %>
 ```
 
-Boolean methods:
-
-```ruby
-user.sex = :male
-user.sex.male? #=> true
-user.sex.female? #=> false
-```
-
 Predicate methods:
 
 ```ruby
@@ -119,6 +111,14 @@ user.sex = 'male'
 
 user.male?   # => true
 user.female? # => false
+```
+
+Boolean methods:
+
+```ruby
+user.sex = :male
+user.sex.male? #=> true
+user.sex.female? #=> false
 ```
 
 Using prefix:
