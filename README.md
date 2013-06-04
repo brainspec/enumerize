@@ -73,6 +73,17 @@ en:
       female: "Female"
 ```
 
+If you want to separate I18n namespace by model name except for `ActiveRecord::Base` inherited class, your class should extend `ActiveModel::Naming`.
+
+```ruby
+class User
+  extend Enumerize
+  extend ActiveModel::Naming
+
+  (snip)
+end
+```
+
 get attribute value:
 
 ```ruby
