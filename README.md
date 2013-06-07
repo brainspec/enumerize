@@ -73,6 +73,15 @@ en:
       female: "Female"
 ```
 
+Note that if you want to use I18n feature with plain Ruby object don't forget to extend it with `ActiveModel::Naming`:
+
+```ruby
+class User
+  extend Enumerize
+  extend ActiveModel::Naming
+end
+```
+
 get attribute value:
 
 ```ruby
