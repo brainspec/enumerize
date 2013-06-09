@@ -258,6 +258,23 @@ and if you want it as radio buttons:
 <% end %>
 ```
 
+### RSpec
+
+Also you can use builtin RSpec matcher:
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], default: :male
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female) }
+  it { should enumerize(:sex).in(:male, :female).with_default(:male) }
+end
+```
+
 ### Other Integrations
 
 Enumerize integrates with the following automatically:
