@@ -1,5 +1,7 @@
 module Enumerize
   class AttributeMap
+    attr_reader :attributes
+
     def initialize
       @attributes = {}
       @dependants = []
