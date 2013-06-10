@@ -5,6 +5,9 @@ module Enumerize
     extend ActiveSupport::Concern
 
     included do
+      if respond_to?(:after_initialize)
+        after_initialize :_set_default_value_for_enumerized_attributes
+      end
       if respond_to?(:validate)
         validate :_validate_enumerized_attributes
       end
@@ -48,9 +51,17 @@ module Enumerize
 
     def initialize(*)
       super
+      _set_default_value_for_enumerized_attributes
+    end
+
+    def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
         if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
-          public_send("#{attr.name}=", attr.default_value)
+          value = attr.default_value
+          if value.respond_to? :call
+            value = value.arity == 0 ? value.call : value.call(self)
+          end
+          public_send("#{attr.name}=", value)
         end
       end
     end
