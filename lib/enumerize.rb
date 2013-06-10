@@ -47,4 +47,8 @@ module Enumerize
     require 'enumerize/hooks/formtastic'
   rescue LoadError
   end
+
+  if defined?(::RSpec)
+    require 'enumerize/integrations/rspec'
+  end
 end
