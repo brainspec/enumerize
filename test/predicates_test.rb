@@ -15,9 +15,22 @@ describe Enumerize::Predicates do
     object.must_respond_to :b?
   end
 
+  it 'creates predicate methods on multiple attribute' do
+    klass.enumerize(:foo, in: %w(a b), predicates: true, multiple: true)
+    object.must_respond_to :a?
+    object.must_respond_to :b?
+  end
+
   it 'checks values' do
     klass.enumerize(:foo, in: %w(a b), predicates: true)
     object.foo = 'a'
+    object.a?.must_equal true
+    object.b?.must_equal false
+  end
+
+  it 'checks values on multiple attribute' do
+    klass.enumerize(:foo, in: %w(a b), predicates: true, multiple: true)
+    object.foo << :a
     object.a?.must_equal true
     object.b?.must_equal false
   end

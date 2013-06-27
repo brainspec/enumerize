@@ -1,6 +1,7 @@
 ### master
 
 ### enhancements
+  * Add predicate methods to the multiple attributes (by [@nashby](https://github.com/nashby))
   * Add RSpec matcher (by [@nashby](https://github.com/nashby))
   * Add `*_value` method that returns actual value of the enumerized attribute (useful for attributes with custom values)
     (by [@tkyowa](https://github.com/tkyowa))

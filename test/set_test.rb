@@ -109,4 +109,42 @@ describe Enumerize::Set do
       set.join(', ').must_equal 'a, b'
     end
   end
+
+  describe 'boolean methods comparison' do
+    it 'returns true if value equals method' do
+      set << :a
+      set.a?.must_equal true
+    end
+
+    it 'returns false if value does not equal method' do
+      set << :a
+      set.b?.must_equal false
+    end
+
+    it 'raises NoMethodError if there are no values like boolean method' do
+      proc {
+        set.some_method?
+      }.must_raise NoMethodError
+    end
+
+    it 'raises ArgumentError if arguments are passed' do
+      proc {
+        set.a?('<3')
+      }.must_raise ArgumentError
+    end
+
+    it 'responds to methods for existing values' do
+      set.must_respond_to :a?
+      set.must_respond_to :b?
+      set.must_respond_to :c?
+    end
+
+    it 'returns a method object' do
+      set.method(:a?).must_be_instance_of Method
+    end
+
+    it 'does not respond to a method for not existing value' do
+      set.wont_respond_to :some_method?
+    end
+  end
 end
