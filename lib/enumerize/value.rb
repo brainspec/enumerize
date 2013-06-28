@@ -2,6 +2,8 @@ require 'i18n'
 
 module Enumerize
   class Value < String
+    include Predicatable
+
     def initialize(attr, name, value=nil)
       @attr  = attr
       @value = value || name.to_s
@@ -17,31 +19,14 @@ module Enumerize
       I18n.t(i18n_keys[0], :default => i18n_keys[1..-1])
     end
 
-    def method_missing(method, *args, &block)
-      if boolean_method?(method)
-        define_query_methods
-        send(method, *args, &block)
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(method, include_private=false)
-      boolean_method?(method)
-    end
-
     private
 
-    def define_query_methods
-      @attr.values.each do |value|
-        unless singleton_methods.include?(:"#{value}?")
-          singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{value}?
-              #{value == self}
-            end
-          RUBY
+    def define_query_method(value)
+      singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{value}?
+          #{value == self}
         end
-      end
+      RUBY
     end
 
     def i18n_keys
@@ -59,10 +44,6 @@ module Enumerize
 
     def i18n_suffix
       "#{@attr.i18n_suffix}." if @attr.i18n_suffix
-    end
-
-    def boolean_method?(method)
-      method[-1] == '?' && @attr.values.include?(method[0..-2])
     end
   end
 end

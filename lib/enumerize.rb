@@ -10,6 +10,7 @@ module Enumerize
   autoload :Module,       'enumerize/module'
   autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'
+  autoload :Predicatable, 'enumerize/predicatable'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   def self.included(base)
