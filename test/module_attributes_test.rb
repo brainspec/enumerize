@@ -26,4 +26,25 @@ class ModuleAttributesSpec < MiniTest::Spec
     klass.new.sex.must_equal 'male'
     klass.sex.must_be_instance_of Enumerize::Attribute
   end
+
+  it 'validates attributes' do
+    mod = Module.new do
+      extend Enumerize
+      enumerize :sex, :in => %w[male female]
+    end
+
+    klass = Class.new do
+      include ActiveModel::Validations
+      include mod
+
+      def self.model_name
+        ActiveModel::Name.new(self, nil, 'name')
+      end
+    end
+
+    object = klass.new
+    object.sex = 'wrong'
+    object.wont_be :valid?
+    object.errors[:sex].must_include 'is not included in the list'
+  end
 end
