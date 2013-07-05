@@ -6,6 +6,10 @@
   * Add `*_value` method that returns actual value of the enumerized attribute (useful for attributes with custom values)
     (by [@tkyowa](https://github.com/tkyowa))
 
+### bug fix
+  * Validates enumerized values when enumeration is included via module
+    (by [@nashby](https://github.com/nashby)) and (by [@lest](https://github.com/lest))
+
 ## 0.6.1 (May 20, 2013) ##
 
 ### bug fix
