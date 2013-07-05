@@ -1,12 +1,10 @@
-require 'active_support/concern'
-
 module Enumerize
   module Base
-    extend ActiveSupport::Concern
+    def self.included(base)
+      base.extend ClassMethods
 
-    included do
-      if respond_to?(:validate)
-        validate :_validate_enumerized_attributes
+      if base.respond_to?(:validate)
+        base.validate :_validate_enumerized_attributes
       end
     end
 
