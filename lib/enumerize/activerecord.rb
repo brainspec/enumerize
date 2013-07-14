@@ -1,5 +1,3 @@
-require 'active_support/concern'
-
 module Enumerize
   module ActiveRecord
     def enumerize(name, options={})
@@ -20,6 +18,15 @@ module Enumerize
               define_singleton_method "without_#{name}" do |*values|
                 values = values.map { |value| enumerized_attributes[name].find_value(value).value }
                 where(arel_table[name].not_in(values))
+              end
+            end
+
+            # https://github.com/brainspec/enumerize/issues/74
+            class_eval do
+              def write_attribute(attr_name, value)
+                _enumerized_values_for_validation[attr_name] = value
+
+                super
               end
             end
           end

@@ -102,6 +102,13 @@ describe Enumerize::ActiveRecord do
     user.errors[:role].must_include 'is not included in the list'
   end
 
+  it 'validates inclusion when using write_attribute' do
+    user = User.new
+    user.send(:write_attribute, :role, 'wrong')
+    user.wont_be :valid?
+    user.errors[:role].must_include 'is not included in the list'
+  end
+
   it 'validates inclusion on mass assignment' do
     assert_raises ActiveRecord::RecordInvalid do
       User.create!(role: 'wrong')
