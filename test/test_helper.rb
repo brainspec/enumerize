@@ -24,6 +24,23 @@ end
 
 require 'enumerize'
 
+module Formtastic::Util
+  extend self
+
+  def rails3?
+    ActiveSupport::VERSION::MAJOR == 3
+  end
+
+  def rails4_0?
+    ActiveSupport::VERSION::MAJOR == 4 && ActiveSupport::VERSION::MAJOR == 0
+  end
+
+  def deprecated_version_of_rails?
+    ActiveSupport::VERSION::MAJOR == 3 && ActiveSupport::VERSION::MAJOR < 2
+  end
+end
+
+
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each do |file|
   require file
 end
