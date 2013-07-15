@@ -5,20 +5,6 @@ require 'active_model'
 
 $VERBOSE=true
 
-module SimpleForm
-  module Rails
-    def self.env
-      ActiveSupport::StringInquirer.new("test")
-    end
-  end
-end
-
-module Formtastic
-  module Rails
-    VERSION = ActiveSupport::VERSION
-  end
-end
-
 module RailsAdmin
 end
 
