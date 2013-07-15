@@ -7,6 +7,7 @@
     (by [@tkyowa](https://github.com/tkyowa))
 
 ### bug fix
+  * Make validation work when `write_attribute` is using for setting enumerized values (by [@nashby](https://github.com/nashby))
   * Validates enumerized values when enumeration is included via module
     (by [@nashby](https://github.com/nashby)) and (by [@lest](https://github.com/lest))
 
