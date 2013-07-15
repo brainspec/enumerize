@@ -6,10 +6,10 @@ gem 'rake'
 gem 'minitest', '~> 4.1'
 gem 'rspec', :require => false
 
-gem 'activerecord', '4.0.0'
+gem 'rails', '4.0.0', :require => false
 gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
 gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
 
 gem 'mongoid', github: 'mongoid/mongoid'
-gem 'simple_form', '3.0.0.beta1'
+gem 'simple_form', github: 'plataformatec/simple_form'
 gem 'formtastic', github: 'justinfrench/formtastic'
