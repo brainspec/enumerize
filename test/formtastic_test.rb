@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'rails'
 
 module Formtastic
   module Helpers

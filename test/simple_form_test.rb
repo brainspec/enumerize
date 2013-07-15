@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'simple_form/version'
+require 'rails'
 
 class SimpleFormSpec < MiniTest::Spec
   include ViewTestHelper
