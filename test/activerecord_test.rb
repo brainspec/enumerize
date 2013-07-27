@@ -89,6 +89,14 @@ describe Enumerize::ActiveRecord do
     User.new.attributes['lambda_role'].must_equal 'admin'
   end
 
+  it 'uses after_initialize callback to set default value' do
+    User.delete_all
+    User.create!(sex: 'male', lambda_role: nil)
+
+    user = User.where(:sex => 'male').first
+    user.lambda_role.must_equal 'admin'
+  end
+
   it 'uses default value from db column' do
     User.new.account_type.must_equal 'basic'
   end
