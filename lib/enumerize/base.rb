@@ -46,11 +46,7 @@ module Enumerize
 
     def initialize(*)
       super
-      self.class.enumerized_attributes.each do |attr|
-        if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
-          public_send("#{attr.name}=", attr.default_value)
-        end
-      end
+      _set_default_value_for_enumerized_attributes
     end
 
     def read_attribute_for_validation(key)
@@ -76,6 +72,20 @@ module Enumerize
           errors.add attr.name unless value.respond_to?(:all?) && value.all? { |v| v.blank? || attr.find_value(v) }
         else
           errors.add attr.name, :inclusion unless attr.find_value(value)
+        end
+      end
+    end
+
+    def _set_default_value_for_enumerized_attributes
+      self.class.enumerized_attributes.each do |attr|
+        if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
+          value = attr.default_value
+
+          if value.respond_to?(:call)
+            value = value.arity == 0 ? value.call : value.call(self)
+          end
+
+          public_send("#{attr.name}=", value)
         end
       end
     end
