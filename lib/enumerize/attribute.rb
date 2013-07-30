@@ -14,8 +14,16 @@ module Enumerize
       @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
 
       if options[:default]
-        @default_value = find_value(options[:default])
+        @default_value = find_default_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
+      end
+    end
+
+    def find_default_value(value)
+      if value.respond_to?(:call)
+        value
+      else
+        find_value(value)
       end
     end
 
