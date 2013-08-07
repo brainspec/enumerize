@@ -1,6 +1,6 @@
 # Enumerize [![TravisCI](https://secure.travis-ci.org/brainspec/enumerize.png?branch=master)](http://travis-ci.org/brainspec/enumerize) [![Gemnasium](https://gemnasium.com/brainspec/enumerize.png)](https://gemnasium.com/brainspec/enumerize)
 
-Enumerated attributes with I18n and ActiveRecord/Mongoid support
+Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper support
 
 ## Installation
 
@@ -48,6 +48,18 @@ class User
   extend Enumerize
 
   field :role
+  enumerize :role, in: [:user, :admin], default: :user
+end
+```
+
+MongoMapper:
+
+```ruby
+class User
+  include MongoMapper::Document
+  extend Enumerize
+
+  key :role
   enumerize :role, in: [:user, :admin], default: :user
 end
 ```
