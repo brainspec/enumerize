@@ -1,22 +1,20 @@
 require 'test_helper'
 
 silence_warnings do
-  require 'mongoid'
+  require 'mongo_mapper'
 end
 
-Mongoid.configure do |config|
-  config.sessions = { :default => { :database => 'enumerize-test-suite', hosts: ['127.0.0.1:27017'] } }
-  config.use_utc = true
-  config.include_root_in_json = true
-end
+MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
+MongoMapper.database   = 'enumerize-test-suite-of-mongomapper'
 
 describe Enumerize do
-  class MongoidUser
-    include Mongoid::Document
+  class MongoMapperUser
+    include MongoMapper::Document
     extend Enumerize
 
-    field :sex
-    field :role
+    key :sex
+    key :role
+
     enumerize :sex, :in => %w[male female]
     enumerize :role, :in => %w[admin user], :default => 'user'
   end
@@ -24,7 +22,7 @@ describe Enumerize do
   before { $VERBOSE = nil }
   after  { $VERBOSE = true }
 
-  let(:model) { MongoidUser }
+  let(:model) { MongoMapperUser }
 
   it 'sets nil if invalid value is passed' do
     user = model.new
