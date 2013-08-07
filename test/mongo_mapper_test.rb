@@ -16,7 +16,7 @@ describe Enumerize do
     key :role
 
     enumerize :sex, :in => %w[male female]
-    enumerize :role, :in => %w[admine user], :default => 'user'
+    enumerize :role, :in => %w[admin user], :default => 'user'
   end
 
   before { $VERBOSE = nil }
