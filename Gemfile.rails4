@@ -11,5 +11,6 @@ gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
 gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
 
 gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongo_mapper', github: 'jnunemaker/mongomapper'
 gem 'simple_form', github: 'plataformatec/simple_form'
 gem 'formtastic', github: 'justinfrench/formtastic'
