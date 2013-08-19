@@ -32,8 +32,8 @@ module Enumerize
     def i18n_keys
       @i18n_keys ||= begin
         i18n_keys = []
-        i18n_keys << i18n_scope
         i18n_keys << i18n_scope(i18n_suffix)
+        i18n_keys << i18n_scope
         i18n_keys << self.humanize # humanize value if there are no translations
       end
     end
