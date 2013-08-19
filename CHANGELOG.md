@@ -1,6 +1,7 @@
 ### master
 
 ### enhancements
+  * Give priority to model specific translation definition. See example [here](https://github.com/brainspec/enumerize/pull/96) (by [@labocho](https://github.com/labocho))
   * Allow lambda in default value (by [@adie](https://github.com/adie))
   * Add predicate methods to the multiple attributes (by [@nashby](https://github.com/nashby))
   * Add RSpec matcher (by [@nashby](https://github.com/nashby))
