@@ -12,6 +12,34 @@ describe Enumerize::Value do
     value.must_be :==, 'test_value'
   end
 
+  describe 'translation' do
+    let(:attr)  { Struct.new(:values, :name, :i18n_suffix).new([], "attribute_name", "model_name") }
+
+    it 'uses common translation' do
+      store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
+        value.text.must_be :==, "Common translation"
+      end
+    end
+
+    it 'uses model specific translation' do
+      store_translations(:en, :enumerize => {:model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
+        value.text.must_be :==, "Model Specific translation"
+      end
+    end
+
+    it 'uses model specific translation rather than common translation' do
+      store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}, :model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
+        value.text.must_be :==, "Model Specific translation"
+      end
+    end
+
+    it 'uses simply humanized value when translation is undefined' do
+      store_translations(:en, :enumerize => {}) do
+        value.text.must_be :==, "Test value"
+      end
+    end
+  end
+
   describe 'boolean methods comparison' do
     before do
       attr.values = [value, Enumerize::Value.new(attr, 'other_value')]
