@@ -1,4 +1,4 @@
-### master
+## 0.7.0 (August 21, 2013) ##
 
 ### enhancements
   * Give priority to model specific translation definition. See example [here](https://github.com/brainspec/enumerize/pull/96) (by [@labocho](https://github.com/labocho))
