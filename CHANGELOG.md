@@ -22,7 +22,7 @@
 
 ### enhancements
   * Use inclusion error message for invalid values (by [@lest](https://github.com/lest))
-  * Add `:only` and `except` options to the `Attribute#options` method. (by [@thehappycoder](https://github.com/thehappycoder))
+  * Add `:only` and `except` options to the `Attribute#options` method. (by [@thehappycoder](https://github.com/thehappycoder) and [@randoum](https://github.com/randoum))
   * ActiveRecord scopes. (by [@lest](https://github.com/lest), [@banyan](https://github.com/banyan) and [@nashby](https://github.com/nashby))
   * Support for RailsAdmin (by [@drewda](https://github.com/drewda))
 
