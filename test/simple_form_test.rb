@@ -44,6 +44,15 @@ class SimpleFormSpec < MiniTest::Spec
   let(:user) { User.new }
   let(:post) { Post.new }
 
+  it 'renders select with enumerized values using input_field' do
+    concat(simple_form_for(user) do |f|
+      f.input_field(:sex)
+    end)
+
+    assert_select 'select option[value=male]'
+    assert_select 'select option[value=female]'
+  end
+
   it 'renders select with enumerized values' do
     concat(simple_form_for(user) do |f|
       f.input(:sex)
