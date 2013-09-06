@@ -84,6 +84,12 @@ describe Enumerize::ActiveRecord do
     User.new.attributes['role'].must_equal 'user'
   end
 
+  it 'does not set default value for not selected attributes' do
+    User.delete_all
+    User.create!(:sex => :male)
+    User.select(:id).collect(&:id)
+  end
+
   it 'has default value with lambda' do
     User.new.lambda_role.must_equal 'admin'
     User.new.attributes['lambda_role'].must_equal 'admin'
