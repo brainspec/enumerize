@@ -78,7 +78,15 @@ module Enumerize
 
     def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
-        if !public_send(attr.name) && !_enumerized_values_for_validation.key?(attr.name)
+        # remove after dropping support for Rails 3.x
+        # https://github.com/brainspec/enumerize/issues/101
+        attr_value = begin
+          public_send(attr.name)
+        rescue ActiveModel::MissingAttributeError
+          nil
+        end
+
+        if !attr_value && !_enumerized_values_for_validation.key?(attr.name)
           value = attr.default_value
 
           if value.respond_to?(:call)
