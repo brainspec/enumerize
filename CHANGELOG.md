@@ -3,6 +3,9 @@
 ### enhancements
   * Integration with SimpleForm's `input_field` (by [@nashby](https://github.com/nashby))
 
+### bug fix
+  * Do not try to set default value for not selected attributes (by [@nashby](https://github.com/nashby))
+
 ## 0.7.0 (August 21, 2013) ##
 
 ### enhancements
