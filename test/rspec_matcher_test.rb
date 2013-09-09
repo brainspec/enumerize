@@ -15,6 +15,22 @@ describe Enumerize::Integrations::RSpec do
   let(:should) { Should.new }
   let(:object) { klass.new }
 
+  describe '#description' do
+    before do
+      klass.enumerize(:sex, :in => [:male, :female])
+    end
+
+    it 'returns description without default value' do
+      matcher = should.enumerize(:sex).in(:male, :female)
+      matcher.description.must_equal 'enumerize :sex in: "female", "male"'
+    end
+
+    it 'returns description with default value' do
+      matcher = should.enumerize(:sex).in(:male, :female).with_default(:male)
+      matcher.description.must_equal 'enumerize :sex in: "female", "male" with "male" as default value'
+    end
+  end
+
   describe '#matches?' do
     before do
       klass.enumerize(:sex, :in => [:male, :female])
