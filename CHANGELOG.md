@@ -4,6 +4,7 @@
   * Integration with SimpleForm's `input_field` (by [@nashby](https://github.com/nashby))
 
 ### bug fix
+  * Return proper RSpec description for enumerized attribute without default value (by [andreygerasimchuk](https://github.com/andreygerasimchuk))
   * Do not try to set default value for not selected attributes (by [@nashby](https://github.com/nashby))
 
 ## 0.7.0 (August 21, 2013) ##
