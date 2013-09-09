@@ -33,6 +33,7 @@ module Enumerize
         def description
           description  = "enumerize :#{attr} in: #{quote_values(values)}"
           description += " with #{default.inspect} as default value" if default
+          description
         end
 
         def matches?(subject)
