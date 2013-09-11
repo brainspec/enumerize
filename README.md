@@ -28,6 +28,9 @@ class User
 end
 ```
 
+Note that enumerized values are just identificators so if you want to use multi-word, etc. values you should use `I18n` feature.
+
+
 ActiveRecord:
 
 ```ruby
