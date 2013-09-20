@@ -22,7 +22,7 @@ module Enumerize
           message  = " expected :#{attr} to allow value#{values.size == 1 ? nil : 's'}: #{quote_values(values)},"
           message += " but it allows #{quote_values(enumerized_values)} instead"
 
-          if default
+          if default && !matches_default_value?
             message  = " expected :#{attr} to have #{default.inspect} as default value,"
             message += " but it sets #{enumerized_default.inspect} instead"
           end

@@ -65,5 +65,12 @@ describe Enumerize::Integrations::RSpec do
       expected = ' expected :sex to have "foo" as default value, but it sets "male" instead'
       matcher.failure_message.must_equal expected
     end
+
+    it 'returns failure message for ivalid :in option with default value' do
+      matcher = should.enumerize(:sex).in(:bar).with_default(:male)
+      matcher.subject = object
+      expected = ' expected :sex to allow value: "bar", but it allows "female", "male" instead'
+      matcher.failure_message.must_equal expected
+    end
   end
 end
