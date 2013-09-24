@@ -31,6 +31,10 @@ module Enumerize
       @value_hash[value.to_s] unless value.nil?
     end
 
+    def value_for(value)
+      find_value(value).value
+    end
+
     def i18n_suffix
       @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
     end
