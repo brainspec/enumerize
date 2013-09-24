@@ -19,9 +19,9 @@ module Enumerize
       end
 
       # Define methods to get each value
-      @values.each do |name, value|
+      @values.each do |v|
         metaclass = class << self; self; end
-        metaclass.send(:define_method, name) { value.value }
+        metaclass.send(:define_method, v.to_s) { v.value }
       end
     end
 
