@@ -17,6 +17,11 @@ module Enumerize
         @default_value = find_default_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
       end
+
+      # Define methods to get each value
+      @values.each do |name, value|
+        define_method(name) { value.value }
+      end
     end
 
     def find_default_value(value)
