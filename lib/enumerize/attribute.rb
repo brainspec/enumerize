@@ -20,7 +20,8 @@ module Enumerize
 
       # Define methods to get each value
       @values.each do |name, value|
-        define_method(name) { value.value }
+        metaclass = class << self; self; end
+        metaclass.send(:define_method, name) { value.value }
       end
     end
 
