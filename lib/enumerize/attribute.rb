@@ -22,6 +22,7 @@ module Enumerize
       @values.each do |v|
         metaclass = class << self; self; end
         metaclass.send(:define_method, v.to_s) { v.value }
+        metaclass.send(:define_method, v.to_s + '_text' ) { v.text }
       end
     end
 
@@ -35,10 +36,6 @@ module Enumerize
 
     def find_value(value)
       @value_hash[value.to_s] unless value.nil?
-    end
-
-    def value_for(value)
-      find_value(value).value
     end
 
     def i18n_suffix
