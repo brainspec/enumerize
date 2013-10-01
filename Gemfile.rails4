@@ -10,7 +10,7 @@ gem 'rails', '4.0.0', :require => false
 gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
 gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
 
-gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongoid', github: 'mongoid/mongoid', ref: 'f91feef0a0c6b83a1b878e154f1014536aa1c298'
 gem 'mongo_mapper', github: 'jnunemaker/mongomapper'
-gem 'simple_form', github: 'plataformatec/simple_form'
+gem 'simple_form'
 gem 'formtastic', github: 'justinfrench/formtastic'
