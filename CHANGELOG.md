@@ -7,6 +7,7 @@
   * Return proper RSpec failure message for enumerized attribute with default value (by [@nashby](https://github.com/nashby))
   * Return proper RSpec description for enumerized attribute without default value (by [@andreygerasimchuk](https://github.com/andreygerasimchuk))
   * Do not try to set default value for not selected attributes (by [@nashby](https://github.com/nashby))
+  * Fix uniqueness validation with Active Record (by [@lest](https://github.com/lest))
 
 ## 0.7.0 (August 21, 2013) ##
 

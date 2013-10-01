@@ -54,6 +54,10 @@ class User < ActiveRecord::Base
   enumerize :account_type, :in => [:basic, :premium]
 end
 
+class UniqStatusUser < User
+  validates :status, uniqueness: true
+end
+
 describe Enumerize::ActiveRecord do
   it 'sets nil if invalid value is passed' do
     user = User.new
@@ -195,6 +199,8 @@ describe Enumerize::ActiveRecord do
   end
 
   it 'adds scope' do
+    User.delete_all
+
     user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
 
@@ -233,5 +239,17 @@ describe Enumerize::ActiveRecord do
     document_2 = Document.create!(visibility: :private)
 
     Document.with_visibility(:public).must_equal [document_1]
+  end
+
+  it 'validates uniqueness' do
+    user = User.new
+    user.status = :active
+    user.save!
+
+    user = UniqStatusUser.new
+    user.status = :active
+    user.valid?
+
+    user.errors[:status].wont_be :empty?
   end
 end
