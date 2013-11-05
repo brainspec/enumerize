@@ -9,16 +9,7 @@ module Enumerize
             _define_scope_methods!(name, options)
           end
 
-          # https://github.com/brainspec/enumerize/issues/74
-          unless method_defined?(:write_attribute)
-            class_eval do
-              def write_attribute(attr_name, value)
-                _enumerized_values_for_validation[attr_name] = value
-
-                super
-              end
-            end
-          end
+          include InstanceMethods
 
           # Since Rails use `allocate` method on models and initializes them with `init_with` method.
           # This way `initialize` method is not being called, but `after_initialize` callback always gets triggered.
@@ -72,6 +63,27 @@ module Enumerize
 
       def attr
         @klass.enumerized_attributes[@name]
+      end
+    end
+
+    module InstanceMethods
+      # https://github.com/brainspec/enumerize/issues/74
+      def write_attribute(attr_name, value)
+        _enumerized_values_for_validation[attr_name] = value
+
+        super
+      end
+
+      # Support multiple enumerized attributes
+      def becomes(klass)
+        became = super
+        klass.enumerized_attributes.each do |attr|
+          if attr.is_a? Multiple
+            became.send("#{attr.name}=", send(attr.name))
+          end
+        end
+
+        became
       end
     end
   end

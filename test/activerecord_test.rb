@@ -252,4 +252,18 @@ describe Enumerize::ActiveRecord do
 
     user.errors[:status].wont_be :empty?
   end
+
+  it 'supports multiple attributes in #becomes' do
+    User.delete_all
+
+    uniq_user = UniqStatusUser.new
+    uniq_user.interests = [:sports, :dancing]
+    uniq_user.sex = :male
+    uniq_user.save!
+
+    user = uniq_user.becomes(User)
+
+    user.sex.must_equal uniq_user.sex
+    user.interests.must_equal uniq_user.interests
+  end
 end

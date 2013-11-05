@@ -2,6 +2,7 @@
 
 ### enhancements
   * Integration with SimpleForm's `input_field` (by [@nashby](https://github.com/nashby))
+  * Support multiple attributes in Active Record #becomes method (by [@lest](https://github.com/lest))
 
 ### bug fix
   * Return proper RSpec failure message for enumerized attribute with default value (by [@nashby](https://github.com/nashby))
