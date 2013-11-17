@@ -16,9 +16,7 @@ module Enumerize
           after_initialize :_set_default_value_for_enumerized_attributes
 
           # https://github.com/brainspec/enumerize/issues/111
-          unless options[:multiple]
-            serialize name, Column.new(self, name)
-          end
+          require 'enumerize/hooks/uniqueness'
         end
       end
     end
@@ -40,29 +38,6 @@ module Enumerize
           values = values.map { |value| enumerized_attributes[name].find_value(value).value }
           where(arel_table[name].not_in(values))
         end
-      end
-    end
-
-    class Column
-      def initialize(klass, name)
-        @klass = klass
-        @name  = name
-      end
-
-      def dump(value)
-        if v = attr.find_value(value)
-          v.value
-        end
-      end
-
-      def load(value)
-        value
-      end
-
-      private
-
-      def attr
-        @klass.enumerized_attributes[@name]
       end
     end
 

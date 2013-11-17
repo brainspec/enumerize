@@ -21,6 +21,7 @@ ActiveRecord::Base.connection.instance_eval do
 
   create_table :documents do |t|
     t.string :visibility
+    t.timestamps
   end
 end
 
@@ -229,12 +230,16 @@ describe Enumerize::ActiveRecord do
   end
 
   it 'supports defining enumerized attributes on abstract class' do
+    Document.delete_all
+
     document = Document.new
     document.visibility = :protected
     document.visibility.must_equal 'protected'
   end
 
   it 'supports defining enumerized scopes on abstract class' do
+    Document.delete_all
+
     document_1 = Document.create!(visibility: :public)
     document_2 = Document.create!(visibility: :private)
 
@@ -265,5 +270,20 @@ describe Enumerize::ActiveRecord do
 
     user.sex.must_equal uniq_user.sex
     user.interests.must_equal uniq_user.interests
+  end
+
+  it "doesn't update record" do
+    Document.delete_all
+
+    expected = Time.utc(2010, 10, 10)
+
+    document = Document.new
+    document.updated_at = expected
+    document.save!
+
+    document = Document.last
+    document.save!
+
+    assert_equal expected, document.updated_at
   end
 end
