@@ -2,15 +2,15 @@ require 'active_support/concern'
 require 'enumerize/version'
 
 module Enumerize
-  autoload :Attribute,    'enumerize/attribute'
-  autoload :AttributeMap, 'enumerize/attribute_map'
-  autoload :Value,        'enumerize/value'
-  autoload :Set,          'enumerize/set'
-  autoload :Base,         'enumerize/base'
-  autoload :Module,       'enumerize/module'
-  autoload :ActiveRecord, 'enumerize/activerecord'
-  autoload :Predicates,   'enumerize/predicates'
-  autoload :Predicatable, 'enumerize/predicatable'
+  autoload :Attribute,        'enumerize/attribute'
+  autoload :AttributeMap,     'enumerize/attribute_map'
+  autoload :Value,            'enumerize/value'
+  autoload :Set,              'enumerize/set'
+  autoload :Base,             'enumerize/base'
+  autoload :Module,           'enumerize/module'
+  autoload :ActiveRecord,     'enumerize/activerecord'
+  autoload :Predicates,       'enumerize/predicates'
+  autoload :Predicatable,     'enumerize/predicatable'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   def self.included(base)
@@ -49,7 +49,5 @@ module Enumerize
   rescue LoadError
   end
 
-  if defined?(::RSpec)
-    require 'enumerize/integrations/rspec'
-  end
+  require 'enumerize/integrations/rspec'
 end
