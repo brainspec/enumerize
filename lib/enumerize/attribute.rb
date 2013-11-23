@@ -108,6 +108,8 @@ module Enumerize
             else
               if defined?(@#{name})
                 self.#{name} = @#{name}
+              elsif respond_to?(:read_attribute)
+                self.#{name} = read_attribute(:#{name})
               else
                 self.#{name} = []
               end
