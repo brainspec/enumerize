@@ -19,6 +19,7 @@ describe Enumerize do
     field :role
     enumerize :sex, :in => %w[male female]
     enumerize :role, :in => %w[admin user], :default => 'user'
+    enumerize :mult, :in => %w[one two three four], :multiple => true
   end
 
   before { $VERBOSE = nil }
@@ -66,5 +67,13 @@ describe Enumerize do
     user = model.first
     user.sex = :female
     user.sex.must_equal 'female'
+  end
+
+  it 'loads multiple properly' do
+    model.delete_all
+
+    model.create!(:mult => ['one', 'two'])
+    user = model.first
+    user.mult.to_a.must_equal ['one', 'two']
   end
 end
