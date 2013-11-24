@@ -105,11 +105,11 @@ module Enumerize
           unless defined?(@_#{name}_enumerized_set)
             if defined?(super)
               self.#{name} = super
+            elsif respond_to?(:read_attribute)
+              self.#{name} = read_attribute(:#{name})
             else
               if defined?(@#{name})
                 self.#{name} = @#{name}
-              elsif respond_to?(:read_attribute)
-                self.#{name} = read_attribute(:#{name})
               else
                 self.#{name} = []
               end
