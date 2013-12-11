@@ -10,6 +10,7 @@
   * Do not try to set default value for not selected attributes (by [@nashby](https://github.com/nashby))
   * Fix uniqueness validation with Active Record (by [@lest](https://github.com/lest))
   * Fix loading of attributes with multiple: true in mongoid (by [glebtv](https://github.com/glebtv))
+  * Serialize value as scalar type (by [@ka8725](https://github.com/ka8725))
 
 ## 0.7.0 (August 21, 2013) ##
 
