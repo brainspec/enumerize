@@ -19,6 +19,10 @@ module Enumerize
       I18n.t(i18n_keys[0], :default => i18n_keys[1..-1])
     end
 
+    def encode_with(coder)
+      coder.represent_object(self.class.superclass, @value)
+    end
+
     private
 
     def define_query_method(value)

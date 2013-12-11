@@ -286,4 +286,12 @@ describe Enumerize::ActiveRecord do
 
     assert_equal expected, document.updated_at
   end
+
+  it 'changes from dirty should be serialized as scalar values' do
+    user = User.create(:status => :active)
+    user.status = :blocked
+
+    expected = ActiveSupport::HashWithIndifferentAccess.new(status: [1, 2]).to_yaml
+    assert_equal expected, user.changes.to_yaml
+  end
 end

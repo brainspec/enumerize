@@ -78,4 +78,10 @@ describe Enumerize::Value do
       value.wont_respond_to :some_method?
     end
   end
+
+  describe 'serialization' do
+    it 'should be serialized to yaml as string value' do
+      assert_equal YAML.dump('test_value'), YAML.dump(value)
+    end
+  end
 end
