@@ -4,15 +4,13 @@ module Enumerize
   class Value < String
     include Predicatable
 
+    attr_reader :value
+
     def initialize(attr, name, value=nil)
       @attr  = attr
       @value = value || name.to_s
 
       super(name.to_s)
-    end
-
-    def value
-      @value
     end
 
     def text
