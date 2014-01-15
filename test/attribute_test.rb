@@ -67,4 +67,35 @@ describe Enumerize::Attribute do
       attr.find_value(2).must_equal 'b'
     end
   end
+
+  describe 'values hash with zero' do
+    before do
+      build_attr nil, :foo, :in => {:a => 1, :b => 2, :c => 0}
+    end
+
+    it 'returns hash keys as values' do
+      attr.values.must_equal %w[a b c]
+    end
+
+    it 'finds values by hash values' do
+      attr.find_value(1).must_equal 'a'
+      attr.find_value(2).must_equal 'b'
+      attr.find_value(0).must_equal 'c'
+    end
+  end
+
+  describe 'boolean values hash' do
+    before do
+      build_attr nil, :foo, :in => {:a => true, :b => false}
+    end
+
+    it 'returns hash keys as values' do
+      attr.values.must_equal %w[a b]
+    end
+
+    it 'finds values by hash values' do
+      attr.find_value(true).must_equal 'a'
+      attr.find_value(false).must_equal 'b'
+    end
+  end
 end

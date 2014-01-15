@@ -8,7 +8,7 @@ module Enumerize
 
     def initialize(attr, name, value=nil)
       @attr  = attr
-      @value = value || name.to_s
+      @value = value.nil? ? name.to_s : value
 
       super(name.to_s)
     end
