@@ -290,6 +290,21 @@ describe User do
 end
 ```
 
+### Minitest with Shoulda
+
+You can use the RSpec matcher with shoulda in your tests by adding two lines in your `test_helper.rb` inside `class ActiveSupport::TestCase` definition:
+
+```ruby
+class ActiveSupport::TestCase
+  ActiveRecord::Migration.check_pending!
+
+  require 'enumerize/integrations/rspec'
+  extend Enumerize::Integrations::RSpec
+  
+  ...
+end
+```
+
 ### Other Integrations
 
 Enumerize integrates with the following automatically:
