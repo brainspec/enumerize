@@ -191,6 +191,9 @@ user = User.new
 user.role = :user
 user.role #=> 'user'
 user.role_value #=> 1
+
+User.role.find_value(:user).value #=> 1
+User.role.find_value(:admin).value #=> 2
 ```
 
 ActiveRecord scopes:
