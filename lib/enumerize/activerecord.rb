@@ -1,5 +1,5 @@
 module Enumerize
-  module ActiveRecord
+  module ActiveRecordSupport
     def enumerize(name, options={})
       super
 

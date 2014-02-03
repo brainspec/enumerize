@@ -59,7 +59,7 @@ class UniqStatusUser < User
   validates :status, uniqueness: true
 end
 
-describe Enumerize::ActiveRecord do
+describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid

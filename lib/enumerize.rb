@@ -8,10 +8,11 @@ module Enumerize
   autoload :Set,          'enumerize/set'
   autoload :Base,         'enumerize/base'
   autoload :Module,       'enumerize/module'
-  autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'
   autoload :Predicatable, 'enumerize/predicatable'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
+
+  autoload :ActiveRecordSupport, 'enumerize/activerecord'
 
   def self.included(base)
     ActiveSupport::Deprecation.warn '`include Enumerize` was deprecated. Please use `extend Enumerize`.', caller
@@ -21,7 +22,7 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
-    base.extend Enumerize::ActiveRecord
+    base.extend Enumerize::ActiveRecordSupport
 
     if defined?(::RailsAdmin)
       require 'enumerize/integrations/rails_admin'
