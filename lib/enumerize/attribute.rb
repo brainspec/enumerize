@@ -1,6 +1,6 @@
 module Enumerize
   class Attribute
-    attr_reader :name, :values, :default_value
+    attr_reader :name, :values, :default_value, :i18n_scope
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
@@ -12,6 +12,11 @@ module Enumerize
       @values = Array(options[:in]).map { |v| Value.new(self, *v) }
       @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
       @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
+
+      if options[:i18n_scope]
+        raise ArgumentError, ':i18n_scope option accepts only String or Array of strings' unless Array(options[:i18n_scope]).all? { |s| s.is_a?(String) }
+        @i18n_scope = options[:i18n_scope]
+      end
 
       if options[:default]
         @default_value = find_default_value(options[:default])
@@ -31,8 +36,14 @@ module Enumerize
       @value_hash[value.to_s] unless value.nil?
     end
 
-    def i18n_suffix
-      @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
+    def i18n_scopes
+      @i18n_scopes ||= if i18n_scope
+        scopes = Array(i18n_scope)
+      elsif @klass.respond_to?(:model_name)
+        scopes = ["enumerize.#{@klass.model_name.i18n_key}.#{name}"]
+      else
+        []
+      end
     end
 
     def options(options = {})

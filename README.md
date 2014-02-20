@@ -88,6 +88,30 @@ en:
       female: "Female"
 ```
 
+You can also pass `i18n_scope` option to specify scope (or array of scopes) storring the translations. Note that `i18n_scope` option does not accept scope as array:
+
+
+```ruby
+class Person
+  extend Enumerize
+  extend ActiveModel::Naming
+
+  enumerize :sex, in: %w[male female], i18n_scope: "sex"
+  enumerize :color, in: %w[black white], i18n_scope: ["various.colors", "colors"]
+end
+
+# localization file
+en:
+  sex:
+    male: "Male"
+    female: "Female"
+  various:
+    colors:
+      black: "Black"
+  colors:
+    white: "White"
+```
+
 Note that if you want to use I18n feature with plain Ruby object don't forget to extend it with `ActiveModel::Naming`:
 
 ```ruby
@@ -303,7 +327,7 @@ class ActiveSupport::TestCase
 
   require 'enumerize/integrations/rspec'
   extend Enumerize::Integrations::RSpec
-  
+
   ...
 end
 ```

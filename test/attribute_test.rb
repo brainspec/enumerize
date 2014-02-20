@@ -19,6 +19,17 @@ describe Enumerize::Attribute do
     attr.name.must_equal :foo
   end
 
+  describe 'i18n scopes' do
+    it 'returns scopes from options' do
+      build_attr nil, 'foo', :in => %w[a b], :i18n_scope => %w[bar buzz]
+      attr.i18n_scopes.must_equal %w[bar buzz]
+    end
+
+    it 'accepts only string scopes' do
+      proc { build_attr nil, 'foo', :in => %w[a b], :i18n_scope => [%w[bar buzz], "bar.buzz"] }.must_raise ArgumentError
+    end
+  end
+
   describe 'options for select' do
     it 'returns all options for select' do
       store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
