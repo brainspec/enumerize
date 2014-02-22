@@ -50,7 +50,10 @@ module Enumerize
   rescue LoadError
   end
 
-  if defined?(::RSpec)
+  begin
+    require 'rspec/matchers'
+  rescue LoadError
+  else
     require 'enumerize/integrations/rspec'
   end
 end
