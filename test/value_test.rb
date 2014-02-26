@@ -13,7 +13,7 @@ describe Enumerize::Value do
   end
 
   describe 'translation' do
-    let(:attr)  { Struct.new(:values, :name, :i18n_suffix).new([], "attribute_name", "model_name") }
+    let(:attr)  { Struct.new(:values, :name, :i18n_scopes).new([], "attribute_name", []) }
 
     it 'uses common translation' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
@@ -22,12 +22,16 @@ describe Enumerize::Value do
     end
 
     it 'uses model specific translation' do
+      attr.i18n_scopes = ["enumerize.model_name.attribute_name"]
+
       store_translations(:en, :enumerize => {:model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
         value.text.must_be :==, "Model Specific translation"
       end
     end
 
     it 'uses model specific translation rather than common translation' do
+      attr.i18n_scopes = ["enumerize.model_name.attribute_name"]
+
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}, :model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
         value.text.must_be :==, "Model Specific translation"
       end
@@ -36,6 +40,22 @@ describe Enumerize::Value do
     it 'uses simply humanized value when translation is undefined' do
       store_translations(:en, :enumerize => {}) do
         value.text.must_be :==, "Test value"
+      end
+    end
+
+    it 'uses specified in options translation scope' do
+      attr.i18n_scopes = ["other.scope"]
+
+      store_translations(:en, :other => {:scope => {:test_value => "Scope specific translation"}}) do
+        value.text.must_be :==, "Scope specific translation"
+      end
+    end
+
+    it 'uses first found translation scope from options' do
+      attr.i18n_scopes = ["nonexistent.scope", "other.scope"]
+
+      store_translations(:en, :other => {:scope => {:test_value => "Scope specific translation"}}) do
+        value.text.must_be :==, "Scope specific translation"
       end
     end
   end
