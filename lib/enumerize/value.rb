@@ -19,6 +19,13 @@ module Enumerize
       I18n.t(i18n_keys[0], :default => i18n_keys[1..-1])
     end
 
+    def ==(other)
+      return super(other) if other.is_a? String
+      return super(other.to_s) if other.is_a? Symbol
+      return value == other if other.is_a?(Integer) && value.is_a?(Integer)
+      super other
+    end
+
     private
 
     def define_query_method(value)
