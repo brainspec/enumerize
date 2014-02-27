@@ -44,7 +44,9 @@ module Enumerize
     module InstanceMethods
       # https://github.com/brainspec/enumerize/issues/74
       def write_attribute(attr_name, value)
-        _enumerized_values_for_validation[attr_name] = value
+        if self.class.enumerized_attributes[attr_name]
+          _enumerized_values_for_validation[attr_name] = value
+        end
 
         super
       end
