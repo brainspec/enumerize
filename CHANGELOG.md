@@ -6,6 +6,7 @@
   * Add ability to specify localization scope with `i18n_scope` option (by [@dreamfall](https://github.com/dreamfall))
 
 ### bug fix
+  * Fix RSpec integration using enumerize with Spring (by [@winston](https://github.com/winston))
   * Return proper RSpec failure message for enumerized attribute with default value (by [@nashby](https://github.com/nashby))
   * Return proper RSpec description for enumerized attribute without default value (by [@andreygerasimchuk](https://github.com/andreygerasimchuk))
   * Do not try to set default value for not selected attributes (by [@nashby](https://github.com/nashby))
