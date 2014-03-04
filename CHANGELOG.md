@@ -1,4 +1,4 @@
-## master ##
+## 0.8.0 (March 4, 2014) ##
 
 ### enhancements
   * Integration with SimpleForm's `input_field` (by [@nashby](https://github.com/nashby))
