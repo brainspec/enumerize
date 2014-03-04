@@ -7,7 +7,7 @@ module Enumerize
 
         _enumerize_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{name}_enum
-            self.class.enumerized_attributes[:#{name}].options
+            self.class.enumerized_attributes[:#{name}].values.map{|v| [v.text, v.value]}
           end
         RUBY
       end
