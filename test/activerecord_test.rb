@@ -92,7 +92,8 @@ describe Enumerize::ActiveRecordSupport do
   it 'does not set default value for not selected attributes' do
     User.delete_all
     User.create!(:sex => :male)
-    User.select(:id).collect(&:id)
+
+    assert_equal ['id'], User.select(:id).first.attributes.keys
   end
 
   it 'has default value with lambda' do

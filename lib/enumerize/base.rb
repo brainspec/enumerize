@@ -80,10 +80,10 @@ module Enumerize
       self.class.enumerized_attributes.each do |attr|
         # remove after dropping support for Rails 3.x
         # https://github.com/brainspec/enumerize/issues/101
-        attr_value = begin
-          public_send(attr.name)
+        begin
+          attr_value = public_send(attr.name)
         rescue ActiveModel::MissingAttributeError
-          nil
+          next
         end
 
         if !attr_value && !_enumerized_values_for_validation.key?(attr.name)
