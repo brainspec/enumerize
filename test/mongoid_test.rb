@@ -17,6 +17,7 @@ describe Enumerize do
 
     field :sex
     field :role
+    field :mult
     enumerize :sex, :in => %w[male female]
     enumerize :role, :in => %w[admin user], :default => 'user'
     enumerize :mult, :in => %w[one two three four], :multiple => true

@@ -72,7 +72,7 @@ module Enumerize
         def #{name}
           if defined?(super)
             self.class.enumerized_attributes[:#{name}].find_value(super)
-          elsif respond_to?(:read_attribute)
+          elsif respond_to?(:read_attribute) && (!respond_to?(:has_attribute?, true) || has_attribute?(:#{name}))
             self.class.enumerized_attributes[:#{name}].find_value(read_attribute(:#{name}))
           else
             if defined?(@#{name})
@@ -91,7 +91,7 @@ module Enumerize
 
           if defined?(super)
             super allowed_value_or_nil
-          elsif respond_to?(:write_attribute, true)
+          elsif respond_to?(:write_attribute, true) && (!respond_to?(:has_attribute?, true) || has_attribute?(:#{name}))
             write_attribute '#{name}', allowed_value_or_nil
           else
             @#{name} = allowed_value_or_nil
@@ -116,7 +116,7 @@ module Enumerize
           unless defined?(@_#{name}_enumerized_set)
             if defined?(super)
               self.#{name} = super
-            elsif respond_to?(:read_attribute)
+            elsif respond_to?(:read_attribute) && (!respond_to?(:has_attribute?, true) || has_attribute?(:#{name}))
               self.#{name} = read_attribute(:#{name})
             else
               if defined?(@#{name})
@@ -138,7 +138,7 @@ module Enumerize
 
           if defined?(super)
             super string_values
-          elsif respond_to?(:write_attribute, true)
+          elsif respond_to?(:write_attribute, true) && (!respond_to?(:has_attribute?, true) || has_attribute?(:#{name}))
             write_attribute '#{name}', string_values
           else
             @#{name} = string_values
