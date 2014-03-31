@@ -9,7 +9,10 @@ module Enumerize
 
       @klass  = klass
       @name   = name.to_sym
-      @values = Array(options[:in]).map { |v| Value.new(self, *v) }
+
+      value_class = options.fetch(:value_class, Value)
+      @values = Array(options[:in]).map { |v| value_class.new(self, *v) }
+
       @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
       @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
 

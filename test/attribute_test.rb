@@ -19,6 +19,12 @@ describe Enumerize::Attribute do
     attr.name.must_equal :foo
   end
 
+  it 'uses custom value class' do
+    value_class = Class.new(Enumerize::Value)
+    build_attr nil, 'foo', :in => %w[a b], :value_class => value_class
+    attr.values.first.must_be_instance_of value_class
+  end
+
   describe 'i18n scopes' do
     it 'returns scopes from options' do
       build_attr nil, 'foo', :in => %w[a b], :i18n_scope => %w[bar buzz]
