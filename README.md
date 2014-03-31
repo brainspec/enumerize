@@ -78,14 +78,15 @@ en:
         female: "Female"
 ```
 
-or if you use `sex` attribute across several models you can use this:
+or if you use `sex` attribute across several models you can use `defaults` scope:
 
 ```ruby
 en:
   enumerize:
-    sex:
-      male: "Male"
-      female: "Female"
+    defaults:
+      sex:
+        male: "Male"
+        female: "Female"
 ```
 
 You can also pass `i18n_scope` option to specify scope (or array of scopes) storring the translations. Note that `i18n_scope` option does not accept scope as array:

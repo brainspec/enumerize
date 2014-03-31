@@ -21,6 +21,12 @@ describe Enumerize::Value do
       end
     end
 
+    it 'uses default translation from the "default" section if its present' do
+      store_translations(:en, :enumerize => {:defaults => {:attribute_name => {:test_value => "Common translation"}}}) do
+        value.text.must_be :==, "Common translation"
+      end
+    end
+
     it 'uses model specific translation' do
       attr.i18n_scopes = ["enumerize.model_name.attribute_name"]
 

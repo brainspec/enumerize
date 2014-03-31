@@ -34,6 +34,7 @@ module Enumerize
     def i18n_keys
       @i18n_keys ||= begin
         i18n_keys = i18n_scopes
+        i18n_keys << [:"enumerize.defaults.#{@attr.name}.#{self}"]
         i18n_keys << [:"enumerize.#{@attr.name}.#{self}"]
         i18n_keys << self.humanize # humanize value if there are no translations
         i18n_keys.flatten
