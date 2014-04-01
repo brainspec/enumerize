@@ -1,3 +1,28 @@
+## master
+
+### enhancements
+  * Use 'defaults' scope in the localization file for the attributes that used across several models. This will help to avoid conflicting keys with model names and attribute names. Example:
+
+  ```yml
+    en:
+      enumerize:
+        defaults:
+          sex:
+            male: Male
+            female: Female
+  ```
+
+  You still can use the old solution without "default" scope:
+
+  ```yml
+    en:
+      enumerize:
+        sex:
+          male: Male
+          female: Female
+  ```
+  (by [@nashby](https://github.com/nashby))
+
 ## 0.8.0 (March 4, 2014) ##
 
 ### enhancements
