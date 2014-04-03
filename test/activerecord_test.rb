@@ -57,6 +57,7 @@ end
 
 class UniqStatusUser < User
   validates :status, uniqueness: true
+  validates :sex, presence: true
 end
 
 describe Enumerize::ActiveRecordSupport do
@@ -257,6 +258,18 @@ describe Enumerize::ActiveRecordSupport do
     user.valid?
 
     user.errors[:status].wont_be :empty?
+  end
+
+  it 'is valid after #becomes' do
+    User.delete_all
+    user = User.new
+    user.sex = :male
+    user.save!
+
+    uniq_user = User.find(user.id).becomes(UniqStatusUser)
+    uniq_user.valid?
+
+    uniq_user.errors.must_be_empty
   end
 
   it 'supports multiple attributes in #becomes' do

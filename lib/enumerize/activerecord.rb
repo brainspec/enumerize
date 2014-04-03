@@ -55,9 +55,7 @@ module Enumerize
       def becomes(klass)
         became = super
         klass.enumerized_attributes.each do |attr|
-          if attr.is_a? Multiple
-            became.send("#{attr.name}=", send(attr.name))
-          end
+          became.send("#{attr.name}=", send(attr.name))
         end
 
         became
