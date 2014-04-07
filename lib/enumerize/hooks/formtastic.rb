@@ -10,10 +10,11 @@ module Enumerize
       end
 
       def input_with_enumerize(method, options={})
-        klass = object.class
+        klass = (defined? ::Ransack and object.is_a? ::Ransack::Search) ? object.klass : object.class
 
         if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[method])
           options[:collection] ||= attr.options
+          options[:as] = :select
 
           if attr.kind_of?(Enumerize::Multiple) && options[:as] != :check_boxes
             options[:input_html] = options.fetch(:input_html, {}).merge(:multiple => true)
