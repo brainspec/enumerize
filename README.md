@@ -34,6 +34,17 @@ Note that enumerized values are just identificators so if you want to use multi-
 ActiveRecord:
 
 ```ruby
+class CreateUsers < ActiveRecord::Migration
+  def change
+    create_table :users do |t|
+      t.string :sex
+      t.string :role
+
+      t.timestamps
+    end
+  end
+end
+
 class User < ActiveRecord::Base
   extend Enumerize
 
