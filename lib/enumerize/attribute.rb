@@ -137,14 +137,14 @@ module Enumerize
           _enumerized_values_for_validation[:#{name}] = values.respond_to?(:map) ? values.map(&:to_s) : values
 
           @_#{name}_enumerized_set = Enumerize::Set.new(self, self.class.enumerized_attributes[:#{name}], values)
-          string_values = #{name}.values.map(&:to_str)
+          raw_values = #{name}.values.map(&:value)
 
           if defined?(super)
-            super string_values
+            super raw_values
           elsif respond_to?(:write_attribute, true)
-            write_attribute '#{name}', string_values
+            write_attribute '#{name}', raw_values
           else
-            @#{name} = string_values
+            @#{name} = raw_values
           end
 
           #{name}

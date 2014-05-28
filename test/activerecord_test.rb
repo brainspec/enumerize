@@ -201,6 +201,22 @@ describe Enumerize::ActiveRecordSupport do
     user.must_be :valid?
   end
 
+  it 'stores custom values for multiple attributes' do
+    User.delete_all
+
+    klass = Class.new(User)
+    klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
+
+    user = klass.new
+    user.interests << :music
+    user.read_attribute(:interests).must_equal [0]
+    user.interests.must_equal %w(music)
+    user.save
+
+    user = klass.find(user.id)
+    user.interests.must_equal %w(music)
+  end
+
   it 'adds scope' do
     User.delete_all
 
