@@ -130,9 +130,17 @@ describe Enumerize::ActiveRecordSupport do
     user.errors[:role].must_include 'is not included in the list'
   end
 
-  it 'validates inclusion when using write_attribute' do
+  it 'validates inclusion when using write_attribute with string attribute' do
     user = User.new
     user.send(:write_attribute, 'role', 'wrong')
+    user.read_attribute_for_validation(:role).must_equal 'wrong'
+    user.wont_be :valid?
+    user.errors[:role].must_include 'is not included in the list'
+  end
+
+  it 'validates inclusion when using write_attribute with symbol attribute' do
+    user = User.new
+    user.send(:write_attribute, :role, 'wrong')
     user.read_attribute_for_validation(:role).must_equal 'wrong'
     user.wont_be :valid?
     user.errors[:role].must_include 'is not included in the list'
