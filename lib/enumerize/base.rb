@@ -50,6 +50,8 @@ module Enumerize
     end
 
     def read_attribute_for_validation(key)
+      key = key.to_s
+
       if _enumerized_values_for_validation.has_key?(key)
         _enumerized_values_for_validation[key]
       else
@@ -86,7 +88,7 @@ module Enumerize
           next
         end
 
-        if !attr_value && !_enumerized_values_for_validation.key?(attr.name)
+        if !attr_value && !_enumerized_values_for_validation.key?(attr.name.to_s)
           value = attr.default_value
 
           if value.respond_to?(:call)

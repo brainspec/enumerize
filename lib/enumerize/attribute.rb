@@ -87,8 +87,6 @@ module Enumerize
         end
 
         def #{name}=(new_value)
-          _enumerized_values_for_validation[:#{name}] = new_value.nil? ? nil : new_value.to_s
-
           allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(new_value)
           allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
 
@@ -99,6 +97,10 @@ module Enumerize
           else
             @#{name} = allowed_value_or_nil
           end
+
+          _enumerized_values_for_validation['#{name}'] = new_value.nil? ? nil : new_value.to_s
+
+          allowed_value_or_nil
         end
 
         def #{name}_text
@@ -134,8 +136,6 @@ module Enumerize
         end
 
         def #{name}=(values)
-          _enumerized_values_for_validation[:#{name}] = values.respond_to?(:map) ? values.map(&:to_s) : values
-
           @_#{name}_enumerized_set = Enumerize::Set.new(self, self.class.enumerized_attributes[:#{name}], values)
           raw_values = #{name}.values.map(&:value)
 
@@ -146,6 +146,8 @@ module Enumerize
           else
             @#{name} = raw_values
           end
+
+          _enumerized_values_for_validation['#{name}'] = values.respond_to?(:map) ? values.map(&:to_s) : values
 
           #{name}
         end
