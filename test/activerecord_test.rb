@@ -23,11 +23,6 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :visibility
     t.timestamps
   end
-
-  create_table :audit_trails do |t|
-    t.references :resource, :polymorphic => true
-    t.timestamps
-  end
 end
 
 class BaseEntity < ActiveRecord::Base
@@ -38,13 +33,6 @@ class BaseEntity < ActiveRecord::Base
 end
 
 class Document < BaseEntity
-end
-
-class AuditTrail < ActiveRecord::Base
-  extend Enumerize
-  enumerize :resource_type,  in: [ :Document, :Task ], scope: true
-  belongs_to :resource, :polymorphic => true
-  validates  :resource_type, presence: true
 end
 
 module RoleEnum
@@ -142,9 +130,17 @@ describe Enumerize::ActiveRecordSupport do
     user.errors[:role].must_include 'is not included in the list'
   end
 
-  it 'validates inclusion when using write_attribute' do
+  it 'validates inclusion when using write_attribute with string attribute' do
     user = User.new
     user.send(:write_attribute, 'role', 'wrong')
+    user.read_attribute_for_validation(:role).must_equal 'wrong'
+    user.wont_be :valid?
+    user.errors[:role].must_include 'is not included in the list'
+  end
+
+  it 'validates inclusion when using write_attribute with symbol attribute' do
+    user = User.new
+    user.send(:write_attribute, :role, 'wrong')
     user.read_attribute_for_validation(:role).must_equal 'wrong'
     user.wont_be :valid?
     user.errors[:role].must_include 'is not included in the list'
@@ -336,22 +332,5 @@ describe Enumerize::ActiveRecordSupport do
 
     expected = ActiveSupport::HashWithIndifferentAccess.new(status: [1, 2]).to_yaml
     assert_equal expected, user.changes.to_yaml
-  end
-
-  it 'should accept listed resource_type value' do
-    document = Document.new
-    audit_trail = AuditTrail.new
-    audit_trail.resource = document
-    audit_trail.resource_type.must_equal 'Document'
-    audit_trail.must_be :valid?
-  end
-
-  it 'should not accept not listed resource_type value' do
-    user = User.new
-    audit_trail = AuditTrail.new
-    audit_trail.resource = user
-    audit_trail.resource_type.must_equal nil
-    audit_trail.wont_be :valid?
-    audit_trail.errors[:resource_type].must_include 'is not included in the list'
   end
 end
