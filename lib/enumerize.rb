@@ -13,6 +13,7 @@ module Enumerize
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   autoload :ActiveRecordSupport, 'enumerize/activerecord'
+  autoload :SequelSupport, 'enumerize/sequel'
 
   def self.included(base)
     ActiveSupport::Deprecation.warn '`include Enumerize` was deprecated. Please use `extend Enumerize`.', caller
@@ -23,6 +24,7 @@ module Enumerize
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
     base.extend Enumerize::ActiveRecordSupport
+    base.extend Enumerize::SequelSupport
 
     if defined?(::RailsAdmin)
       require 'enumerize/integrations/rails_admin'

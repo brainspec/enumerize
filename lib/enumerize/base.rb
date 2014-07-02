@@ -54,8 +54,10 @@ module Enumerize
 
       if _enumerized_values_for_validation.has_key?(key)
         _enumerized_values_for_validation[key]
-      else
+      elsif defined?(super)
         super
+      else
+        send(key)
       end
     end
 
@@ -84,8 +86,12 @@ module Enumerize
         # https://github.com/brainspec/enumerize/issues/101
         begin
           attr_value = public_send(attr.name)
-        rescue ActiveModel::MissingAttributeError
-          next
+        rescue StandardError => ex
+          if defined?(ActiveModel::MissingAttributeError) && ex.is_a?(ActiveModel::MissingAttributeError)
+            next
+          else
+            raise ex
+          end
         end
 
         if !attr_value && !_enumerized_values_for_validation.key?(attr.name.to_s)
