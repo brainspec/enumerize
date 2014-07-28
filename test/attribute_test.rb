@@ -62,6 +62,13 @@ describe Enumerize::Attribute do
       end
     end
 
+    it 'returns requested options for select when column is integer' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => { a: 1, b: 2 }
+        attr.options.must_equal [['a text', 1], ['b text', 2]]
+      end
+    end
+
     it 'does not work with both :only and :except' do
       store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
         build_attr nil, :foo, :in => %w[a b]
