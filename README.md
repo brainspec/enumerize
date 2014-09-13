@@ -326,6 +326,9 @@ end
 describe User do
   it { should enumerize(:sex).in(:male, :female) }
   it { should enumerize(:sex).in(:male, :female).with_default(:male) }
+  
+  # or with RSpec 3 expect synatax
+  it { is_expected.to enumerize(:sex).in(:male, :female) }
 end
 ```
 
