@@ -284,7 +284,7 @@ module SequelTest
       user = User.create(:status => :active)
       user.status = :blocked
 
-      expected = { status: ["1", 2] }.to_yaml
+      expected = { status: [1, 2] }.to_yaml
       assert_equal expected, user.column_changes.to_yaml
     end
   end

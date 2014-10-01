@@ -10,6 +10,8 @@ module Enumerize
           end
 
           include InstanceMethods
+
+          require 'enumerize/hooks/sequel_dataset'
         end
       end
     end
@@ -68,18 +70,6 @@ module Enumerize
         end
 
         super
-      end
-
-      def change_column_value(*)
-        @_enumerize_bypass_attr_reader = true
-        super
-        @_enumerize_bypass_attr_reader = false
-      end
-
-      def validates_unique(*)
-        @_enumerize_bypass_attr_reader = true
-        super
-        @_enumerize_bypass_attr_reader = false
       end
     end
   end
