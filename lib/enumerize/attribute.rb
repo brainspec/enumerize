@@ -67,7 +67,7 @@ module Enumerize
         end
       end
 
-      values.map { |v| [v.text, v.value] }
+      values.map { |v| [v.text, v.to_s] }
     end
 
     def define_methods!(mod)
