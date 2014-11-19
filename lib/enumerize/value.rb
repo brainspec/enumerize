@@ -23,12 +23,8 @@ module Enumerize
 
     private
 
-    def define_query_method(value)
-      singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{value}?
-          #{value == self}
-        end
-      RUBY
+    def predicate_call(value)
+      value == self
     end
 
     def i18n_keys
