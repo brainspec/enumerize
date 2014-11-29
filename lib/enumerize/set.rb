@@ -34,6 +34,10 @@ module Enumerize
       @values.to_a
     end
 
+    def texts
+      @values.collect { |value| value.text }
+    end
+
     delegate :join, to: :to_ary
 
     def ==(other)
