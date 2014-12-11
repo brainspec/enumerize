@@ -1,6 +1,8 @@
-## master
+## 0.9.0 (December 11, 2014) ##
 
 ### enhancements
+
+  * Add :value_class option (by [@lest](https://github.com/lest))
   * Use 'defaults' scope in the localization file for the attributes that used across several models. This will help to avoid conflicting keys with model names and attribute names. Example:
 
   ```yml
@@ -22,6 +24,12 @@
           female: Female
   ```
   (by [@nashby](https://github.com/nashby))
+
+### bug fix
+  * Store values for validation using string keys (by [@nagyt234](https://github.com/nagyt234))
+  * Store custom values for multiple attributes (by [@lest](https://github.com/lest))
+  * Support validations after using AR#becomes (by [@lest](https://github.com/lest))
+  * Do not try to set attribute for not selected attributes (by [@dany1468](https://github.com/dany1468))
 
 ## 0.8.0 (March 4, 2014) ##
 
