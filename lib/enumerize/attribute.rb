@@ -4,6 +4,7 @@ module Enumerize
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
+      raise ArgumentError, ':scope option does not work with option :multiple' if options[:multiple] && options[:scope]
 
       extend Multiple if options[:multiple]
 
