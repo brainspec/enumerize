@@ -251,6 +251,8 @@ User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
 ```
 
+:warning: It is not possible to define a scope when using the `:multiple` option. :warning:
+
 Array-like attributes with plain ruby objects:
 
 ```ruby
