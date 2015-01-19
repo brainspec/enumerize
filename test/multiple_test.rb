@@ -33,4 +33,10 @@ describe Enumerize::Base do
     klass.enumerize :foos, in: %w(a b c), multiple: true
     object.wont_respond_to :foos_value
   end
+
+  it "cannot define multiple with scope" do
+    assert_raises ArgumentError do
+      klass.enumerize :foos, in: %w(a b c), multiple: true, scope: true
+    end
+  end
 end
