@@ -6,6 +6,11 @@ module Enumerize
       if base.respond_to?(:validate)
         base.validate :_validate_enumerized_attributes
       end
+
+      class << base
+        alias_method :inherited_without_enumerized, :inherited
+        alias_method :inherited, :inherited_with_enumerized
+      end
     end
 
     module ClassMethods
@@ -28,9 +33,9 @@ module Enumerize
         @enumerized_attributes ||= AttributeMap.new
       end
 
-      def inherited(subclass)
+      def inherited_with_enumerized(subclass)
         enumerized_attributes.add_dependant subclass.enumerized_attributes
-        super
+        inherited_without_enumerized subclass
       end
 
       private
