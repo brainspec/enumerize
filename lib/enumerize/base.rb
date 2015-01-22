@@ -8,7 +8,9 @@ module Enumerize
       end
 
       class << base
-        alias_method :inherited_without_enumerized, :inherited
+        if self.respond_to? :inherited
+          alias_method :inherited_without_enumerized, :inherited
+        end
         alias_method :inherited, :inherited_with_enumerized
       end
     end
@@ -35,7 +37,10 @@ module Enumerize
 
       def inherited_with_enumerized(subclass)
         enumerized_attributes.add_dependant subclass.enumerized_attributes
-        inherited_without_enumerized subclass
+
+        if respond_to?  :inherited_without_enumerized
+          inherited_without_enumerized subclass
+        end
       end
 
       private
