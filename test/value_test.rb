@@ -13,7 +13,7 @@ describe Enumerize::Value do
   end
 
   describe 'translation' do
-    let(:attr)  { Struct.new(:values, :name, :i18n_scopes).new([], "attribute_name", []) }
+    let(:attr)  { Struct.new(:values, :name, :i18n_scopes, :text_transform).new([], "attribute_name", [], nil) }
 
     it 'uses common translation' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
@@ -40,6 +40,13 @@ describe Enumerize::Value do
 
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}, :model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
         value.text.must_be :==, "Model Specific translation"
+      end
+    end
+
+    it 'uses text_transform proc when translation is undefined' do
+      attr.text_transform = proc { |value| value.dasherize }
+      store_translations(:en, :enumerize => {}) do
+        value.text.must_be :==, "test-value"
       end
     end
 
