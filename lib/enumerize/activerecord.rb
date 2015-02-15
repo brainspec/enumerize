@@ -5,10 +5,6 @@ module Enumerize
 
       _enumerize_module.dependent_eval do
         if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
-          if options[:scope]
-            _define_scope_methods!(name, options)
-          end
-
           include InstanceMethods
 
           # Since Rails use `allocate` method on models and initializes them with `init_with` method.
@@ -17,26 +13,6 @@ module Enumerize
 
           # https://github.com/brainspec/enumerize/issues/111
           require 'enumerize/hooks/uniqueness'
-        end
-      end
-    end
-
-    private
-
-    def _define_scope_methods!(name, options)
-      scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
-
-      define_singleton_method scope_name do |*values|
-        values = values.map { |value| enumerized_attributes[name].find_value(value).value }
-        values = values.first if values.size == 1
-
-        where(name => values)
-      end
-
-      if options[:scope] == true
-        define_singleton_method "without_#{name}" do |*values|
-          values = values.map { |value| enumerized_attributes[name].find_value(value).value }
-          where(arel_table[name].not_in(values))
         end
       end
     end
