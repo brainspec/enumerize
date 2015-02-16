@@ -18,10 +18,7 @@ module Enumerize
     end
 
     def ==(other)
-      return super(other) if other.is_a? String
-      return super(other.to_s) if other.is_a? Symbol
-      return value == other if other.is_a?(Integer) && value.is_a?(Integer)
-      super other
+      super(other.to_s) || value == other
     end
 
     def encode_with(coder)
