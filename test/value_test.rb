@@ -119,6 +119,8 @@ describe Enumerize::Value do
   end
 
   describe 'serialization' do
+    let(:value) { Enumerize::Value.new(attr, 'test_value') }
+
     it 'should be serialized to yaml as string value' do
       assert_equal YAML.dump('test_value'), YAML.dump(value)
     end
