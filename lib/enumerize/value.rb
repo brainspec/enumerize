@@ -36,7 +36,14 @@ module Enumerize
         i18n_keys = i18n_scopes
         i18n_keys << [:"enumerize.defaults.#{@attr.name}.#{self}"]
         i18n_keys << [:"enumerize.#{@attr.name}.#{self}"]
-        i18n_keys << self.underscore.humanize # humanize value if there are no translations
+
+        # if there are no translations
+        i18n_keys << if @attr.text_transform.nil?
+                       self.underscore.humanize
+                     else
+                       @attr.text_transform.call(self)
+                     end
+
         i18n_keys.flatten
       end
     end

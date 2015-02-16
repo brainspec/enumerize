@@ -1,6 +1,6 @@
 module Enumerize
   class Attribute
-    attr_reader :name, :values, :default_value, :i18n_scope
+    attr_reader :name, :values, :default_value, :i18n_scope, :text_transform
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
@@ -25,6 +25,10 @@ module Enumerize
       if options[:default]
         @default_value = find_default_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
+      end
+
+      if options[:text_transform]
+        @text_transform = options[:text_transform]
       end
     end
 
