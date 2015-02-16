@@ -21,8 +21,7 @@ module Enumerize
       # Define methods to get each value
       @values.each do |v|
         metaclass = class << self; self; end
-        metaclass.send(:define_method, v.to_s) { v.value }
-        metaclass.send(:define_method, v.to_s + '_text' ) { v.text }
+        metaclass.send(:define_method, v.to_s) { v }
       end
     end
 
