@@ -2,14 +2,27 @@ require 'test_helper'
 
 describe Enumerize::Value do
   let(:attr)  { Struct.new(:values).new([]) }
-  let(:value) { Enumerize::Value.new(attr, 'test_value') }
+  let(:value) { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
     value.must_be_kind_of String
   end
 
-  it 'is compared to string' do
-    value.must_be :==, 'test_value'
+  describe 'equality' do
+    it 'is compared to string' do
+      value.must_be :==, 'test_value'
+      value.wont_be :==, 'not_value'
+    end
+
+    it 'is compared to symbol' do
+      value.must_be :==, :test_value
+      value.wont_be :==, :not_value
+    end
+
+    it 'is compared to integer' do
+      value.must_be :==, 1
+      value.wont_be :==, 2
+    end
   end
 
   describe 'translation' do
@@ -106,6 +119,8 @@ describe Enumerize::Value do
   end
 
   describe 'serialization' do
+    let(:value) { Enumerize::Value.new(attr, 'test_value') }
+
     it 'should be serialized to yaml as string value' do
       assert_equal YAML.dump('test_value'), YAML.dump(value)
     end
