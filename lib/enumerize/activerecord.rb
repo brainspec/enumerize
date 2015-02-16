@@ -13,6 +13,14 @@ module Enumerize
 
           # https://github.com/brainspec/enumerize/issues/111
           require 'enumerize/hooks/uniqueness'
+        elsif defined?(::Mongoid::Document) and self < ::Mongoid::Document
+          if options[:scope]
+            _define_scope_methods!(name, options)
+          end
+
+          include InstanceMethods
+
+          after_initialize :_set_default_value_for_enumerized_attributes
         end
       end
     end
