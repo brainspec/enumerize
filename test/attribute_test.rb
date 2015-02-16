@@ -67,4 +67,12 @@ describe Enumerize::Attribute do
       attr.find_value(2).must_equal 'b'
     end
   end
+
+  it 'sets up shortcut methods for each value' do
+    build_attr nil, :foo, :in => {:a => 1, :b => 2}
+    attr.a.value.must_equal 1
+    attr.b.value.must_equal 2
+    attr.a.text.must_equal 'A'
+    attr.b.text.must_equal 'B'
+  end
 end
