@@ -14,6 +14,11 @@ module Enumerize
 
   autoload :ActiveRecordSupport, 'enumerize/activerecord'
 
+  module Scope
+    autoload :ActiveRecord, 'enumerize/scope/activerecord'
+    autoload :Mongoid,      'enumerize/scope/mongoid'
+  end
+
   def self.included(base)
     ActiveSupport::Deprecation.warn '`include Enumerize` was deprecated. Please use `extend Enumerize`.', caller
     extended(base)
@@ -23,6 +28,8 @@ module Enumerize
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
     base.extend Enumerize::ActiveRecordSupport
+    base.extend Enumerize::Scope::ActiveRecord if defined?(::ActiveRecord::Base)
+    base.extend Enumerize::Scope::Mongoid      if defined?(::Mongoid::Document)
 
     if defined?(::RailsAdmin)
       require 'enumerize/integrations/rails_admin'
