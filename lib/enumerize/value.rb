@@ -4,15 +4,13 @@ module Enumerize
   class Value < String
     include Predicatable
 
+    attr_reader :value
+
     def initialize(attr, name, value=nil)
       @attr  = attr
-      @value = value || name.to_s
+      @value = value.nil? ? name.to_s : value
 
       super(name.to_s)
-    end
-
-    def value
-      @value
     end
 
     def text
@@ -24,6 +22,10 @@ module Enumerize
       return super(other.to_s) if other.is_a? Symbol
       return value == other if other.is_a?(Integer) && value.is_a?(Integer)
       super other
+    end
+
+    def encode_with(coder)
+      coder.represent_object(self.class.superclass, @value)
     end
 
     private
@@ -38,19 +40,16 @@ module Enumerize
 
     def i18n_keys
       @i18n_keys ||= begin
-        i18n_keys = []
-        i18n_keys << i18n_scope(i18n_suffix)
-        i18n_keys << i18n_scope
-        i18n_keys << self.humanize # humanize value if there are no translations
+        i18n_keys = i18n_scopes
+        i18n_keys << [:"enumerize.defaults.#{@attr.name}.#{self}"]
+        i18n_keys << [:"enumerize.#{@attr.name}.#{self}"]
+        i18n_keys << self.underscore.humanize # humanize value if there are no translations
+        i18n_keys.flatten
       end
     end
 
-    def i18n_scope(suffix = nil)
-      :"enumerize.#{suffix}#{@attr.name}.#{self}"
-    end
-
-    def i18n_suffix
-      "#{@attr.i18n_suffix}." if @attr.i18n_suffix
+    def i18n_scopes
+      @attr.i18n_scopes.map { |s| :"#{s}.#{self}" }
     end
   end
 end

@@ -11,7 +11,7 @@ Rake::TestTask.new do |t|
 end
 
 RSpec::Core::RakeTask.new('default') do |t|
-  t.pattern = FileList['test/rspec_spec.rb']
+  t.pattern = 'test/rspec_spec.rb'
 end
 
 task :default => :test
