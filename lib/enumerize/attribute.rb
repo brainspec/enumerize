@@ -40,6 +40,10 @@ module Enumerize
       @value_hash[value.to_s] unless value.nil?
     end
 
+    def find_values(*values)
+      values.map { |value| find_value(value) }.compact
+    end
+
     def i18n_scopes
       @i18n_scopes ||= if i18n_scope
         scopes = Array(i18n_scope)

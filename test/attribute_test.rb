@@ -99,6 +99,10 @@ describe Enumerize::Attribute do
       attr.find_value(2).must_equal 'b'
       attr.find_value(0).must_equal 'c'
     end
+
+    it 'finds all values by hash values' do
+      attr.find_values(1, 2, 0).must_equal ['a', 'b', 'c']
+    end
   end
 
   describe 'boolean values hash' do

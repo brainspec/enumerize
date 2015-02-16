@@ -19,7 +19,7 @@ module Enumerize
         scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
 
         define_singleton_method scope_name do |*values|
-          values = values.map { |value| enumerized_attributes[name].find_value(value).value }
+          values = enumerized_attributes[name].find_values(*values).map(&:value)
 
           if values.size == 1
             where(name => values.first)
@@ -30,7 +30,7 @@ module Enumerize
 
         if options[:scope] == true
           define_singleton_method "without_#{name}" do |*values|
-            values = values.map { |value| enumerized_attributes[name].find_value(value).value }
+            values = enumerized_attributes[name].find_values(*values).map(&:value)
             not_in(name => values)
           end
         end

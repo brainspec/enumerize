@@ -242,6 +242,12 @@ describe Enumerize::ActiveRecordSupport do
     User.having_role(:admin).must_equal [user_1]
   end
 
+  it 'ignores not enumerized values that passed to the scope method' do
+    User.delete_all
+
+    User.with_status(:foo).must_equal []
+  end
+
   it 'allows either key or value as valid' do
     user_1 = User.new(status: :active)
     user_2 = User.new(status: 1)
