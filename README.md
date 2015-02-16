@@ -34,6 +34,17 @@ Note that enumerized values are just identificators so if you want to use multi-
 ActiveRecord:
 
 ```ruby
+class CreateUsers < ActiveRecord::Migration
+  def change
+    create_table :users do |t|
+      t.string :sex
+      t.string :role
+
+      t.timestamps
+    end
+  end
+end
+
 class User < ActiveRecord::Base
   extend Enumerize
 
@@ -78,14 +89,39 @@ en:
         female: "Female"
 ```
 
-or if you use `sex` attribute across several models you can use this:
+or if you use `sex` attribute across several models you can use `defaults` scope:
 
 ```ruby
 en:
   enumerize:
-    sex:
-      male: "Male"
-      female: "Female"
+    defaults:
+      sex:
+        male: "Male"
+        female: "Female"
+```
+
+You can also pass `i18n_scope` option to specify scope (or array of scopes) storring the translations. Note that `i18n_scope` option does not accept scope as array:
+
+
+```ruby
+class Person
+  extend Enumerize
+  extend ActiveModel::Naming
+
+  enumerize :sex, in: %w[male female], i18n_scope: "sex"
+  enumerize :color, in: %w[black white], i18n_scope: ["various.colors", "colors"]
+end
+
+# localization file
+en:
+  sex:
+    male: "Male"
+    female: "Female"
+  various:
+    colors:
+      black: "Black"
+  colors:
+    white: "White"
 ```
 
 Note that if you want to use I18n feature with plain Ruby object don't forget to extend it with `ActiveModel::Naming`:
@@ -191,6 +227,9 @@ user = User.new
 user.role = :user
 user.role #=> 'user'
 user.role_value #=> 1
+
+User.role.find_value(:user).value #=> 1
+User.role.find_value(:admin).value #=> 2
 ```
 
 ActiveRecord scopes:
@@ -211,6 +250,8 @@ User.without_sex(:male)
 User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
 ```
+
+:warning: It is not possible to define a scope when using the `:multiple` option. :warning:
 
 Array-like attributes with plain ruby objects:
 
@@ -287,6 +328,24 @@ end
 describe User do
   it { should enumerize(:sex).in(:male, :female) }
   it { should enumerize(:sex).in(:male, :female).with_default(:male) }
+
+  # or with RSpec 3 expect syntax
+  it { is_expected.to enumerize(:sex).in(:male, :female) }
+end
+```
+
+### Minitest with Shoulda
+
+You can use the RSpec matcher with shoulda in your tests by adding two lines in your `test_helper.rb` inside `class ActiveSupport::TestCase` definition:
+
+```ruby
+class ActiveSupport::TestCase
+  ActiveRecord::Migration.check_pending!
+
+  require 'enumerize/integrations/rspec'
+  extend Enumerize::Integrations::RSpec
+
+  ...
 end
 ```
 

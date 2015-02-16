@@ -17,8 +17,9 @@ describe Enumerize do
 
     field :sex
     field :role
-    enumerize :sex, :in => %w[male female]
-    enumerize :role, :in => %w[admin user], :default => 'user'
+    enumerize :sex, :in => %w[male female], scope: true
+    enumerize :role, :in => %w[admin user], :default => 'user', scope: :having_role
+    enumerize :mult, :in => %w[one two three four], :multiple => true
   end
 
   before { $VERBOSE = nil }
@@ -66,5 +67,37 @@ describe Enumerize do
     user = model.first
     user.sex = :female
     user.sex.must_equal 'female'
+  end
+
+  it 'loads multiple properly' do
+    model.delete_all
+
+    model.create!(:mult => ['one', 'two'])
+    user = model.first
+    user.mult.to_a.must_equal ['one', 'two']
+  end
+
+  it 'adds scope' do
+    model.delete_all
+
+    user_1 = model.create!(sex: :male, role: :admin)
+    user_2 = model.create!(sex: :female, role: :user)
+
+    model.with_sex(:male).to_a.must_equal [user_1]
+    model.with_sex(:female).to_a.must_equal [user_2]
+    model.with_sex(:male, :female).to_set.must_equal [user_1, user_2].to_set
+
+    model.without_sex(:male).to_a.must_equal [user_2]
+    model.without_sex(:female).to_a.must_equal [user_1]
+    model.without_sex(:male, :female).to_a.must_equal []
+
+    model.having_role(:admin).to_a.must_equal [user_1]
+    model.having_role(:user).to_a.must_equal [user_2]
+  end
+
+  it 'ignores not enumerized values that passed to the scope method' do
+    model.delete_all
+
+    model.with_sex(:foo).must_equal []
   end
 end

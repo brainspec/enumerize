@@ -1,17 +1,26 @@
 module Enumerize
   class Attribute
-    attr_reader :name, :values, :default_value
+    attr_reader :name, :values, :default_value, :i18n_scope
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
+      raise ArgumentError, ':scope option does not work with option :multiple' if options[:multiple] && options[:scope]
 
       extend Multiple if options[:multiple]
 
       @klass  = klass
       @name   = name.to_sym
-      @values = Array(options[:in]).map { |v| Value.new(self, *v) }
+
+      value_class = options.fetch(:value_class, Value)
+      @values = Array(options[:in]).map { |v| value_class.new(self, *v) }
+
       @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
       @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
+
+      if options[:i18n_scope]
+        raise ArgumentError, ':i18n_scope option accepts only String or Array of strings' unless Array(options[:i18n_scope]).all? { |s| s.is_a?(String) }
+        @i18n_scope = options[:i18n_scope]
+      end
 
       if options[:default]
         @default_value = find_default_value(options[:default])
@@ -37,8 +46,18 @@ module Enumerize
       @value_hash[value.to_s] unless value.nil?
     end
 
-    def i18n_suffix
-      @klass.model_name.i18n_key if @klass.respond_to?(:model_name)
+    def find_values(*values)
+      values.map { |value| find_value(value) }.compact
+    end
+
+    def i18n_scopes
+      @i18n_scopes ||= if i18n_scope
+        scopes = Array(i18n_scope)
+      elsif @klass.respond_to?(:model_name)
+        scopes = ["enumerize.#{@klass.model_name.i18n_key}.#{name}"]
+      else
+        []
+      end
     end
 
     def options(options = {})
@@ -79,8 +98,6 @@ module Enumerize
         end
 
         def #{name}=(new_value)
-          _enumerized_values_for_validation[:#{name}] = new_value.nil? ? nil : new_value.to_s
-
           allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(new_value)
           allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
 
@@ -91,6 +108,10 @@ module Enumerize
           else
             @#{name} = allowed_value_or_nil
           end
+
+          _enumerized_values_for_validation['#{name}'] = new_value.nil? ? nil : new_value.to_s
+
+          allowed_value_or_nil
         end
 
         def #{name}_text
@@ -111,6 +132,8 @@ module Enumerize
           unless defined?(@_#{name}_enumerized_set)
             if defined?(super)
               self.#{name} = super
+            elsif respond_to?(:read_attribute)
+              self.#{name} = read_attribute(:#{name})
             else
               if defined?(@#{name})
                 self.#{name} = @#{name}
@@ -124,18 +147,18 @@ module Enumerize
         end
 
         def #{name}=(values)
-          _enumerized_values_for_validation[:#{name}] = values.respond_to?(:map) ? values.map(&:to_s) : values
-
           @_#{name}_enumerized_set = Enumerize::Set.new(self, self.class.enumerized_attributes[:#{name}], values)
-          string_values = #{name}.values.map(&:to_str)
+          raw_values = #{name}.values.map(&:value)
 
           if defined?(super)
-            super string_values
+            super raw_values
           elsif respond_to?(:write_attribute, true)
-            write_attribute '#{name}', string_values
+            write_attribute '#{name}', raw_values
           else
-            @#{name} = string_values
+            @#{name} = raw_values
           end
+
+          _enumerized_values_for_validation['#{name}'] = values.respond_to?(:map) ? values.map(&:to_s) : values
 
           #{name}
         end

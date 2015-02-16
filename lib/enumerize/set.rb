@@ -1,3 +1,5 @@
+require 'active_support/core_ext/module/delegation'
+
 module Enumerize
   class Set
     include Enumerable
@@ -8,12 +10,15 @@ module Enumerize
     def initialize(obj, attr, values)
       @obj    = obj
       @attr   = attr
-      @values = ::Set.new
+      @values = []
 
       if values.respond_to?(:each)
         values.each do |input|
           value = @attr.find_value(input)
-          @values << value if value
+
+          if value && !@values.include?(value)
+            @values << value
+          end
         end
       end
     end

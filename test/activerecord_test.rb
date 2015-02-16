@@ -21,6 +21,7 @@ ActiveRecord::Base.connection.instance_eval do
 
   create_table :documents do |t|
     t.string :visibility
+    t.timestamps
   end
 end
 
@@ -54,7 +55,12 @@ class User < ActiveRecord::Base
   enumerize :account_type, :in => [:basic, :premium]
 end
 
-describe Enumerize::ActiveRecord do
+class UniqStatusUser < User
+  validates :status, uniqueness: true
+  validates :sex, presence: true
+end
+
+describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
@@ -87,7 +93,8 @@ describe Enumerize::ActiveRecord do
   it 'does not set default value for not selected attributes' do
     User.delete_all
     User.create!(:sex => :male)
-    User.select(:id).collect(&:id)
+
+    assert_equal ['id'], User.select(:id).first.attributes.keys
   end
 
   it 'has default value with lambda' do
@@ -123,9 +130,18 @@ describe Enumerize::ActiveRecord do
     user.errors[:role].must_include 'is not included in the list'
   end
 
-  it 'validates inclusion when using write_attribute' do
+  it 'validates inclusion when using write_attribute with string attribute' do
+    user = User.new
+    user.send(:write_attribute, 'role', 'wrong')
+    user.read_attribute_for_validation(:role).must_equal 'wrong'
+    user.wont_be :valid?
+    user.errors[:role].must_include 'is not included in the list'
+  end
+
+  it 'validates inclusion when using write_attribute with symbol attribute' do
     user = User.new
     user.send(:write_attribute, :role, 'wrong')
+    user.read_attribute_for_validation(:role).must_equal 'wrong'
     user.wont_be :valid?
     user.errors[:role].must_include 'is not included in the list'
   end
@@ -194,7 +210,25 @@ describe Enumerize::ActiveRecord do
     user.must_be :valid?
   end
 
+  it 'stores custom values for multiple attributes' do
+    User.delete_all
+
+    klass = Class.new(User)
+    klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
+
+    user = klass.new
+    user.interests << :music
+    user.read_attribute(:interests).must_equal [0]
+    user.interests.must_equal %w(music)
+    user.save
+
+    user = klass.find(user.id)
+    user.interests.must_equal %w(music)
+  end
+
   it 'adds scope' do
+    User.delete_all
+
     user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
 
@@ -206,6 +240,12 @@ describe Enumerize::ActiveRecord do
     User.without_status(:active, :blocked).must_equal []
 
     User.having_role(:admin).must_equal [user_1]
+  end
+
+  it 'ignores not enumerized values that passed to the scope method' do
+    User.delete_all
+
+    User.with_status(:foo).must_equal []
   end
 
   it 'allows either key or value as valid' do
@@ -223,15 +263,80 @@ describe Enumerize::ActiveRecord do
   end
 
   it 'supports defining enumerized attributes on abstract class' do
+    Document.delete_all
+
     document = Document.new
     document.visibility = :protected
     document.visibility.must_equal 'protected'
   end
 
   it 'supports defining enumerized scopes on abstract class' do
+    Document.delete_all
+
     document_1 = Document.create!(visibility: :public)
     document_2 = Document.create!(visibility: :private)
 
     Document.with_visibility(:public).must_equal [document_1]
+  end
+
+  it 'validates uniqueness' do
+    user = User.new
+    user.status = :active
+    user.save!
+
+    user = UniqStatusUser.new
+    user.status = :active
+    user.valid?
+
+    user.errors[:status].wont_be :empty?
+  end
+
+  it 'is valid after #becomes' do
+    User.delete_all
+    user = User.new
+    user.sex = :male
+    user.save!
+
+    uniq_user = User.find(user.id).becomes(UniqStatusUser)
+    uniq_user.valid?
+
+    uniq_user.errors.must_be_empty
+  end
+
+  it 'supports multiple attributes in #becomes' do
+    User.delete_all
+
+    uniq_user = UniqStatusUser.new
+    uniq_user.interests = [:sports, :dancing]
+    uniq_user.sex = :male
+    uniq_user.save!
+
+    user = uniq_user.becomes(User)
+
+    user.sex.must_equal uniq_user.sex
+    user.interests.must_equal uniq_user.interests
+  end
+
+  it "doesn't update record" do
+    Document.delete_all
+
+    expected = Time.utc(2010, 10, 10)
+
+    document = Document.new
+    document.updated_at = expected
+    document.save!
+
+    document = Document.last
+    document.save!
+
+    assert_equal expected, document.updated_at
+  end
+
+  it 'changes from dirty should be serialized as scalar values' do
+    user = User.create(:status => :active)
+    user.status = :blocked
+
+    expected = ActiveSupport::HashWithIndifferentAccess.new(status: [1, 2]).to_yaml
+    assert_equal expected, user.changes.to_yaml
   end
 end

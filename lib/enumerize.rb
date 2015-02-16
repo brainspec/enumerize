@@ -8,10 +8,16 @@ module Enumerize
   autoload :Set,          'enumerize/set'
   autoload :Base,         'enumerize/base'
   autoload :Module,       'enumerize/module'
-  autoload :ActiveRecord, 'enumerize/activerecord'
   autoload :Predicates,   'enumerize/predicates'
   autoload :Predicatable, 'enumerize/predicatable'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
+
+  autoload :ActiveRecordSupport, 'enumerize/activerecord'
+
+  module Scope
+    autoload :ActiveRecord, 'enumerize/scope/activerecord'
+    autoload :Mongoid,      'enumerize/scope/mongoid'
+  end
 
   def self.included(base)
     ActiveSupport::Deprecation.warn '`include Enumerize` was deprecated. Please use `extend Enumerize`.', caller
@@ -21,7 +27,9 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
-    base.extend Enumerize::ActiveRecord
+    base.extend Enumerize::ActiveRecordSupport
+    base.extend Enumerize::Scope::ActiveRecord if defined?(::ActiveRecord::Base)
+    base.extend Enumerize::Scope::Mongoid      if defined?(::Mongoid::Document)
 
     if defined?(::RailsAdmin)
       require 'enumerize/integrations/rails_admin'
@@ -49,7 +57,10 @@ module Enumerize
   rescue LoadError
   end
 
-  if defined?(::RSpec)
+  begin
+    require 'rspec/matchers'
+  rescue LoadError
+  else
     require 'enumerize/integrations/rspec'
   end
 end

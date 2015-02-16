@@ -1,47 +1,40 @@
 module Enumerize
-  module ActiveRecord
+  module ActiveRecordSupport
     def enumerize(name, options={})
       super
 
-      if options[:scope]
-        _enumerize_module.dependent_eval do
-          if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
-            _define_scope_methods!(name, options)
+      _enumerize_module.dependent_eval do
+        if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
+          include InstanceMethods
 
-            class_eval do
-              # https://github.com/brainspec/enumerize/issues/74
-              def write_attribute(attr_name, value)
-                _enumerized_values_for_validation[attr_name] = value
+          # Since Rails use `allocate` method on models and initializes them with `init_with` method.
+          # This way `initialize` method is not being called, but `after_initialize` callback always gets triggered.
+          after_initialize :_set_default_value_for_enumerized_attributes
 
-                super
-              end
-
-              # Since Rails use `allocate` method on models and initializes them with `init_with` method.
-              # This way `initialize` method is not being called, but `after_initialize` callback always gets triggered.
-              after_initialize :_set_default_value_for_enumerized_attributes
-            end
-          end
+          # https://github.com/brainspec/enumerize/issues/111
+          require 'enumerize/hooks/uniqueness'
         end
       end
     end
 
-    private
+    module InstanceMethods
+      # https://github.com/brainspec/enumerize/issues/74
+      def write_attribute(attr_name, value)
+        if self.class.enumerized_attributes[attr_name]
+          _enumerized_values_for_validation[attr_name.to_s] = value
+        end
 
-    def _define_scope_methods!(name, options)
-      scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
-
-      define_singleton_method scope_name do |*values|
-        values = values.map { |value| enumerized_attributes[name].find_value(value).value }
-        values = values.first if values.size == 1
-
-        where(name => values)
+        super
       end
 
-      if options[:scope] == true
-        define_singleton_method "without_#{name}" do |*values|
-          values = values.map { |value| enumerized_attributes[name].find_value(value).value }
-          where(arel_table[name].not_in(values))
+      # Support multiple enumerized attributes
+      def becomes(klass)
+        became = super
+        klass.enumerized_attributes.each do |attr|
+          became.send("#{attr.name}=", send(attr.name))
         end
+
+        became
       end
     end
   end
