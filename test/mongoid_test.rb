@@ -94,4 +94,10 @@ describe Enumerize do
     model.having_role(:admin).to_a.must_equal [user_1]
     model.having_role(:user).to_a.must_equal [user_2]
   end
+
+  it 'ignores not enumerized values that passed to the scope method' do
+    model.delete_all
+
+    model.with_sex(:foo).must_equal []
+  end
 end
