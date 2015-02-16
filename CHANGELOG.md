@@ -1,3 +1,9 @@
+## master
+
+### enhancements
+
+ * Add scopes support to mongoid documents (by [@nashby](https://github.com/nashby))
+
 ## 0.9.0 (December 11, 2014) ##
 
 ### enhancements
