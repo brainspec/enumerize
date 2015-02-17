@@ -2,7 +2,18 @@
 
 ### enhancements
 
+### bug fix
+
+## 0.10.0 (February 17, 2015) ##
+
+### enhancements
+
  * Add scopes support to mongoid documents (by [@nashby](https://github.com/nashby))
+ * Use underscore.humanize in #text to make use of Inflector acronyms (by [@mintuhouse](https://github.com/mintuhouse))
+ * Raise an exception when :scope option is used together with :multiple option (by [@maurogeorge](https://github.com/maurogeorge))
+ * Use alias_method_chain instead of overriding Class#inherited (by [@yuroyoro](https://github.com/yuroyoro))
+ * Shortcut methods to retrieve enumerize values (by [@CyborgMaster](https://github.com/CyborgMaster))
+ * Extend equality operator to support comparing with symbols and custom values (e.g. integers) (by [@CyborgMaster](https://github.com/CyborgMaster))
 
 ## 0.9.0 (December 11, 2014) ##
 
