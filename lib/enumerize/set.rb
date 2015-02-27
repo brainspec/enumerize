@@ -59,12 +59,8 @@ module Enumerize
 
     private
 
-    def define_query_method(value)
-      singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{value}?
-          include?("#{value}")
-        end
-      RUBY
+    def predicate_call(value)
+      include?(value)
     end
 
     def mutate!
