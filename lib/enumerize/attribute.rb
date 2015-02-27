@@ -26,12 +26,6 @@ module Enumerize
         @default_value = find_default_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
       end
-
-      # Define methods to get each value
-      @values.each do |v|
-        metaclass = class << self; self; end
-        metaclass.send(:define_method, v.to_s) { v }
-      end
     end
 
     def find_default_value(value)
@@ -81,6 +75,10 @@ module Enumerize
       values.map { |v| [v.text, v.to_s] }
     end
 
+    def respond_to_missing?(method, include_private=false)
+      @value_hash.include?(method.to_s) || super
+    end
+
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{name}
@@ -122,6 +120,16 @@ module Enumerize
           self.#{name} && self.#{name}.value
         end
       RUBY
+    end
+
+    private
+
+    def method_missing(method)
+      if @value_hash.include?(method.to_s)
+        find_value(method)
+      else
+        super
+      end
     end
   end
 
