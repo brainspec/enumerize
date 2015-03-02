@@ -12,6 +12,10 @@ rvm:
   - 2.1
   - 2.2
   - jruby-19mode
+matrix:
+  exclude:
+    - rvm: 2.2
+      gemfile: Gemfile
 notifications:
   email:
     recipients:
