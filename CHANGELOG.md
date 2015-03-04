@@ -4,6 +4,12 @@
 
 ### bug fix
 
+## 0.10.1 (March 4, 2015) ##
+
+### bug fix
+
+ * Use method_missing instead of defining singleton class methods to allow Marshal serialization (by [@lest](https://github.com/lest))
+
 ## 0.10.0 (February 17, 2015) ##
 
 ### enhancements
