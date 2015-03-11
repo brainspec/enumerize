@@ -55,6 +55,14 @@ describe Enumerize do
     model.new.role.must_equal 'user'
   end
 
+  it 'uses after_initialize callback to set default value' do
+    model.delete_all
+    model.create!(sex: 'male', role: nil)
+
+    user = model.where(sex: 'male').first
+    user.role.must_equal 'user'
+  end
+
   it 'validates inclusion' do
     user = model.new
     user.role = 'wrong'

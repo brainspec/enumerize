@@ -4,7 +4,7 @@ module Enumerize
       super
 
       _enumerize_module.dependent_eval do
-        if defined?(::ActiveRecord::Base) && self < ::ActiveRecord::Base
+        if self < ::ActiveRecord::Base
           include InstanceMethods
 
           # Since Rails use `allocate` method on models and initializes them with `init_with` method.
