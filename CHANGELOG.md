@@ -3,6 +3,7 @@
 ### enhancements
 
 ### bug fix
+ * Use `after_initialize` callback to set default value in Mongoid documents. (by [@nashby](https://github.com/nashby))
 
 ## 0.10.1 (March 4, 2015) ##
 
