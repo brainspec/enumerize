@@ -13,6 +13,7 @@ module Enumerize
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   autoload :ActiveRecordSupport, 'enumerize/activerecord'
+  autoload :MongoidSupport,      'enumerize/mongoid'
 
   module Scope
     autoload :ActiveRecord, 'enumerize/scope/activerecord'
@@ -27,9 +28,16 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
-    base.extend Enumerize::ActiveRecordSupport
-    base.extend Enumerize::Scope::ActiveRecord if defined?(::ActiveRecord::Base)
-    base.extend Enumerize::Scope::Mongoid      if defined?(::Mongoid::Document)
+
+    if defined?(::ActiveRecord::Base)
+      base.extend Enumerize::ActiveRecordSupport
+      base.extend Enumerize::Scope::ActiveRecord
+    end
+
+    if defined?(::Mongoid::Document)
+      base.extend Enumerize::MongoidSupport
+      base.extend Enumerize::Scope::Mongoid
+    end
 
     if defined?(::RailsAdmin)
       require 'enumerize/integrations/rails_admin'
