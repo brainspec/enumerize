@@ -336,7 +336,6 @@ describe Enumerize::ActiveRecordSupport do
     user = User.create(:status => :active)
     user.status = :blocked
 
-    expected = ActiveSupport::HashWithIndifferentAccess.new(status: [1, 2]).to_yaml
-    assert_equal expected, user.changes.to_yaml
+    assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
   end
 end
