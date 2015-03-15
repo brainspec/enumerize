@@ -1,5 +1,7 @@
 require 'test_helper'
 
+begin
+
 silence_warnings do
   require 'mongoid'
 end
@@ -108,4 +110,8 @@ describe Enumerize do
 
     model.with_sex(:foo).must_equal []
   end
+end
+
+rescue LoadError
+  # Skip
 end

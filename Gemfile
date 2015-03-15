@@ -18,6 +18,5 @@ platforms :rbx do
 end
 
 gem 'mongoid'
-gem 'mongo_mapper'
 gem 'simple_form'
 gem 'formtastic'
