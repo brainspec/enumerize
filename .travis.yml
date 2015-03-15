@@ -13,6 +13,9 @@ rvm:
   - 2.2
   - jruby-19mode
 matrix:
+  exclude:
+    - rvm: 2.2
+      gemfile: Gemfile.rails32
   include:
     - rvm: 2.2
       gemfile: Gemfile.rails40
