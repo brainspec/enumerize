@@ -154,7 +154,7 @@ describe Enumerize::ActiveRecordSupport do
 
   it "uses persisted value for validation if it hasn't been set" do
     user = User.create! :sex => :male
-    User.find(user).read_attribute_for_validation(:sex).must_equal 'male'
+    User.find(user.id).read_attribute_for_validation(:sex).must_equal 'male'
   end
 
   it 'is valid with empty string assigned' do
