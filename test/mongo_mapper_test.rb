@@ -1,5 +1,7 @@
 require 'test_helper'
 
+__END__
+
 silence_warnings do
   require 'mongo_mapper'
 end

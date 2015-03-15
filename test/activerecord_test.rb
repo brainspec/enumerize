@@ -15,13 +15,13 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :lambda_role
     t.string :name
     t.string :interests
-    t.string :status
+    t.integer :status
     t.string :account_type, :default => :basic
   end
 
   create_table :documents do |t|
     t.string :visibility
-    t.timestamps
+    t.timestamps null: true
   end
 end
 

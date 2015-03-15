@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/spec'
 require 'active_support/core_ext/kernel/reporting'
 require 'active_model'
+require 'rails'
 
 $VERBOSE=true
 

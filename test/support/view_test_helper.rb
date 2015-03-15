@@ -1,6 +1,10 @@
 require 'active_support/concern'
 require 'active_support/testing/setup_and_teardown'
 
+if defined?(ActionView::RoutingUrlFor)
+  ActionView::RoutingUrlFor.send(:include, ActionDispatch::Routing::UrlFor)
+end
+
 module ViewTestHelper
   extend ActiveSupport::Concern
 

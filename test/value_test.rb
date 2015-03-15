@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'yaml'
 
 describe Enumerize::Value do
   let(:attr)  { Struct.new(:values).new([]) }

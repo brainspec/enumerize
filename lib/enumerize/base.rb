@@ -8,8 +8,9 @@ module Enumerize
       end
 
       class << base
-        if (method_defined?(:inherited) || private_method_defined?(:inherited)) && (not method_defined? :inherited_without_enumerized)
+        if (method_defined?(:inherited) || private_method_defined?(:inherited)) && !private_method_defined?(:inherited_without_enumerized)
           alias_method :inherited_without_enumerized, :inherited
+          private :inherited_without_enumerized
         end
 
         alias_method :inherited, :inherited_with_enumerized
