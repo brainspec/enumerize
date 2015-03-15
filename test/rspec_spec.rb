@@ -1,3 +1,4 @@
+require 'rails'
 require 'enumerize'
 require 'rspec'
 

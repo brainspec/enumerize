@@ -4,10 +4,26 @@ require 'active_support/core_ext/kernel/reporting'
 require 'active_model'
 require 'rails'
 
-$VERBOSE=true
-
 module RailsAdmin
 end
+
+require 'simple_form'
+SimpleForm.setup {}
+
+require 'formtastic'
+
+module EnumerizeTest
+  class Application < Rails::Application
+    config.active_support.deprecation = :stderr
+    config.active_support.test_order = :random
+    config.eager_load = false
+    config.secret_key_base = 'secret'
+  end
+end
+
+EnumerizeTest::Application.initialize!
+
+$VERBOSE=true
 
 require 'enumerize'
 
