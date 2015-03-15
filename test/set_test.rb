@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'yaml'
 
 describe Enumerize::Set do
   let(:klass) do
@@ -145,6 +146,13 @@ describe Enumerize::Set do
 
     it 'does not respond to a method for not existing value' do
       set.wont_respond_to :some_method?
+    end
+  end
+
+  describe 'serialization' do
+    it 'is serialized to yaml as array' do
+      set << :a
+      assert_equal YAML.dump(%w(a)), YAML.dump(set)
     end
   end
 end

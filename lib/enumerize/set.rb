@@ -57,6 +57,10 @@ module Enumerize
       "#<Enumerize::Set {#{join(', ')}}>"
     end
 
+    def encode_with(coder)
+      coder.represent_object(Array, @values)
+    end
+
     private
 
     def predicate_call(value)
