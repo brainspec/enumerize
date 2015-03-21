@@ -19,9 +19,10 @@ describe Enumerize do
 
     field :sex
     field :role
-    enumerize :sex, :in => %w[male female], scope: true
-    enumerize :role, :in => %w[admin user], :default => 'user', scope: :having_role
-    enumerize :mult, :in => %w[one two three four], :multiple => true
+    enumerize :sex,    :in => %w[male female], scope: true
+    enumerize :status, :in => %w[notice warning error], scope: true
+    enumerize :role,   :in => %w[admin user], :default => 'user', scope: :having_role
+    enumerize :mult,   :in => %w[one two three four], :multiple => true
   end
 
   before { $VERBOSE = nil }
@@ -103,6 +104,17 @@ describe Enumerize do
 
     model.having_role(:admin).to_a.must_equal [user_1]
     model.having_role(:user).to_a.must_equal [user_2]
+  end
+
+  it 'chains scopes' do
+    model.delete_all
+
+    user_1 = model.create!(status: :notice)
+    user_2 = model.create!(status: :warning)
+    user_3 = model.create!(status: :error)
+
+    model.with_status(:notice, :warning).with_status(:notice, :error).to_a.must_equal [user_1]
+    model.with_status(:notice, :warning).union.with_status(:notice, :error).to_a.must_equal [user_1, user_2, user_3]
   end
 
   it 'ignores not enumerized values that passed to the scope method' do
