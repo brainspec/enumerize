@@ -3,6 +3,7 @@
 ### enhancements
 
 ### bug fix
+ * Use Mongoid's `:in` method for generated scopes, fix chained scopes. (by [@nashby](https://github.com/nashby))
  * Use `after_initialize` callback to set default value in Mongoid documents. (by [@nashby](https://github.com/nashby))
 
 ## 0.10.1 (March 4, 2015) ##

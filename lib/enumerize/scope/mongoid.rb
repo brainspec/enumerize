@@ -20,12 +20,7 @@ module Enumerize
 
         define_singleton_method scope_name do |*values|
           values = enumerized_attributes[name].find_values(*values).map(&:value)
-
-          if values.size == 1
-            where(name => values.first)
-          else
-            where(name.in => values)
-          end
+          self.in(name => values)
         end
 
         if options[:scope] == true
