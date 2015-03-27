@@ -134,6 +134,14 @@ module Enumerize
   end
 
   module Multiple
+    def find_default_value(value)
+      if value.respond_to?(:call)
+        value
+      else
+        find_values(*value)
+      end
+    end
+
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{name}
