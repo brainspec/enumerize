@@ -99,7 +99,9 @@ module Enumerize
           next
         end
 
-        if !attr_value && !_enumerized_values_for_validation.key?(attr.name.to_s)
+        value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
+
+        if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
           value = attr.default_value
 
           if value.respond_to?(:call)
