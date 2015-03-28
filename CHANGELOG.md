@@ -1,6 +1,7 @@
 ## master
 
 ### enhancements
+ * Add ability to set default value for enumerized field with multiple type. (by [@nashby](https://github.com/nashby))
 
 ### bug fix
  * Use Mongoid's `:in` method for generated scopes, fix chained scopes. (by [@nashby](https://github.com/nashby))
