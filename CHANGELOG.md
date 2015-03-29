@@ -1,6 +1,12 @@
 ## master
 
 ### enhancements
+
+### bug fix
+
+## 0.11.0 (March 29, 2015) ##
+
+### enhancements
  * Add ability to set default value for enumerized field with multiple type. (by [@nashby](https://github.com/nashby))
  * Support Rails 4.2. (by [@lest](https://github.com/lest))
 
