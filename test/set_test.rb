@@ -104,6 +104,12 @@ describe Enumerize::Set do
     end
   end
 
+  describe '#texts' do
+    it 'returns array of text values' do
+      set.texts.must_equal ['A']
+    end
+  end
+
   describe '#join' do
     it 'joins values' do
       set << :b
