@@ -190,6 +190,13 @@ describe Enumerize::ActiveRecordSupport do
     interests.must_equal %w(music dancing)
   end
 
+  it 'stores multiple value passed passed to new' do
+    user = User.new(interests: [:music, :dancing])
+    user.save!
+    user.interests.must_equal %w(music dancing)
+    User.find(user.id).interests.must_equal %w(music dancing)
+  end
+
   it 'returns invalid multiple value for validation' do
     user = User.new
     user.interests << :music
