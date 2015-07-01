@@ -3,7 +3,11 @@ require 'minitest/spec'
 require 'active_support/core_ext/kernel/reporting'
 require 'active_model'
 require 'rails'
-require 'mongoid'
+begin
+  require 'mongoid'
+rescue LoadError => e
+  puts e
+end
 
 module RailsAdmin
 end
