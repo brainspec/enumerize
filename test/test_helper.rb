@@ -3,6 +3,7 @@ require 'minitest/spec'
 require 'active_support/core_ext/kernel/reporting'
 require 'active_model'
 require 'rails'
+require 'mongoid'
 
 module RailsAdmin
 end

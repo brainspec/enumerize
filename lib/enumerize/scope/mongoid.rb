@@ -7,7 +7,7 @@ module Enumerize
         _enumerize_module.dependent_eval do
           if self < ::Mongoid::Document
             if options[:scope]
-              _define_scope_methods!(name, options)
+              _define_mongoid_scope_methods!(name, options)
             end
           end
         end
@@ -15,7 +15,7 @@ module Enumerize
 
       private
 
-      def _define_scope_methods!(name, options)
+      def _define_mongoid_scope_methods!(name, options)
         scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
 
         define_singleton_method scope_name do |*values|
