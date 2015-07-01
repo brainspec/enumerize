@@ -5,8 +5,7 @@ require 'active_model'
 require 'rails'
 begin
   require 'mongoid'
-rescue LoadError => e
-  puts e
+rescue LoadError
 end
 
 module RailsAdmin
