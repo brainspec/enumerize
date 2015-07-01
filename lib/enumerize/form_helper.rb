@@ -1,7 +1,7 @@
 # backport of https://github.com/rails/rails/commit/3be9e8a0c2187744b6c9879ca2836cef5ebed693
 if defined?(ActionView::Helpers::InstanceTag)
   ActionView::Helpers::InstanceTag.singleton_class.class_eval do
-    remove_method :check_box_checked?
+    remove_method :check_box_checked? if method_defined? :check_box_checked?
 
     def check_box_checked?(value, checked_value)
       case value
