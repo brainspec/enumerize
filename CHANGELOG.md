@@ -2,6 +2,7 @@
 
 ### enhancements
  * Add `texts` method for getting an array of text values of the enumerized field with multiple type. (by [@huynhquancam](https://github.com/huynhquancam))
+ * Drop Rails 3.2 support. (by [@nashby](https://github.com/nashby))
 
 ### bug fix
 
