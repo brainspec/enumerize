@@ -6,6 +6,8 @@
 
 ### bug fix
 
+ * Fix conflicts when Active Record and Mongoid are used at the same time. (by [@matsu911](https://github.com/matsu911))
+
 ## 0.11.0 (March 29, 2015) ##
 
 ### enhancements
