@@ -2,37 +2,28 @@ module Enumerize
   module Integrations
     module RSpec
       class Matcher
-        attr_accessor :attr, :values, :subject, :default
 
         def initialize(attr)
           self.attr = attr
         end
 
-        def in(*values)
-          self.values = values.map(&:to_s).sort
+        def in(*expected_values)
+          self.expected_values = expected_values
           self
         end
 
-        def with_default(default)
-          self.default = default.to_s
+        def with_default(expected_default)
+          self.expected_default = expected_default.to_s
           self
         end
 
         def failure_message
-          message  = " expected :#{attr} to allow value#{values.size == 1 ? nil : 's'}: #{quote_values(values)},"
-          message += " but it allows #{quote_values(enumerized_values)} instead"
-
-          if default && !matches_default_value?
-            message  = " expected :#{attr} to have #{default.inspect} as default value,"
-            message += " but it sets #{enumerized_default.inspect} instead"
-          end
-
-          message
+          "Expected #{expectation}"
         end
 
         def description
-          description  = "enumerize :#{attr} in: #{quote_values(values)}"
-          description += " with #{default.inspect} as default value" if default
+          description  = "define enumerize :#{attr} in: #{quote_values(expected_values)}"
+          description += " with #{expected_default.inspect} as default value" if expected_default
 
           description
         end
@@ -42,35 +33,57 @@ module Enumerize
           matches      = true
 
           matches &= matches_attributes?
-          matches &= matches_default_value? if default
+          matches &= matches_default_value? if expected_default
 
           matches
         end
 
         private
+        attr_accessor :attr, :expected_values, :subject, :expected_default
+
+        def expectation
+          "#{subject.class.name} to #{description}"
+        end
 
         def matches_attributes?
-          values == enumerized_values
+          matches_array_attributes? || matches_hash_attributes?
+        end
+
+        def matches_array_attributes?
+          sorted_values == enumerized_values
+        end
+
+        def matches_hash_attributes?
+          return unless expected_values.first.is_a?(Hash)
+          expected_values.first.all? { |k, v| enumerized_value_hash[k.to_s] == v; }
         end
 
         def matches_default_value?
-          default == enumerized_default
+          expected_default == enumerized_default
+        end
+
+        def sorted_values
+          @sorted_values ||=expected_values.map(&:to_s).sort
         end
 
         def enumerized_values
-          @enumerized_values ||= attributes[attr.to_s].values.sort
+          @enumerized_values ||= attributes.values.sort
         end
 
         def enumerized_default
-          @enumerized_default ||= attributes[attr.to_s].default_value
+          @enumerized_default ||= attributes.default_value
+        end
+
+        def enumerized_value_hash
+          @enumerized_value_hash ||= attributes.instance_variable_get('@value_hash')
         end
 
         def attributes
-          subject.class.enumerized_attributes.attributes
+          subject.class.enumerized_attributes.attributes[attr.to_s]
         end
 
         def quote_values(values)
-          values.map(&:inspect).join(', ')
+          sorted_values.map(&:inspect).join(', ')
         end
       end
     end

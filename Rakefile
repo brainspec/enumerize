@@ -10,8 +10,6 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-RSpec::Core::RakeTask.new('default') do |t|
-  t.pattern = 'test/rspec_spec.rb'
-end
+RSpec::Core::RakeTask.new
 
-task :default => :test
+task :default => [:test, :spec]
