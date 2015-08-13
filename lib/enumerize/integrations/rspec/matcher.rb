@@ -17,6 +17,11 @@ module Enumerize
           self
         end
 
+        def with_i18n_scope(expected_i18n_scope)
+          self.expected_i18n_scope = expected_i18n_scope
+          self
+        end
+
         def failure_message
           "Expected #{expectation}"
         end
@@ -29,6 +34,7 @@ module Enumerize
           description  = "define enumerize :#{expected_attr}"
           description += " in: #{quote_values(expected_values)}" if expected_values
           description += " with #{expected_default.inspect} as default value" if expected_default
+          description += " i18n_scope: #{expected_i18n_scope.inspect}" if expected_i18n_scope
 
           description
         end
@@ -40,12 +46,14 @@ module Enumerize
           matches &= matches_attribute?
           matches &= matches_values? if expected_values
           matches &= matches_default_value? if expected_default
+          matches &= matches_i18n_scope? if expected_i18n_scope
 
           matches
         end
 
         private
-        attr_accessor :expected_attr, :expected_values, :subject, :expected_default
+        attr_accessor :expected_attr, :expected_values, :subject, :expected_default,
+                      :expected_i18n_scope
 
         def expectation
           "#{subject.class.name} to #{description}"
@@ -70,6 +78,10 @@ module Enumerize
 
         def matches_default_value?
           expected_default == enumerized_default
+        end
+
+        def matches_i18n_scope?
+          attributes.i18n_scope == expected_i18n_scope
         end
 
         def sorted_values

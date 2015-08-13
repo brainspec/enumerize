@@ -129,4 +129,43 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
       expect(matcher.description).to eq(message)
     end
   end
+
+  describe '#with_i18n_scope' do
+
+    context 'defined as string' do
+
+      before do
+        model.enumerize(:sex, :in => [:male, :female], i18n_scope: 'sex')
+      end
+
+      it 'accepts the right i18n_scope' do
+        expect(subject).to enumerize(:sex).in(:male, :female).with_i18n_scope('sex')
+      end
+
+      it 'rejects the wrong i18n_scope' do
+        message = 'Expected Model to define enumerize :sex in: "female", "male" i18n_scope: "gender"'
+        expect do
+          expect(subject).to enumerize(:sex).in(:male, :female).with_i18n_scope('gender')
+        end.to fail_with(message)
+      end
+    end
+
+    context 'defined as array' do
+
+      before do
+        model.enumerize(:sex, :in => [:male, :female], i18n_scope: ['sex', 'more.sex'])
+      end
+
+      it 'accepts the wrong i18n_scope' do
+        expect(subject).to enumerize(:sex).in(:male, :female).with_i18n_scope(['sex', 'more.sex'])
+      end
+
+      it 'rejects the wrong i18n_scope' do
+        message = 'Expected Model to define enumerize :sex in: "female", "male" i18n_scope: ["sex"]'
+        expect do
+          expect(subject).to enumerize(:sex).in(:male, :female).with_i18n_scope(['sex'])
+        end.to fail_with(message)
+      end
+    end
+  end
 end
