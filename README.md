@@ -100,7 +100,7 @@ en:
         female: "Female"
 ```
 
-You can also pass `i18n_scope` option to specify scope (or array of scopes) storring the translations. Note that `i18n_scope` option does not accept scope as array:
+You can also pass `i18n_scope` option to specify scope (or array of scopes) storing the translations.
 
 
 ```ruby
