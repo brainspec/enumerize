@@ -14,6 +14,21 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
     model.new
   end
 
+  describe 'without qualifier' do
+
+    it 'accepts when has defined a enumerize' do
+      model.enumerize(:sex, :in => [:male, :female])
+      expect(subject).to enumerize(:sex)
+    end
+
+    it 'rejects when has not defined a enumerize' do
+      message = 'Expected Model to define enumerize :sex'
+      expect do
+        expect(subject).to enumerize(:sex)
+      end.to fail_with(message)
+    end
+  end
+
   describe '#in' do
 
     context 'defined as array' do
