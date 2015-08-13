@@ -322,15 +322,125 @@ Also you can use builtin RSpec matcher:
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], default: :male
+  enumerize :sex, in: [:male, :female]
+end
+
+describe User do
+  it { should enumerize(:sex) }
+
+  # or with RSpec 3 expect syntax
+  it { is_expected.to enumerize(:sex) }
+end
+```
+
+#### Qualifiers
+
+##### in
+
+Use `in` to test usage of the `:in` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female]
 end
 
 describe User do
   it { should enumerize(:sex).in(:male, :female) }
-  it { should enumerize(:sex).in(:male, :female).with_default(:male) }
+end
+```
 
-  # or with RSpec 3 expect syntax
-  it { is_expected.to enumerize(:sex).in(:male, :female) }
+You can test enumerized attribute value using custom values with the `in`
+qualifier.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: { male: 0, female: 1 }
+end
+
+describe User do
+  it { should enumerize(:sex).in(male: 0, female: 1) }
+end
+```
+
+##### with_default
+
+Use `with_default` to test usage of the `:default` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], default: :female
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).default(:female) }
+end
+```
+
+##### with_i18n_scope
+
+Use `with_i18n_scope` to test usage of the `:i18n_scope` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], i18n_scope: 'sex'
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_i18n_scope('sex') }
+end
+```
+
+##### with_predicates
+
+Use `with_predicates` to test usage of the `:predicates` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], predicates: true
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_predicates(true) }
+end
+```
+
+You can text prefixed predicates with the `with_predicates` qualifiers.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], predicates: { prefix: true }
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_predicates(prefix: true) }
+end
+```
+
+##### with_multiple
+
+Use `with_multiple` to test usage of the `:multiple` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], multiple: true
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_multiple(true) }
 end
 ```
 
