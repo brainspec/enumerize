@@ -22,6 +22,11 @@ module Enumerize
           self
         end
 
+        def with_predicates(expected_predicates)
+          self.expected_predicates = expected_predicates
+          self
+        end
+
         def failure_message
           "Expected #{expectation}"
         end
@@ -35,6 +40,7 @@ module Enumerize
           description += " in: #{quote_values(expected_values)}" if expected_values
           description += " with #{expected_default.inspect} as default value" if expected_default
           description += " i18n_scope: #{expected_i18n_scope.inspect}" if expected_i18n_scope
+          description += " predicates: #{expected_predicates.inspect}" if expected_predicates
 
           description
         end
@@ -47,13 +53,14 @@ module Enumerize
           matches &= matches_values? if expected_values
           matches &= matches_default_value? if expected_default
           matches &= matches_i18n_scope? if expected_i18n_scope
+          matches &= matches_predicates? if expected_predicates
 
           matches
         end
 
         private
         attr_accessor :expected_attr, :expected_values, :subject, :expected_default,
-                      :expected_i18n_scope
+                      :expected_i18n_scope, :expected_predicates
 
         def expectation
           "#{subject.class.name} to #{description}"
@@ -82,6 +89,14 @@ module Enumerize
 
         def matches_i18n_scope?
           attributes.i18n_scope == expected_i18n_scope
+        end
+
+        def matches_predicates?
+          if expected_predicates.is_a?(TrueClass)
+            subject.respond_to?("#{sorted_values.first}?")
+          else
+            subject.respond_to?("#{expected_attr}_#{attributes.values.first}?")
+          end
         end
 
         def sorted_values

@@ -168,4 +168,25 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
       end
     end
   end
+
+  describe '#with_predicates' do
+
+    it 'accepts when predicates is defined as a boolean' do
+      model.enumerize(:sex, :in => [:male, :female], predicates: true)
+      expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(true)
+    end
+
+    it 'accepts when predicates is defined as a hash' do
+      model.enumerize(:sex, :in => [:male, :female], predicates: { prefix: true })
+      expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(prefix: true)
+    end
+
+    it 'rejects when predicates is not defined' do
+      model.enumerize(:sex, :in => [:male, :female])
+      message = 'Expected Model to define enumerize :sex in: "female", "male" predicates: true'
+      expect do
+        expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(true)
+      end.to fail_with(message)
+    end
+  end
 end
