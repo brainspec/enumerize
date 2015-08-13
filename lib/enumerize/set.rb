@@ -37,7 +37,7 @@ module Enumerize
     end
 
     def texts
-      @values.collect { |value| value.text }
+      @values.map(&:text)
     end
 
     delegate :join, to: :to_ary
