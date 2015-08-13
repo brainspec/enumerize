@@ -21,6 +21,10 @@ module Enumerize
           "Expected #{expectation}"
         end
 
+        def failure_message_when_negated
+          "Did not expect #{expectation}"
+        end
+
         def description
           description  = "define enumerize :#{attr} in: #{quote_values(expected_values)}"
           description += " with #{expected_default.inspect} as default value" if expected_default

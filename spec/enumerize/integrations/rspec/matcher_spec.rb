@@ -36,6 +36,13 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
           expect(subject).to enumerize(:sex).in(:boy, :girl)
         end.to fail_with(message)
       end
+
+      it 'has the right message when negated' do
+        message = 'Did not expect Model to define enumerize :sex in: "female", "male"'
+        expect do
+          expect(subject).to_not enumerize(:sex).in(:male, :female)
+        end.to fail_with(message)
+      end
     end
 
     context 'defined as hash' do
