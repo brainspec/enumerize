@@ -189,4 +189,20 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
       end.to fail_with(message)
     end
   end
+
+  describe '#with_multiple' do
+
+    it 'accepts when has defined the multiple' do
+      model.enumerize(:sex, :in => [:male, :female], multiple: true)
+      expect(subject).to enumerize(:sex).in(:male, :female).with_multiple(true)
+    end
+
+    it 'rejects when has not defined the multiple' do
+      model.enumerize(:sex, :in => [:male, :female])
+      message = 'Expected Model to define enumerize :sex in: "female", "male" multiple: true'
+      expect do
+        expect(subject).to enumerize(:sex).in(:male, :female).with_multiple(true)
+      end.to fail_with(message)
+    end
+  end
 end

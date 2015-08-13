@@ -27,6 +27,11 @@ module Enumerize
           self
         end
 
+        def with_multiple(expected_multiple)
+          self.expected_multiple = expected_multiple
+          self
+        end
+
         def failure_message
           "Expected #{expectation}"
         end
@@ -41,6 +46,7 @@ module Enumerize
           description += " with #{expected_default.inspect} as default value" if expected_default
           description += " i18n_scope: #{expected_i18n_scope.inspect}" if expected_i18n_scope
           description += " predicates: #{expected_predicates.inspect}" if expected_predicates
+          description += " multiple: #{expected_multiple.inspect}" if expected_multiple
 
           description
         end
@@ -54,13 +60,14 @@ module Enumerize
           matches &= matches_default_value? if expected_default
           matches &= matches_i18n_scope? if expected_i18n_scope
           matches &= matches_predicates? if expected_predicates
+          matches &= matches_multiple? if expected_multiple
 
           matches
         end
 
         private
         attr_accessor :expected_attr, :expected_values, :subject, :expected_default,
-                      :expected_i18n_scope, :expected_predicates
+                      :expected_i18n_scope, :expected_predicates, :expected_multiple
 
         def expectation
           "#{subject.class.name} to #{description}"
@@ -97,6 +104,10 @@ module Enumerize
           else
             subject.respond_to?("#{expected_attr}_#{attributes.values.first}?")
           end
+        end
+
+        def matches_multiple?
+          subject.instance_variable_defined?("@_#{expected_attr}_enumerized_set")
         end
 
         def sorted_values
