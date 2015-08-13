@@ -278,6 +278,12 @@ class User < ActiveRecord::Base
 end
 ```
 
+get an array of all text values:
+
+```ruby
+@user.interests.texts # shortcut for @user.interests.map(&:text)
+```
+
 ### SimpleForm
 
 If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:
