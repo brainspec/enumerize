@@ -428,6 +428,36 @@ describe User do
 end
 ```
 
+##### with_scope
+
+Use `with_scope` to test usage of the `:scope` option.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], scope: true
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_scope(true) }
+end
+```
+
+You can text custom scope with the `with_scope` qualifiers.
+
+```ruby
+class User
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], scope: :having_sex
+end
+
+describe User do
+  it { should enumerize(:sex).in(:male, :female).with_scope(scope: :having_sex) }
+end
+```
+
 ##### with_multiple
 
 Use `with_multiple` to test usage of the `:multiple` option.
