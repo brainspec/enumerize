@@ -378,7 +378,7 @@ class User
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).default(:female) }
+  it { should enumerize(:sex).in(:male, :female).with_default(:female) }
 end
 ```
 
