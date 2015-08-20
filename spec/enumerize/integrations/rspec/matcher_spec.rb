@@ -1,3 +1,27 @@
+require 'active_record'
+
+silence_warnings do
+  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.logger = Logger.new(nil)
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+end
+
+ActiveRecord::Base.connection.instance_eval do
+  create_table :users do |t|
+    t.string :sex
+    t.string :role
+    t.string :account_type
+  end
+end
+
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  enumerize :sex, :in => [:male, :female], scope: true
+  enumerize :role, :in => [:user, :admin], scope: :having_role
+  enumerize :account_type, :in => [:basic, :premium]
+end
+
 RSpec.describe Enumerize::Integrations::RSpec::Matcher do
 
   let(:model) do
@@ -202,6 +226,28 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
       message = 'Expected Model to define enumerize :sex in: "female", "male" multiple: true'
       expect do
         expect(subject).to enumerize(:sex).in(:male, :female).with_multiple(true)
+      end.to fail_with(message)
+    end
+  end
+
+  describe '#with_scope' do
+
+    subject do
+      User.new
+    end
+
+    it 'accepts when scope is defined as a boolean' do
+      expect(subject).to enumerize(:sex).in(:male, :female).with_scope(true)
+    end
+
+    it 'accepts when scope is defined as a hash' do
+      expect(subject).to enumerize(:role).in(:user, :admin).with_scope(scope: :having_role)
+    end
+
+    it 'rejects when scope is not defined' do
+      message = 'Expected User to define enumerize :account_type in: "basic", "premium" scope: true'
+      expect do
+        expect(subject).to enumerize(:account_type).in(:basic, :premium).with_scope(true)
       end.to fail_with(message)
     end
   end

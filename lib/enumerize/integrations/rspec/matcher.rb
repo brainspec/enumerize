@@ -32,6 +32,11 @@ module Enumerize
           self
         end
 
+        def with_scope(expected_scope)
+          self.expected_scope = expected_scope
+          self
+        end
+
         def failure_message
           "Expected #{expectation}"
         end
@@ -47,6 +52,7 @@ module Enumerize
           description += " i18n_scope: #{expected_i18n_scope.inspect}" if expected_i18n_scope
           description += " predicates: #{expected_predicates.inspect}" if expected_predicates
           description += " multiple: #{expected_multiple.inspect}" if expected_multiple
+          description += " scope: #{expected_scope.inspect}" if expected_scope
 
           description
         end
@@ -61,13 +67,15 @@ module Enumerize
           matches &= matches_i18n_scope? if expected_i18n_scope
           matches &= matches_predicates? if expected_predicates
           matches &= matches_multiple? if expected_multiple
+          matches &= matches_scope? if expected_scope
 
           matches
         end
 
         private
         attr_accessor :expected_attr, :expected_values, :subject, :expected_default,
-                      :expected_i18n_scope, :expected_predicates, :expected_multiple
+                      :expected_i18n_scope, :expected_predicates, :expected_multiple,
+                      :expected_scope
 
         def expectation
           "#{subject.class.name} to #{description}"
@@ -110,6 +118,14 @@ module Enumerize
           subject.instance_variable_defined?("@_#{expected_attr}_enumerized_set")
         end
 
+        def matches_scope?
+          if expected_scope.is_a?(TrueClass)
+            subject_class.respond_to?("with_#{expected_attr}")
+          else
+            subject_class.respond_to?(expected_scope[:scope])
+          end
+        end
+
         def sorted_values
           @sorted_values ||=expected_values.map(&:to_s).sort
         end
@@ -127,7 +143,11 @@ module Enumerize
         end
 
         def attributes
-          subject.class.enumerized_attributes.attributes[expected_attr.to_s]
+          subject_class.enumerized_attributes.attributes[expected_attr.to_s]
+        end
+
+        def subject_class
+          @subject_class ||= subject.class
         end
 
         def quote_values(values)
