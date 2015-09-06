@@ -1,22 +1,5 @@
-source 'https://rubygems.org'
+eval_gemfile('Gemfile.global')
 
-gemspec
-
-gem 'rake'
-gem 'minitest', '~> 5.5.1'
-gem 'rspec', :require => false
-
-gem 'rails', '4.2.0', :require => false
-gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
-gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
-
-platforms :rbx do
-  gem 'rubysl', '~> 2.0'
-  gem 'psych'
-  gem 'rubinius-developer_tools'
-  gem 'rubysl-test-unit'
-end
-
+gem 'minitest', '~> 5.8'
+gem 'rails',    '4.2.4', :require => false
 gem 'mongoid'
-gem 'simple_form'
-gem 'formtastic'
