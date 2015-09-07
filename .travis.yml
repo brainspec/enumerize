@@ -5,12 +5,18 @@ before_install:
   - gem install bundler
 gemfile:
   - Gemfile
-  - Gemfile.rails4
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.0
+  - 2.1
+  - 2.2
   - jruby-19mode
+matrix:
+  include:
+    - rvm: 2.2
+      gemfile: Gemfile.rails40
+    - rvm: 2.2
+      gemfile: Gemfile.mongo_mapper
 notifications:
   email:
     recipients:

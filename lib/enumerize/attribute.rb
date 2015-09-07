@@ -4,6 +4,7 @@ module Enumerize
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
+      raise ArgumentError, ':scope option does not work with option :multiple' if options[:multiple] && options[:scope]
 
       extend Multiple if options[:multiple]
 
@@ -39,6 +40,10 @@ module Enumerize
       @value_hash[value.to_s] unless value.nil?
     end
 
+    def find_values(*values)
+      values.map { |value| find_value(value) }.compact
+    end
+
     def i18n_scopes
       @i18n_scopes ||= if i18n_scope
         scopes = Array(i18n_scope)
@@ -68,6 +73,10 @@ module Enumerize
       end
 
       values.map { |v| [v.text, v.to_s] }
+    end
+
+    def respond_to_missing?(method, include_private=false)
+      @value_hash.include?(method.to_s) || super
     end
 
     def define_methods!(mod)
@@ -112,9 +121,27 @@ module Enumerize
         end
       RUBY
     end
+
+    private
+
+    def method_missing(method)
+      if @value_hash.include?(method.to_s)
+        find_value(method)
+      else
+        super
+      end
+    end
   end
 
   module Multiple
+    def find_default_value(value)
+      if value.respond_to?(:call)
+        value
+      else
+        find_values(*value)
+      end
+    end
+
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{name}

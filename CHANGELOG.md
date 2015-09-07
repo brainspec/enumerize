@@ -1,6 +1,51 @@
 ## master
 
 ### enhancements
+
+### bug fix
+
+## 1.0.0 (August 2, 2015)
+
+### enhancements
+ * Add `texts` method for getting an array of text values of the enumerized field with multiple type. (by [@huynhquancam](https://github.com/huynhquancam))
+ * Drop Rails 3.2 support. (by [@nashby](https://github.com/nashby))
+
+### bug fix
+
+ * Fix conflicts when Active Record and Mongoid are used at the same time. (by [@matsu911](https://github.com/matsu911))
+
+## 0.11.0 (March 29, 2015) ##
+
+### enhancements
+ * Add ability to set default value for enumerized field with multiple type. (by [@nashby](https://github.com/nashby))
+ * Support Rails 4.2. (by [@lest](https://github.com/lest))
+
+### bug fix
+ * Use Mongoid's `:in` method for generated scopes, fix chained scopes. (by [@nashby](https://github.com/nashby))
+ * Use `after_initialize` callback to set default value in Mongoid documents. (by [@nashby](https://github.com/nashby))
+
+## 0.10.1 (March 4, 2015) ##
+
+### bug fix
+
+ * Use method_missing instead of defining singleton class methods to allow Marshal serialization (by [@lest](https://github.com/lest))
+
+## 0.10.0 (February 17, 2015) ##
+
+### enhancements
+
+ * Add scopes support to mongoid documents (by [@nashby](https://github.com/nashby))
+ * Use underscore.humanize in #text to make use of Inflector acronyms (by [@mintuhouse](https://github.com/mintuhouse))
+ * Raise an exception when :scope option is used together with :multiple option (by [@maurogeorge](https://github.com/maurogeorge))
+ * Use alias_method_chain instead of overriding Class#inherited (by [@yuroyoro](https://github.com/yuroyoro))
+ * Shortcut methods to retrieve enumerize values (by [@CyborgMaster](https://github.com/CyborgMaster))
+ * Extend equality operator to support comparing with symbols and custom values (e.g. integers) (by [@CyborgMaster](https://github.com/CyborgMaster))
+
+## 0.9.0 (December 11, 2014) ##
+
+### enhancements
+
+  * Add :value_class option (by [@lest](https://github.com/lest))
   * Use 'defaults' scope in the localization file for the attributes that used across several models. This will help to avoid conflicting keys with model names and attribute names. Example:
 
   ```yml
@@ -22,6 +67,12 @@
           female: Female
   ```
   (by [@nashby](https://github.com/nashby))
+
+### bug fix
+  * Store values for validation using string keys (by [@nagyt234](https://github.com/nagyt234))
+  * Store custom values for multiple attributes (by [@lest](https://github.com/lest))
+  * Support validations after using AR#becomes (by [@lest](https://github.com/lest))
+  * Do not try to set attribute for not selected attributes (by [@dany1468](https://github.com/dany1468))
 
 ## 0.8.0 (March 4, 2014) ##
 

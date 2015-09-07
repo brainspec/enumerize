@@ -1,3 +1,5 @@
+require 'active_support/core_ext/module/delegation'
+
 module Enumerize
   class Set
     include Enumerable
@@ -34,9 +36,14 @@ module Enumerize
       @values.to_a
     end
 
+    def texts
+      @values.map(&:text)
+    end
+
     delegate :join, to: :to_ary
 
     def ==(other)
+      return false unless other.respond_to?(:each)
       other.size == size && other.all? { |v| @values.include?(@attr.find_value(v)) }
     end
 
@@ -55,14 +62,14 @@ module Enumerize
       "#<Enumerize::Set {#{join(', ')}}>"
     end
 
+    def encode_with(coder)
+      coder.represent_object(Array, @values)
+    end
+
     private
 
-    def define_query_method(value)
-      singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{value}?
-          include?("#{value}")
-        end
-      RUBY
+    def predicate_call(value)
+      include?(value)
     end
 
     def mutate!

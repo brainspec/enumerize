@@ -1,5 +1,7 @@
 require 'test_helper'
 
+begin
+
 silence_warnings do
   require 'mongo_mapper'
 end
@@ -65,4 +67,8 @@ describe Enumerize do
     user.sex = :female
     user.sex.must_equal 'female'
   end
+end
+
+rescue LoadError
+  # Skip
 end

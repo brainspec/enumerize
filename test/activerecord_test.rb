@@ -15,13 +15,13 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :lambda_role
     t.string :name
     t.string :interests
-    t.string :status
+    t.integer :status
     t.string :account_type, :default => :basic
   end
 
   create_table :documents do |t|
     t.string :visibility
-    t.timestamps
+    t.timestamps null: true
   end
 end
 
@@ -154,7 +154,7 @@ describe Enumerize::ActiveRecordSupport do
 
   it "uses persisted value for validation if it hasn't been set" do
     user = User.create! :sex => :male
-    User.find(user).read_attribute_for_validation(:sex).must_equal 'male'
+    User.find(user.id).read_attribute_for_validation(:sex).must_equal 'male'
   end
 
   it 'is valid with empty string assigned' do
@@ -188,6 +188,13 @@ describe Enumerize::ActiveRecordSupport do
     interests.must_equal %w(music)
     interests << :dancing
     interests.must_equal %w(music dancing)
+  end
+
+  it 'stores multiple value passed passed to new' do
+    user = User.new(interests: [:music, :dancing])
+    user.save!
+    user.interests.must_equal %w(music dancing)
+    User.find(user.id).interests.must_equal %w(music dancing)
   end
 
   it 'returns invalid multiple value for validation' do
@@ -240,6 +247,12 @@ describe Enumerize::ActiveRecordSupport do
     User.without_status(:active, :blocked).must_equal []
 
     User.having_role(:admin).must_equal [user_1]
+  end
+
+  it 'ignores not enumerized values that passed to the scope method' do
+    User.delete_all
+
+    User.with_status(:foo).must_equal []
   end
 
   it 'allows either key or value as valid' do
@@ -330,7 +343,6 @@ describe Enumerize::ActiveRecordSupport do
     user = User.create(:status => :active)
     user.status = :blocked
 
-    expected = ActiveSupport::HashWithIndifferentAccess.new(status: [1, 2]).to_yaml
-    assert_equal expected, user.changes.to_yaml
+    assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
   end
 end

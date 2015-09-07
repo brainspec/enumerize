@@ -6,6 +6,15 @@ module Enumerize
       if base.respond_to?(:validate)
         base.validate :_validate_enumerized_attributes
       end
+
+      class << base
+        if (method_defined?(:inherited) || private_method_defined?(:inherited)) && !private_method_defined?(:inherited_without_enumerized)
+          alias_method :inherited_without_enumerized, :inherited
+          private :inherited_without_enumerized
+        end
+
+        alias_method :inherited, :inherited_with_enumerized
+      end
     end
 
     module ClassMethods
@@ -28,9 +37,11 @@ module Enumerize
         @enumerized_attributes ||= AttributeMap.new
       end
 
-      def inherited(subclass)
+      def inherited_with_enumerized(subclass)
         enumerized_attributes.add_dependant subclass.enumerized_attributes
-        super
+        if respond_to?(:inherited_without_enumerized, true)
+          inherited_without_enumerized subclass
+        end
       end
 
       private
@@ -82,19 +93,15 @@ module Enumerize
 
     def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
-        # remove after dropping support for Rails 3.x
-        # https://github.com/brainspec/enumerize/issues/101
-        begin
+        if respond_to?(attr.name)
           attr_value = public_send(attr.name)
-        rescue StandardError => ex
-          if defined?(ActiveModel::MissingAttributeError) && ex.is_a?(ActiveModel::MissingAttributeError)
-            next
-          else
-            raise ex
-          end
+        else
+          next
         end
 
-        if !attr_value && !_enumerized_values_for_validation.key?(attr.name.to_s)
+        value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
+
+        if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
           value = attr.default_value
 
           if value.respond_to?(:call)

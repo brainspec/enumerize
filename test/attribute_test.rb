@@ -85,6 +85,18 @@ describe Enumerize::Attribute do
     end
   end
 
+  it 'sets up shortcut methods for each value' do
+    build_attr nil, :foo, :in => {:a => 1, :b => 2}
+
+    attr.must_respond_to :a
+    attr.must_respond_to :b
+
+    attr.a.value.must_equal 1
+    attr.b.value.must_equal 2
+    attr.a.text.must_equal 'A'
+    attr.b.text.must_equal 'B'
+  end
+
   describe 'values hash with zero' do
     before do
       build_attr nil, :foo, :in => {:a => 1, :b => 2, :c => 0}
@@ -98,6 +110,10 @@ describe Enumerize::Attribute do
       attr.find_value(1).must_equal 'a'
       attr.find_value(2).must_equal 'b'
       attr.find_value(0).must_equal 'c'
+    end
+
+    it 'finds all values by hash values' do
+      attr.find_values(1, 2, 0).must_equal ['a', 'b', 'c']
     end
   end
 
