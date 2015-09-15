@@ -65,8 +65,10 @@ module Enumerize
 
       if _enumerized_values_for_validation.has_key?(key)
         _enumerized_values_for_validation[key]
-      else
+      elsif defined?(super)
         super
+      else
+        send(key)
       end
     end
 

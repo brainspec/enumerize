@@ -43,6 +43,7 @@ module Enumerize
     delegate :join, to: :to_ary
 
     def ==(other)
+      return false unless other.respond_to?(:each)
       other.size == size && other.all? { |v| @values.include?(@attr.find_value(v)) }
     end
 

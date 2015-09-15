@@ -13,10 +13,12 @@ module Enumerize
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   autoload :ActiveRecordSupport, 'enumerize/activerecord'
+  autoload :SequelSupport, 'enumerize/sequel'
   autoload :MongoidSupport,      'enumerize/mongoid'
 
   module Scope
     autoload :ActiveRecord, 'enumerize/scope/activerecord'
+    autoload :Sequel, 'enumerize/scope/sequel'
     autoload :Mongoid,      'enumerize/scope/mongoid'
   end
 
@@ -37,6 +39,11 @@ module Enumerize
     if defined?(::Mongoid::Document)
       base.extend Enumerize::MongoidSupport
       base.extend Enumerize::Scope::Mongoid
+    end
+
+    if defined?(::Sequel::Model)
+      base.extend Enumerize::SequelSupport
+      base.extend Enumerize::Scope::Sequel
     end
 
     if defined?(::RailsAdmin)
