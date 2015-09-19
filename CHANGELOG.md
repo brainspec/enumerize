@@ -1,6 +1,7 @@
 ## master
 
 ### enhancements
+ * Add Sequel support. (by [@mrbrdo](https://github.com/mrbrdo)) 
 
 ### bug fix
 
