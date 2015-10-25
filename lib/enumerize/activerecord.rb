@@ -37,5 +37,14 @@ module Enumerize
         became
       end
     end
+
+    def update_all(updates)
+      enumerized_attributes.each do |attr|
+        next if updates[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
+        updates[attr.name] = attr.find_value(updates[attr.name]).value
+      end
+
+      super(updates)
+    end
   end
 end
