@@ -2,8 +2,11 @@ require 'test_helper'
 require 'yaml'
 
 describe Enumerize::Value do
-  let(:attr)  { Struct.new(:values).new([]) }
-  let(:val) { Enumerize::Value.new(attr, 'test_value', 1) }
+  class Attr < Struct.new(:values)
+  end
+
+  let(:attr) { Attr.new([]) }
+  let(:val)  { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
     val.must_be_kind_of String
@@ -124,6 +127,11 @@ describe Enumerize::Value do
 
     it 'should be serialized to yaml as string value' do
       assert_equal YAML.dump('test_value'), YAML.dump(val)
+    end
+
+    it 'serializes with Marshal' do
+      dump_value = Marshal.dump(val)
+      Marshal.load(dump_value).must_equal 'test_value'
     end
   end
 end
