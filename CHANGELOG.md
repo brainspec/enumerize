@@ -2,6 +2,8 @@
 
 ### enhancements
  * Add Sequel support. (by [@mrbrdo](https://github.com/mrbrdo)) 
+ * Add qualifiers to RSpec matcher. (by [@maurogeorge](https://github.com/maurogeorge))
+ * Support hash in the RSpec matcher. (by [@maurogeorge](https://github.com/maurogeorge))
 
 ### bug fix
 
