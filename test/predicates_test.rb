@@ -15,6 +15,12 @@ describe Enumerize::Predicates do
     object.must_respond_to :b?
   end
 
+  it 'creates predicate methods when enumerized values have dash in it' do
+    klass.enumerize(:foo, in: %w(foo-bar bar-foo), predicates: true)
+    object.must_respond_to :foo_bar?
+    object.must_respond_to :bar_foo?
+  end
+
   it 'creates predicate methods on multiple attribute' do
     klass.enumerize(:foo, in: %w(a b), predicates: true, multiple: true)
     object.must_respond_to :a?

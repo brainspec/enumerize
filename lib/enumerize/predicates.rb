@@ -63,7 +63,7 @@ module Enumerize
       end
 
       def names
-        values.map { |v| "#{v}?" }
+        values.map { |v| "#{v.tr('-', '_')}?" }
       end
 
       def build(klass)
