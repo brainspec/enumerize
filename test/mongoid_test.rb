@@ -7,9 +7,8 @@ silence_warnings do
 end
 
 Mongoid.configure do |config|
-  config.sessions = { :default => { :database => 'enumerize-test-suite', hosts: ['127.0.0.1:27017'] } }
-  config.use_utc = true
-  config.include_root_in_json = true
+  config.connect_to('enumerize-test-suite')
+  config.options = { use_utc: true, include_root_in_json: true }
 end
 
 describe Enumerize do
