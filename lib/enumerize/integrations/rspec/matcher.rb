@@ -8,7 +8,7 @@ module Enumerize
         end
 
         def in(*expected_values)
-          self.expected_values = expected_values
+          self.expected_values = expected_values.flatten
           self
         end
 

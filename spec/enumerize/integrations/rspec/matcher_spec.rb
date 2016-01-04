@@ -61,7 +61,11 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
         model.enumerize(:sex, :in => [:male, :female])
       end
 
-      it 'accepts the right params as a array' do
+      it 'accepts the right params as an array' do
+        expect(subject).to enumerize(:sex).in([:male, :female])
+      end
+
+      it 'accepts the right params as regular params' do
         expect(subject).to enumerize(:sex).in(:male, :female)
       end
 
