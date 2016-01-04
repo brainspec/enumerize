@@ -4,6 +4,8 @@
 
 ### bug fix
 
+* Fix exception when using predicate methods and enumerized values have dash in it. (by [@nashby](https://github.com/nashby))
+
 ## 1.1.0 (November 15, 2015)
 
 ### enhancements
