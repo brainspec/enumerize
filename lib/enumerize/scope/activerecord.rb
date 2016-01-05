@@ -22,7 +22,7 @@ module Enumerize
           values = enumerized_attributes[name].find_values(*values).map(&:value)
           values = values.first if values.size == 1
 
-          where(name => values)
+          where(arel_table[name].in(values))
         end
 
         if options[:scope] == true
