@@ -4,12 +4,16 @@
 
 ### bug fix
 
+## 1.1.1 (January 25, 2016)
+
+### bug fix
+
 * Fix exception when using predicate methods and enumerized values have dash in it. (by [@nashby](https://github.com/nashby))
 
 ## 1.1.0 (November 15, 2015)
 
 ### enhancements
- * Add Sequel support. (by [@mrbrdo](https://github.com/mrbrdo)) 
+ * Add Sequel support. (by [@mrbrdo](https://github.com/mrbrdo))
  * Add qualifiers to RSpec matcher. (by [@maurogeorge](https://github.com/maurogeorge))
  * Support hash in the RSpec matcher. (by [@maurogeorge](https://github.com/maurogeorge))
 
