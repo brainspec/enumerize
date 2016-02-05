@@ -31,7 +31,11 @@ module Enumerize
       def becomes(klass)
         became = super
         klass.enumerized_attributes.each do |attr|
-          became.send("#{attr.name}=", send(attr.name))
+          # Rescue when column associated to the enum does not exist.
+          begin
+            became.send("#{attr.name}=", send(attr.name))
+          rescue ActiveModel::MissingAttributeError
+          end
         end
 
         became

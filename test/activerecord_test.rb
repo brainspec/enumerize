@@ -53,6 +53,10 @@ class User < ActiveRecord::Base
   enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
 
   enumerize :account_type, :in => [:basic, :premium]
+
+  # There is no column for relationship enumeration for testing purposes: model
+  # should not be broken even if the associated column does not exist yet.
+  enumerize :relationship, :in => [:single, :married]
 end
 
 class UniqStatusUser < User
