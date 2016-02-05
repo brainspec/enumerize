@@ -108,7 +108,11 @@ module Enumerize
             value = value.arity == 0 ? value.call : value.call(self)
           end
 
-          public_send("#{attr.name}=", value)
+          # Rescue when column associated to the enum does not exist.
+          begin
+            public_send("#{attr.name}=", value)
+          rescue ActiveModel::MissingAttributeError
+          end
         end
       end
     end
