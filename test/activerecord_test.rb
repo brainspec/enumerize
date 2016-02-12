@@ -349,4 +349,43 @@ describe Enumerize::ActiveRecordSupport do
 
     assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
   end
+
+  it 'allows using update_all' do
+    User.delete_all
+
+    user = User.create(status: :active, account_type: :premium)
+
+    User.update_all(status: :blocked)
+    user.reload
+    user.status.must_equal 'blocked'
+
+    User.update_all(status: :active, account_type: :basic)
+    user.reload
+    user.status.must_equal 'active'
+    user.account_type.must_equal 'basic'
+  end
+
+  it 'allows using update_all for multiple enumerize' do
+    User.delete_all
+
+    klass = Class.new(User)
+    klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
+
+    user = klass.create(status: :active)
+    klass.update_all(status: :blocked, interests: [:music, :dancing])
+
+    user = klass.find(user.id)
+    user.status.must_equal 'blocked'
+    user.interests.must_equal %w(music dancing)
+  end
+
+  it 'allows using update_all with values' do
+    User.delete_all
+
+    user = User.create(status: :active)
+
+    User.update_all(status: 2)
+    user.reload
+    user.status.must_equal 'blocked'
+  end
 end
