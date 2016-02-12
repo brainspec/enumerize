@@ -2,6 +2,12 @@
 
 ### enhancements
 
+* Allow to pass enumerize values to `ActiveRecord#update_all` (by [@DmitryTsepelev](https://github.com/DmitryTsepelev))
+   
+  ```ruby
+  User.update_all(status: :blocked)
+  ```
+  
 ### bug fix
 
 ## 1.1.1 (January 25, 2016)
