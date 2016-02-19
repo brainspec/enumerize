@@ -174,7 +174,7 @@ module Enumerize
             @#{name} = raw_values
           end
 
-          _enumerized_values_for_validation['#{name}'] = values.respond_to?(:map) ? values.map(&:to_s) : values
+          _enumerized_values_for_validation['#{name}'] = values.respond_to?(:map) ? values.reject(&:blank?).map(&:to_s) : values
 
           #{name}
         end

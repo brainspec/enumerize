@@ -64,6 +64,10 @@ class UniqStatusUser < User
   validates :sex, presence: true
 end
 
+class InterestsRequiredUser < User
+  validates :interests, presence: true
+end
+
 describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
@@ -300,6 +304,24 @@ describe Enumerize::ActiveRecordSupport do
     user.valid?
 
     user.errors[:status].wont_be :empty?
+  end
+
+  it 'validates presence with multiple attributes' do
+    user = InterestsRequiredUser.new
+    user.interests = []
+    user.valid?
+
+    user.errors[:interests].wont_be :empty?
+
+    user.interests = ['']
+    user.valid?
+
+    user.errors[:interests].wont_be :empty?
+
+    user.interests = [:dancing, :programming]
+    user.valid?
+
+    user.errors[:interests].must_be_empty
   end
 
   it 'is valid after #becomes' do
