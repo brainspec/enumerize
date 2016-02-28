@@ -65,6 +65,13 @@ describe Enumerize do
     user.role.must_equal 'user'
   end
 
+  it 'does not set default value for not selected attributes' do
+    model.delete_all
+    model.create!(sex: :male)
+
+    assert_equal ['_id'], model.only(:id).first.attributes.keys
+  end
+
   it 'validates inclusion' do
     user = model.new
     user.role = 'wrong'
