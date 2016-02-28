@@ -93,26 +93,25 @@ module Enumerize
 
     def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
-        if respond_to?(attr.name)
-          attr_value = public_send(attr.name)
-        else
-          next
-        end
-
-        value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
-
-        if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
-          value = attr.default_value
-
-          if value.respond_to?(:call)
-            value = value.arity == 0 ? value.call : value.call(self)
+        begin
+          if respond_to?(attr.name)
+            attr_value = public_send(attr.name)
+          else
+            next
           end
 
-          # Rescue when column associated to the enum does not exist.
-          begin
+          value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
+
+          if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
+            value = attr.default_value
+
+            if value.respond_to?(:call)
+              value = value.arity == 0 ? value.call : value.call(self)
+            end
+
             public_send("#{attr.name}=", value)
-          rescue ActiveModel::MissingAttributeError
           end
+        rescue ActiveModel::MissingAttributeError
         end
       end
     end
