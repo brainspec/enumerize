@@ -284,6 +284,18 @@ get an array of all text values:
 @user.interests.texts # shortcut for @user.interests.map(&:text)
 ```
 
+Also, the reader method can be overridden, referencing the enumerized attribute value using `super`:
+
+```ruby
+def sex
+  if current_user.admin?
+    "Super#{super}"
+  else
+    super
+  end
+end
+```
+
 ### SimpleForm
 
 If you are using SimpleForm gem you don't need to specify input type (`:select` by default) and collection:
