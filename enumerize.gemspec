@@ -4,6 +4,7 @@ require File.expand_path('../lib/enumerize/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Sergey Nartimov"]
   gem.email         = "team@brainspec.com"
+  gem.licenses      = ['MIT']
   gem.description   = %q{Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper support}
   gem.summary       = %q{Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper support}
   gem.homepage      = "https://github.com/brainspec/enumerize"
