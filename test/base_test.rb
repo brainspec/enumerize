@@ -171,7 +171,7 @@ describe Enumerize::Base do
 
     object = klass.new
     object.foo.must_be_nil
-    object.attributes.must_equal({:foo => nil})
+    object.attributes.must_equal({})
 
     object.foo = 'test'
     object.foo.must_equal 'test'
