@@ -41,7 +41,7 @@ describe Enumerize::Base do
     end
   end
 
-  it 'scopes translation by i18 key' do
+  it 'scopes translation by i18n key' do
     def klass.model_name
       name = "ExampleClass"
       def name.i18n_key
