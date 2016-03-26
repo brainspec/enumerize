@@ -3,21 +3,15 @@ require 'active_support/concern'
 module Enumerize
   module Hooks
     module SimpleFormBuilderExtension
-      extend ActiveSupport::Concern
 
-      included do
-        alias_method_chain :input, :enumerize
-        alias_method_chain :input_field, :enumerize
+      def input(attribute_name, options={}, &block)
+        add_input_options_for_enumerized_attribute(attribute_name, options)
+        super(attribute_name, options, &block)
       end
 
-      def input_with_enumerize(attribute_name, options={}, &block)
+      def input_field(attribute_name, options={})
         add_input_options_for_enumerized_attribute(attribute_name, options)
-        input_without_enumerize(attribute_name, options, &block)
-      end
-
-      def input_field_with_enumerize(attribute_name, options={})
-        add_input_options_for_enumerized_attribute(attribute_name, options)
-        input_field_without_enumerize(attribute_name, options)
+        super(attribute_name, options)
       end
 
       private
@@ -37,4 +31,4 @@ module Enumerize
   end
 end
 
-::SimpleForm::FormBuilder.send :include, Enumerize::Hooks::SimpleFormBuilderExtension
+::SimpleForm::FormBuilder.send :prepend, Enumerize::Hooks::SimpleFormBuilderExtension
