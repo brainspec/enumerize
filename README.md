@@ -1,4 +1,4 @@
-# Enumerize [![TravisCI](https://secure.travis-ci.org/brainspec/enumerize.png?branch=master)](http://travis-ci.org/brainspec/enumerize) [![Gemnasium](https://gemnasium.com/brainspec/enumerize.png)](https://gemnasium.com/brainspec/enumerize)
+# Enumerize [![TravisCI](https://secure.travis-ci.org/brainspec/enumerize.svg?branch=master)](http://travis-ci.org/brainspec/enumerize) [![Gemnasium](https://gemnasium.com/brainspec/enumerize.svg)](https://gemnasium.com/brainspec/enumerize)
 
 Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper/Sequel support
 
