@@ -3,13 +3,8 @@ require 'active_support/concern'
 module Enumerize
   module Hooks
     module FormtasticFormBuilderExtension
-      extend ActiveSupport::Concern
 
-      included do
-        alias_method_chain :input, :enumerize
-      end
-
-      def input_with_enumerize(method, options={})
+      def input(method, options={})
         klass = object.class
 
         if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[method])
@@ -20,10 +15,10 @@ module Enumerize
           end
         end
 
-        input_without_enumerize(method, options)
+        super(method, options)
       end
     end
   end
 end
 
-::Formtastic::FormBuilder.send :include, Enumerize::Hooks::FormtasticFormBuilderExtension
+::Formtastic::FormBuilder.send :prepend, Enumerize::Hooks::FormtasticFormBuilderExtension
