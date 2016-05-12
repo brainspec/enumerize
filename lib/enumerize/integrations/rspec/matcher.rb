@@ -115,7 +115,7 @@ module Enumerize
         end
 
         def matches_multiple?
-          subject.instance_variable_defined?("@_#{expected_attr}_enumerized_set")
+          subject.public_send(expected_attr).is_a?(Enumerize::Set)
         end
 
         def matches_scope?
