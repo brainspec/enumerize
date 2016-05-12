@@ -1,19 +1,14 @@
 language: ruby
+sudo: false
 services:
   - mongodb
-before_install:
-  - gem install bundler
 gemfile:
   - Gemfile
   - Gemfile.rails40
   - Gemfile.mongo_mapper
 rvm:
-  - 2.2
-  - 2.3.0
-  - jruby-9.0.5.0
+  - 2.2.5
+  - 2.3.1
+  - jruby-9.1.0.0
 notifications:
-  email:
-    recipients:
-      - lest@brainspec.com
-      - nashby@brainspec.com
-      - dreamfall@brainspec.com
+  email: false
