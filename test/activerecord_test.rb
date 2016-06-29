@@ -388,4 +388,24 @@ describe Enumerize::ActiveRecordSupport do
     user.reload
     user.status.must_equal 'blocked'
   end
+
+  it 'preserves string usage of update_all' do
+    User.delete_all
+
+    user = User.create(name: "Fred")
+
+    User.update_all("name = 'Frederick'")
+    user.reload
+    user.name.must_equal 'Frederick'
+  end
+
+  it 'preserves interpolated array usage of update_all' do
+    User.delete_all
+
+    user = User.create(name: "Fred")
+
+    User.update_all(["name = :name", {name: 'Frederick'}])
+    user.reload
+    user.name.must_equal 'Frederick'
+  end
 end
