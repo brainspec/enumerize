@@ -10,6 +10,8 @@
   
 ### bug fix
 
+* Make it compatible with `globalize` gem. (by [@falm](https://github.com/falm))
+
 ## 1.1.1 (January 25, 2016)
 
 ### bug fix
