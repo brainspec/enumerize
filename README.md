@@ -180,6 +180,7 @@ user.sex = 'male'
 user.male?   # => true
 user.female? # => false
 ```
+:warning: If `enumerize` is used with Mongoid, it's not recommended to use `"writer"` as a field value since `writer?` is defined by Mongoid. [See more](https://github.com/brainspec/enumerize/issues/235). :warning:
 
 Using prefix:
 
