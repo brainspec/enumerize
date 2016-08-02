@@ -4,7 +4,7 @@ services:
   - mongodb
 gemfile:
   - Gemfile
-  - Gemfile.rails40
+  - Gemfile.rails42
   - Gemfile.mongo_mapper
 rvm:
   - 2.2.5
