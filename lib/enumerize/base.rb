@@ -30,10 +30,10 @@ module Enumerize
       end
 
       module Hook
-      def inherited(subclass)
-        enumerized_attributes.add_dependant subclass.enumerized_attributes
-        super subclass
-      end
+        def inherited(subclass)
+          enumerized_attributes.add_dependant subclass.enumerized_attributes
+          super subclass
+        end
       end
 
       private
