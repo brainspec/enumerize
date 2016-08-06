@@ -236,10 +236,16 @@ User.role.find_value(:admin).value #=> 2
 ActiveRecord scopes:
 
 ```ruby
+class Tweet < ActiveRecord::Base
+  belongs_to :user
+end
+
 class User < ActiveRecord::Base
   extend Enumerize
   enumerize :sex, :in => [:male, :female], scope: true
-  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :having_status
+  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :having_status, has_many_scope: true
+
+  has_many :tweets
 end
 
 User.with_sex(:female)
@@ -250,9 +256,12 @@ User.without_sex(:male)
 
 User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
+
+Tweet.with_user_status(:active)
+# SELECT "tweets".* FROM "tweets" INNER JOIN "users" ON "users"."id" = "tweets"."user_id" WHERE "users"."status" = 'active'
 ```
 
-:warning: It is not possible to define a scope when using the `:multiple` option. :warning:
+:warning: It is not possible to define a scope or scope for `has_many` when using the `:multiple` option. :warning:
 
 Array-like attributes with plain ruby objects:
 

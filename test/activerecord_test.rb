@@ -19,6 +19,11 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :account_type, :default => :basic
   end
 
+  create_table :tweets do |t|
+    t.integer :user_id
+    t.string :text
+  end
+
   create_table :documents do |t|
     t.string :visibility
     t.timestamps null: true
@@ -41,16 +46,22 @@ module RoleEnum
   enumerize :lambda_role, :in => [:user, :admin], :default => lambda { :admin }
 end
 
+class Tweet < ActiveRecord::Base
+  belongs_to :user
+end
+
 class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
+
+  has_many :tweets
 
   enumerize :sex, :in => [:male, :female]
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
-  enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+  enumerize :status, :in => { active: 1, blocked: 2 }, scope: true, has_many_scope: true
 
   enumerize :account_type, :in => [:basic, :premium]
 
@@ -255,6 +266,23 @@ describe Enumerize::ActiveRecordSupport do
     User.without_status(:active, :blocked).must_equal []
 
     User.having_role(:admin).must_equal [user_1]
+  end
+
+  it 'adds has_many_scope to associated models' do
+    User.delete_all
+    Tweet.delete_all
+
+    user_1 = User.create!(status: :active, role: :admin)
+    user_1.tweets.create!(text: '1')
+    user_2 = User.create!(status: :blocked, role: :admin)
+    user_2.tweets.create!(text: '2')
+    user_2.tweets.create!(text: '3')
+
+    Tweet.with_user_status(:active).count.must_equal 1
+    Tweet.with_user_status(:blocked).count.must_equal 2
+
+    Tweet.without_user_status(:active).count.must_equal 2
+    Tweet.without_user_status(:blocked).count.must_equal 1
   end
 
   it 'ignores not enumerized values that passed to the scope method' do
