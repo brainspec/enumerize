@@ -3,4 +3,4 @@ eval_gemfile('Gemfile.global')
 gem 'minitest', '~> 5.8'
 gem 'rails',    '4.2.7', :require => false
 gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
-gem 'mongo_mapper'
+gem 'mongoid',  '~> 5.0'
