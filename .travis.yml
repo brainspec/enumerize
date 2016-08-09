@@ -10,5 +10,9 @@ rvm:
   - 2.2.5
   - 2.3.1
   - jruby-9.1.2.0
+matrix:
+  allow_failures:
+    - gemfile: Gemfile
+      rvm: jruby-9.1.2.0
 notifications:
   email: false
