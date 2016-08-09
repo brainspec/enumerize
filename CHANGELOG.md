@@ -2,7 +2,10 @@
 
 ### enhancements
 
-* Allow to pass enumerize values to `ActiveRecord#update_all` (by [@DmitryTsepelev](https://github.com/DmitryTsepelev))
+* Drop support for Ruby older than 2.2. Support only Ruby 2.2+. (by [@nashby](https://github.com/nashby))
+* Drop support for Rails 4.0 and 4.1. Support only Rails 4.2 and newer. (by [@lest](https://github.com/lest))
+* Support Rails 5.0. (by [@nashby](https://github.com/nashby) and [@lest](https://github.com/lest))
+* Allow to pass enumerize values to `ActiveRecord#update_all` (by [@DmitryTsepelev](https://github.com/DmitryTsepelev) and [@ianwhite](https://github.com/ianwhite))
    
   ```ruby
   User.update_all(status: :blocked)
@@ -10,7 +13,11 @@
   
 ### bug fix
 
+* Rescue MissingAttributeError on attribute writing. (by [@embs](https://github.com/embs))
+* Fix presence validation for multiple attributes when the list contains a blank string. (by [@smoriwaki](https://github.com/smoriwaki))
+* Replace deprecated alias_method_chain with Module#prepend. (by [@koenpunt](https://github.com/koenpunt) and [@akm](https://github.com/akm))
 * Make it compatible with `globalize` gem. (by [@falm](https://github.com/falm))
+* Prevent method getter from being called when no default_value is being set. (by [@arjan0307](https://github.com/arjan0307))
 
 ## 1.1.1 (January 25, 2016)
 
