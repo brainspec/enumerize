@@ -2,6 +2,12 @@
 
 ### enhancements
 
+### bug fix
+
+## 2.0.0 (August 10, 2016)
+
+### enhancements
+
 * Drop support for Ruby older than 2.2. Support only Ruby 2.2+. (by [@nashby](https://github.com/nashby))
 * Drop support for Rails 4.0 and 4.1. Support only Rails 4.2 and newer. (by [@lest](https://github.com/lest))
 * Support Rails 5.0. (by [@nashby](https://github.com/nashby) and [@lest](https://github.com/lest))
