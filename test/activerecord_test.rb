@@ -430,4 +430,14 @@ describe Enumerize::ActiveRecordSupport do
     user.reload
     user.name.must_equal 'Frederick'
   end
+
+  it 'sets attribute to nil if given one is not valid' do
+    User.delete_all
+
+    user = User.create(status: :active)
+
+    User.update_all(status: :foo)
+    user.reload
+    user.status.must_equal nil
+  end
 end
