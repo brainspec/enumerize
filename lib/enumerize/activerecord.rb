@@ -46,7 +46,8 @@ module Enumerize
       if updates.is_a?(Hash)
         enumerized_attributes.each do |attr|
           next if updates[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
-          updates[attr.name] = attr.find_value(updates[attr.name]).value
+          enumerize_value = attr.find_value(updates[attr.name])
+          updates[attr.name] = enumerize_value && enumerize_value.value
         end
       end
 
