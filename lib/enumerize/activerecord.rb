@@ -7,6 +7,10 @@ module Enumerize
         if self < ::ActiveRecord::Base
           include InstanceMethods
 
+          const_get(:ActiveRecord_Relation).include(RelationMethods)
+          const_get(:ActiveRecord_AssociationRelation).include(RelationMethods)
+          const_get(:ActiveRecord_Associations_CollectionProxy).include(RelationMethods)
+
           # Since Rails use `allocate` method on models and initializes them with `init_with` method.
           # This way `initialize` method is not being called, but `after_initialize` callback always gets triggered.
           after_initialize :_set_default_value_for_enumerized_attributes
@@ -42,16 +46,18 @@ module Enumerize
       end
     end
 
-    def update_all(updates)
-      if updates.is_a?(Hash)
-        enumerized_attributes.each do |attr|
-          next if updates[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
-          enumerize_value = attr.find_value(updates[attr.name])
-          updates[attr.name] = enumerize_value && enumerize_value.value
+    module RelationMethods
+      def update_all(updates)
+        if updates.is_a?(Hash)
+          enumerized_attributes.each do |attr|
+            next if updates[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
+            enumerize_value = attr.find_value(updates[attr.name])
+            updates[attr.name] = enumerize_value && enumerize_value.value
+          end
         end
-      end
 
-      super(updates)
+        super(updates)
+      end
     end
   end
 end

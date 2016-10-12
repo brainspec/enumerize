@@ -20,7 +20,9 @@ ActiveRecord::Base.connection.instance_eval do
   end
 
   create_table :documents do |t|
+    t.integer :user_id
     t.string :visibility
+    t.integer :status
     t.timestamps null: true
   end
 end
@@ -33,6 +35,9 @@ class BaseEntity < ActiveRecord::Base
 end
 
 class Document < BaseEntity
+  belongs_to :user
+
+  enumerize :status, in: {draft: 1, release: 2}
 end
 
 module RoleEnum
@@ -57,6 +62,8 @@ class User < ActiveRecord::Base
   # There is no column for relationship enumeration for testing purposes: model
   # should not be broken even if the associated column does not exist yet.
   enumerize :relationship, :in => [:single, :married]
+
+  has_many :documents
 end
 
 class UniqStatusUser < User
@@ -409,6 +416,28 @@ describe Enumerize::ActiveRecordSupport do
     User.update_all(status: 2)
     user.reload
     user.status.must_equal 'blocked'
+  end
+
+  it 'allows using update_all on relation objects' do
+    User.delete_all
+
+    user = User.create(status: :active, account_type: :premium)
+
+    User.all.update_all(status: :blocked)
+    user.reload
+    user.status.must_equal 'blocked'
+  end
+
+  it 'allows using update_all on association relation objects' do
+    User.delete_all
+    Document.delete_all
+
+    user = User.create
+    document = Document.create(user: user, status: :draft)
+
+    user.documents.update_all(status: :release)
+    document.reload
+    document.status.must_equal 'release'
   end
 
   it 'preserves string usage of update_all' do
