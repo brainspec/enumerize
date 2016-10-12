@@ -9,6 +9,7 @@ module Enumerize
 
           const_get(:ActiveRecord_Relation).include(RelationMethods)
           const_get(:ActiveRecord_AssociationRelation).include(RelationMethods)
+          const_get(:ActiveRecord_Associations_CollectionProxy).include(RelationMethods)
 
           # Since Rails use `allocate` method on models and initializes them with `init_with` method.
           # This way `initialize` method is not being called, but `after_initialize` callback always gets triggered.

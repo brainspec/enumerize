@@ -22,6 +22,7 @@ ActiveRecord::Base.connection.instance_eval do
   create_table :documents do |t|
     t.integer :user_id
     t.string :visibility
+    t.integer :status
     t.timestamps null: true
   end
 end
@@ -35,6 +36,8 @@ end
 
 class Document < BaseEntity
   belongs_to :user
+
+  enumerize :status, in: {draft: 1, release: 2}
 end
 
 module RoleEnum
@@ -430,11 +433,11 @@ describe Enumerize::ActiveRecordSupport do
     Document.delete_all
 
     user = User.create
-    document = Document.create(user: user, visibility: :public)
+    document = Document.create(user: user, status: :draft)
 
-    user.documents.update_all(visibility: :private)
+    user.documents.update_all(status: :release)
     document.reload
-    document.visibility.must_equal 'private'
+    document.status.must_equal 'release'
   end
 
   it 'preserves string usage of update_all' do
