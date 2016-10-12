@@ -4,6 +4,8 @@
 
 ### bug fix
 
+* Support enumerized attributes in #update_all on relation objects. (by [@lest](https://github.com/lest))
+
 ## 2.0.0 (August 10, 2016)
 
 ### enhancements
