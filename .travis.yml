@@ -10,11 +10,15 @@ rvm:
   - 2.2.6
   - 2.3.3
   - ruby-head
-  - jruby-9.1.2.0
+  - jruby-9.1.6.0
 matrix:
   allow_failures:
-    - rvm: ruby-head
-    - gemfile: Gemfile
-      rvm: jruby-9.1.2.0
+    - gemfile: Gemfile.rails42
+      rvm: ruby-head
+    - gemfile: Gemfile.mongo_mapper
+      rvm: ruby-head
+branches:
+  only:
+    - master
 notifications:
   email: false
