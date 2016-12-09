@@ -17,6 +17,12 @@ module Enumerize
 
           # https://github.com/brainspec/enumerize/issues/111
           require 'enumerize/hooks/uniqueness'
+
+          unless options[:multiple]
+            decorate_attribute_type(name, :enumerize) do |subtype|
+              Type.new(enumerized_attributes[name], subtype)
+            end
+          end
         end
       end
     end
@@ -57,6 +63,20 @@ module Enumerize
         end
 
         super(updates)
+      end
+    end
+
+    class Type < ActiveRecord::Type::Value
+      delegate :type, to: :@subtype
+
+      def initialize(attr, subtype)
+        @attr = attr
+        @subtype = subtype
+      end
+
+      def serialize(value)
+        v = @attr.find_value(value)
+        v && v.value
       end
     end
   end
