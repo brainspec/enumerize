@@ -4,6 +4,12 @@
 
 ### bug fix
 
+## 2.1.0 (March 31, 2017)
+
+### enhancements
+
+* Support Active Record types serialization. (by [@lest](https://github.com/lest))
+
 ## 2.0.1 (October 18, 2016)
 
 ### bug fix
