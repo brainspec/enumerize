@@ -5,6 +5,7 @@ services:
 gemfile:
   - Gemfile
   - Gemfile.rails42
+  - Gemfile.rails51
   - Gemfile.mongo_mapper
 rvm:
   - 2.2.6
