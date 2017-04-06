@@ -22,4 +22,8 @@ class MockController
   end
 
   def hash_for_users_path(*); end
+
+  def polymorphic_mappings
+    {}
+  end
 end
