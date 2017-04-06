@@ -8,9 +8,9 @@ gemfile:
   - Gemfile.rails51
   - Gemfile.mongo_mapper
 rvm:
-  - 2.2.6
+  - 2.2.7
   - 2.3.3
-  - ruby-head
+  - 2.4.1
   - jruby-9.1.6.0
 matrix:
   allow_failures:
