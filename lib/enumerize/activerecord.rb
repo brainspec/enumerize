@@ -86,6 +86,10 @@ module Enumerize
       end
 
       alias type_cast_from_database deserialize
+
+      def as_json(options = nil)
+        {attr: @attr.name, subtype: @subtype}.as_json(options)
+      end
     end
   end
 end
