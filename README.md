@@ -153,14 +153,6 @@ use it with forms (it supports `:only` and `:except` options):
 <% end %>
 ```
 
-Boolean methods:
-
-```ruby
-user.sex = :male
-user.sex.male? #=> true
-user.sex.female? #=> false
-```
-
 Predicate methods:
 
 ```ruby
@@ -181,6 +173,14 @@ user.male?   # => true
 user.female? # => false
 ```
 :warning: If `enumerize` is used with Mongoid, it's not recommended to use `"writer"` as a field value since `writer?` is defined by Mongoid. [See more](https://github.com/brainspec/enumerize/issues/235). :warning:
+
+Boolean methods:
+
+```ruby
+user.sex = :male
+user.sex.male? #=> true
+user.sex.female? #=> false
+```
 
 Using prefix:
 
