@@ -4,10 +4,36 @@ require 'test_helper'
 require 'active_record'
 require 'logger'
 
+db = (ENV['DB'] || 'postgresql').to_sym
+
 silence_warnings do
   ActiveRecord::Migration.verbose = false
   ActiveRecord::Base.logger = Logger.new(nil)
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+  ActiveRecord::Base.configurations = {
+    'sqlite3' => {
+      adapter: 'sqlite3',
+      database: ':memory:'
+    },
+    'postgresql' => {
+      adapter: 'postgresql',
+      username: 'postgres',
+      password: '',
+      database: 'enumerize_test'
+    },
+    'postgresql_master' => {
+      adapter: 'postgresql',
+      username: 'postgres',
+      password: '',
+      database: 'postgres',
+      schema_search_path: 'public'
+    }
+  }
+  if db == :postgresql
+    ActiveRecord::Base.establish_connection(:postgresql_master)
+    ActiveRecord::Base.connection.recreate_database('enumerize_test')
+  end
+
+  ActiveRecord::Base.establish_connection(db)
 end
 
 ActiveRecord::Base.connection.instance_eval do
@@ -379,6 +405,14 @@ describe Enumerize::ActiveRecordSupport do
     user.status = :blocked
 
     assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
+  end
+
+  it 'does not change by the practical same value' do
+    user = User.create!(status: 'active')
+    user.reload
+    user.status = 'active'
+
+    user.changes.must_be_empty
   end
 
   it 'allows using update_all' do
