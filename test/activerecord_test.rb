@@ -11,21 +11,21 @@ silence_warnings do
   ActiveRecord::Base.logger = Logger.new(nil)
   ActiveRecord::Base.configurations = {
     'sqlite3' => {
-      adapter: 'sqlite3',
-      database: ':memory:'
+      'adapter' => 'sqlite3',
+      'database' => ':memory:'
     },
     'postgresql' => {
-      adapter: 'postgresql',
-      username: 'postgres',
-      password: '',
-      database: 'enumerize_test'
+      'adapter' => 'postgresql',
+      'username' => 'postgres',
+      'password' => '',
+      'database' => 'enumerize_test'
     },
     'postgresql_master' => {
-      adapter: 'postgresql',
-      username: 'postgres',
-      password: '',
-      database: 'postgres',
-      schema_search_path: 'public'
+      'adapter' => 'postgresql',
+      'username' => 'postgres',
+      'password' => '',
+      'database' => 'postgres',
+      'schema_search_path' => 'public'
     }
   }
   if db == :postgresql
