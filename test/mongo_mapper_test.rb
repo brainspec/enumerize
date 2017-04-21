@@ -29,7 +29,7 @@ describe Enumerize do
   it 'sets nil if invalid value is passed' do
     user = model.new
     user.sex = :invalid
-    user.sex.must_equal nil
+    user.sex.must_be_nil
   end
 
   it 'saves value' do

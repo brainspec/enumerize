@@ -107,7 +107,7 @@ describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
-    user.sex.must_equal nil
+    user.sex.must_be_nil
   end
 
   it 'saves value' do
@@ -209,7 +209,7 @@ describe Enumerize::ActiveRecordSupport do
   it 'stores nil when empty string assigned' do
     user = User.new
     user.role = ''
-    user.read_attribute(:role).must_equal nil
+    user.read_attribute(:role).must_be_nil
   end
 
   it 'supports multiple attributes' do
@@ -503,7 +503,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(status: :foo)
     user.reload
-    user.status.must_equal nil
+    user.status.must_be_nil
   end
 
   it 'supports AR types serialization' do
