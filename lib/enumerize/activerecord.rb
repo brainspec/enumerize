@@ -78,6 +78,14 @@ module Enumerize
         v = @attr.find_value(value)
         v && v.value
       end
+
+      alias type_cast_for_database serialize
+
+      def deserialize(value)
+        @attr.find_value(value)
+      end
+
+      alias type_cast_from_database deserialize
     end
   end
 end
