@@ -507,11 +507,14 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'supports AR types serialization' do
-    User.delete_all
-
     type = User.type_for_attribute('status')
     type.must_be_instance_of Enumerize::ActiveRecordSupport::Type
     serialized = type.serialize('blocked')
     serialized.must_equal 2
+  end
+
+  it 'has AR type itself JSON serializable' do
+    type = User.type_for_attribute('status')
+    type.as_json['attr'].must_equal 'status'
   end
 end
