@@ -71,7 +71,7 @@ module SequelTest
     it 'sets nil if invalid value is passed' do
       user = User.new
       user.sex = :invalid
-      user.sex.must_equal nil
+      user.sex.must_be_nil
     end
 
     it 'saves value' do
@@ -147,7 +147,7 @@ module SequelTest
     it 'stores nil when empty string assigned' do
       user = User.new
       user.role = ''
-      user.values[:role].must_equal nil
+      user.values[:role].must_be_nil
     end
 
     it 'supports multiple attributes' do

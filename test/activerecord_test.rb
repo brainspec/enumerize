@@ -4,10 +4,36 @@ require 'test_helper'
 require 'active_record'
 require 'logger'
 
+db = (ENV['DB'] || 'sqlite3').to_sym
+
 silence_warnings do
   ActiveRecord::Migration.verbose = false
   ActiveRecord::Base.logger = Logger.new(nil)
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+  ActiveRecord::Base.configurations = {
+    'sqlite3' => {
+      'adapter' => 'sqlite3',
+      'database' => ':memory:'
+    },
+    'postgresql' => {
+      'adapter' => 'postgresql',
+      'username' => ENV['DB_USER'],
+      'password' => ENV['DB_PASSD'],
+      'database' => 'enumerize_test'
+    },
+    'postgresql_master' => {
+      'adapter' => 'postgresql',
+      'username' => ENV['DB_USER'],
+      'password' => ENV['DB_PASS'],
+      'database' => 'template1',
+      'schema_search_path' => 'public'
+    }
+  }
+  if db == :postgresql
+    ActiveRecord::Base.establish_connection(:postgresql_master)
+    ActiveRecord::Base.connection.recreate_database('enumerize_test')
+  end
+
+  ActiveRecord::Base.establish_connection(db)
 end
 
 ActiveRecord::Base.connection.instance_eval do
@@ -81,7 +107,7 @@ describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
-    user.sex.must_equal nil
+    user.sex.must_be_nil
   end
 
   it 'saves value' do
@@ -183,7 +209,7 @@ describe Enumerize::ActiveRecordSupport do
   it 'stores nil when empty string assigned' do
     user = User.new
     user.role = ''
-    user.read_attribute(:role).must_equal nil
+    user.read_attribute(:role).must_be_nil
   end
 
   it 'supports multiple attributes' do
@@ -381,6 +407,14 @@ describe Enumerize::ActiveRecordSupport do
     assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
   end
 
+  it 'does not change by the practical same value' do
+    user = User.create!(status: 'active')
+    user.reload
+    user.status = 'active'
+
+    user.changes.must_be_empty
+  end
+
   it 'allows using update_all' do
     User.delete_all
 
@@ -469,7 +503,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(status: :foo)
     user.reload
-    user.status.must_equal nil
+    user.status.must_be_nil
   end
 
   it 'supports AR types serialization' do

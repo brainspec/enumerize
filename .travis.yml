@@ -1,6 +1,7 @@
 language: ruby
 sudo: false
 services:
+  - postgresql
   - mongodb
 gemfile:
   - Gemfile
@@ -12,9 +13,20 @@ rvm:
   - 2.3.3
   - 2.4.1
   - jruby-9.1.8.0
+env:
+  global:
+    - DB_USER=postgres
+    - DB_PASS=
+  matrix:
+    - DB=sqlite3
+    - DB=postgresql
 matrix:
+  fast_finish: true
   allow_failures:
     - rvm: jruby-9.1.8.0
+  exclude:
+    - gemfile: Gemfile.mongo_mapper
+      env: DB=postgresql
 branches:
   only:
     - master

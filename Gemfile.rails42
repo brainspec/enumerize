@@ -3,4 +3,5 @@ eval_gemfile('Gemfile.global')
 gem 'minitest', '~> 5.8'
 gem 'rails',    '4.2.8', :require => false
 gem 'activerecord-jdbcsqlite3-adapter', platform: :jruby
+gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'mongoid',  '~> 5.0'

@@ -15,7 +15,7 @@ describe Enumerize::Base do
 
   it 'returns nil when not set' do
     klass.enumerize(:foo, :in => [:a, :b])
-    object.foo.must_equal nil
+    object.foo.must_be_nil
   end
 
   it 'returns value that was set' do
@@ -37,7 +37,7 @@ describe Enumerize::Base do
   it 'returns nil as translation when value is nil' do
     store_translations(:en, :enumerize => {:foo => {:a => 'a text'}}) do
       klass.enumerize(:foo, :in => [:a, :b])
-      object.foo_text.must_equal nil
+      object.foo_text.must_be_nil
     end
   end
 
@@ -120,7 +120,7 @@ describe Enumerize::Base do
     klass.enumerize(:foo, :in => %w[a b])
     subklass.enumerize(:bar, :in => %w[c d])
 
-    klass.enumerized_attributes[:bar].must_equal nil
+    klass.enumerized_attributes[:bar].must_be_nil
   end
 
   it 'adds new parent class attributes to subclass' do
@@ -132,7 +132,7 @@ describe Enumerize::Base do
   it 'stores nil value' do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = nil
-    object.instance_variable_get(:@foo).must_equal nil
+    object.instance_variable_get(:@foo).must_be_nil
   end
 
   it 'casts value to string for validation' do
@@ -144,7 +144,7 @@ describe Enumerize::Base do
   it "doesn't cast nil to string for validation" do
     klass.enumerize(:foo, :in => [:a, :b])
     object.foo = nil
-    object.read_attribute_for_validation(:foo).must_equal nil
+    object.read_attribute_for_validation(:foo).must_be_nil
   end
 
   it 'calls super in the accessor method' do
