@@ -4,7 +4,7 @@ require 'test_helper'
 require 'active_record'
 require 'logger'
 
-db = (ENV['DB'] || 'postgresql').to_sym
+db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
   ActiveRecord::Migration.verbose = false
@@ -16,15 +16,15 @@ silence_warnings do
     },
     'postgresql' => {
       'adapter' => 'postgresql',
-      'username' => 'postgres',
-      'password' => '',
+      'username' => ENV['DB_USER'],
+      'password' => ENV['DB_PASSD'],
       'database' => 'enumerize_test'
     },
     'postgresql_master' => {
       'adapter' => 'postgresql',
-      'username' => 'postgres',
-      'password' => '',
-      'database' => 'postgres',
+      'username' => ENV['DB_USER'],
+      'password' => ENV['DB_PASS'],
+      'database' => 'template1',
       'schema_search_path' => 'public'
     }
   }
