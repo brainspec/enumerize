@@ -4,6 +4,17 @@
 
 ### bug fix
 
+## 2.1.1 (May 1, 2017)
+
+### enhancements
+
+* Run tests with multiple DBs (SQLite and PostgreSQL). (by [tkawa](https://github.com/tkawa))
+
+### bug fix
+
+* Support deserialize and Rails 4.2 methods in the custom AR::Type class. (by [@lest](https://github.com/lest))
+* Support dumping custom AR type to JSON. (by [@lest](https://github.com/lest))
+
 ## 2.1.0 (March 31, 2017)
 
 ### enhancements
