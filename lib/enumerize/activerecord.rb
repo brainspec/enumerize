@@ -90,6 +90,19 @@ module Enumerize
       def as_json(options = nil)
         {attr: @attr.name, subtype: @subtype}.as_json(options)
       end
+
+      def encode_with(coder)
+        coder[:class_name] = @attr.klass.name
+        coder[:attr_name] = @attr.name
+        coder[:subtype] = @subtype
+      end
+
+      def init_with(coder)
+        initialize(
+          coder[:class_name].constantize.enumerized_attributes[coder[:attr_name]],
+          coder[:subtype]
+        )
+      end
     end
   end
 end
