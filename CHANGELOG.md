@@ -4,6 +4,12 @@
 
 ### bug fix
 
+## 2.1.2 (May 18, 2017)
+
+### bug fix
+
+* Support YAML serialization for the custom AR type. (by [@lest](https://github.com/lest))
+
 ## 2.1.1 (May 1, 2017)
 
 ### enhancements
