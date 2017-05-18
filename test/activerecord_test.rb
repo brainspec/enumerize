@@ -517,4 +517,9 @@ describe Enumerize::ActiveRecordSupport do
     type = User.type_for_attribute('status')
     type.as_json['attr'].must_equal 'status'
   end
+
+  it "doesn't break YAML serialization" do
+    user = YAML.load(User.create(status: :blocked).to_yaml)
+    user.status.must_equal 'blocked'
+  end
 end
