@@ -5,7 +5,9 @@ module Enumerize
     module UniquenessValidator
 
       def validate_each(record, name, value)
-        if record.class.respond_to?(:enumerized_attributes) && (attr = record.class.enumerized_attributes[name])
+        klass = record.to_model.class
+
+        if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[name])
           value = attr.find_value(value).try(:value)
         end
 
