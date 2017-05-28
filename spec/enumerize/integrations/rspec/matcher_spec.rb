@@ -221,7 +221,7 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   describe '#with_multiple' do
 
     it 'accepts when has defined the multiple' do
-      model.enumerize(:sex, :in => [:male, :female], multiple: true)
+      model.enumerize(:sex, :in => [:male, :female], multiple: true, default: :male)
       expect(subject).to enumerize(:sex).in(:male, :female).with_multiple(true)
     end
 
