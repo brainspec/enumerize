@@ -36,7 +36,7 @@ module Enumerize
       base.extend Enumerize::Scope::ActiveRecord
     end
 
-    if defined?(::Mongoid::Document)
+    if defined?(::Mongoid::Document) && base.include?(::Mongoid::Document)
       base.extend Enumerize::MongoidSupport
       base.extend Enumerize::Scope::Mongoid
     end
