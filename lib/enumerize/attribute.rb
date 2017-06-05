@@ -72,7 +72,7 @@ module Enumerize
         end
       end
 
-      values.map { |v| [v.text, v.to_s] }
+      values.map { |v| [v.text, v.value] }
     end
 
     def respond_to_missing?(method, include_private=false)
