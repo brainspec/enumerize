@@ -4,6 +4,8 @@
 
 ### bug fix
 
+* Fix RailsAdmin integration when enumerated field used on edit form and enumerated value wasn't set. (by [@nashby](https://github.com/nashby))
+
 ## 2.1.2 (May 18, 2017)
 
 ### bug fix
