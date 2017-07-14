@@ -31,17 +31,17 @@ module Enumerize
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
 
-    if defined?(::ActiveRecord::Base)
+    if defined?(::ActiveRecord::Base) && base.ancestors.include?(::ActiveRecord::Base)
       base.extend Enumerize::ActiveRecordSupport
       base.extend Enumerize::Scope::ActiveRecord
     end
 
-    if defined?(::Mongoid::Document)
+    if defined?(::Mongoid::Document) && base.ancestors.include?(::Mongoid::Document)
       base.extend Enumerize::MongoidSupport
       base.extend Enumerize::Scope::Mongoid
     end
 
-    if defined?(::Sequel::Model)
+    if defined?(::Sequel::Model) && base.ancestors.include?(::Sequel::Model)
       base.extend Enumerize::SequelSupport
       base.extend Enumerize::Scope::Sequel
     end
