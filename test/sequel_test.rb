@@ -32,7 +32,7 @@ module SequelTest
   end
 
   class Document < Sequel::Model
-    extend Enumerize
+    plugin :enumerize
     enumerize :visibility, :in => [:public, :private, :protected], :scope => true, :default => :public
   end
 
@@ -47,7 +47,7 @@ module SequelTest
     plugin :dirty
     plugin :defaults_setter
     plugin :validation_helpers
-    extend Enumerize
+    plugin :enumerize
     include RoleEnum
 
     enumerize :sex, :in => [:male, :female]
