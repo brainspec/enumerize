@@ -315,6 +315,8 @@ and if you want it as radio buttons:
 <% end %>
 ```
 
+Please note that enumerize overwrites the I18n keys of SimpleForm collections; the enumerize keys are used instead of the simple_form ones for inputs concerning enumrized attributes.
+
 ### Formtastic
 
 If you are using Formtastic gem you also don't need to specify input type (`:select` by default) and collection:
