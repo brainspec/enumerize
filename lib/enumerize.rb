@@ -12,6 +12,7 @@ module Enumerize
   autoload :Predicatable, 'enumerize/predicatable'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
+  autoload :ActiveModelAttributesSupport, 'enumerize/activemodel'
   autoload :ActiveRecordSupport, 'enumerize/activerecord'
   autoload :SequelSupport, 'enumerize/sequel'
   autoload :MongoidSupport,      'enumerize/mongoid'
@@ -30,6 +31,10 @@ module Enumerize
   def self.extended(base)
     base.send :include, Enumerize::Base
     base.extend Enumerize::Predicates
+
+    if defined?(::ActiveModel::Attributes)
+      base.extend Enumerize::ActiveModelAttributesSupport
+    end
 
     if defined?(::ActiveRecord::Base)
       base.extend Enumerize::ActiveRecordSupport
