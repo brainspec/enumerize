@@ -75,7 +75,7 @@ module SequelTest
     end
 
     it 'saves value' do
-      User.filter.delete
+      User.filter{ true }.delete
       user = User.new
       user.sex = :female
       user.save
@@ -83,7 +83,7 @@ module SequelTest
     end
 
     it 'loads value' do
-      User.filter.delete
+      User.filter{ true }.delete
       User.create(:sex => :male)
       store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
         user = User.first
@@ -98,7 +98,7 @@ module SequelTest
     end
 
     it 'does not set default value for not selected attributes' do
-      User.filter.delete
+      User.filter{ true }.delete
       User.create(:sex => :male)
 
       assert_equal [:id], User.select(:id).first.values.keys
@@ -109,7 +109,7 @@ module SequelTest
       User.new.values[:lambda_role].must_equal 'admin'
     end
     it 'uses after_initialize callback to set default value' do
-      User.filter.delete
+      User.filter{ true }.delete
       User.create(sex: 'male', lambda_role: nil)
 
       user = User.where(:sex => 'male').first
@@ -193,7 +193,7 @@ module SequelTest
     end
 
     it 'stores custom values for multiple attributes' do
-      User.filter.delete
+      User.filter{ true }.delete
 
       klass = Class.new(User)
       klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
@@ -208,7 +208,7 @@ module SequelTest
     end
 
     it 'adds scope' do
-      User.filter.delete
+      User.filter{ true }.delete
 
       user_1 = User.create(status: :active, role: :admin)
       user_2 = User.create(status: :blocked)
@@ -238,7 +238,7 @@ module SequelTest
     end
 
     it 'supports defining enumerized attributes on abstract class' do
-      Document.filter.delete
+      Document.filter{ true }.delete
 
       document = Document.new
       document.visibility = :protected
@@ -246,7 +246,7 @@ module SequelTest
     end
 
     it 'supports defining enumerized scopes on abstract class' do
-      Document.filter.delete
+      Document.filter{ true }.delete
 
       document_1 = Document.create(visibility: :public)
       document_2 = Document.create(visibility: :private)
@@ -266,7 +266,7 @@ module SequelTest
     end
 
     it "doesn't update record" do
-      Document.filter.delete
+      Document.filter{ true }.delete
 
       expected = Time.new(2010, 10, 10)
 
