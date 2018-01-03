@@ -315,7 +315,7 @@ and if you want it as radio buttons:
 <% end %>
 ```
 
-Please note that enumerize overwrites the I18n keys of SimpleForm collections; the enumerize keys are used instead of the simple_form ones for inputs concerning enumrized attributes.
+Please note that Enumerize overwrites the I18n keys of SimpleForm collections. The enumerized keys are used instead of the SimpleForm ones for inputs concerning enumerized attributes. If you don't want this just pass `:collection` option to the `input` call.
 
 ### Formtastic
 
