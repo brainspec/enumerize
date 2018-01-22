@@ -16,6 +16,10 @@ Or install it yourself as:
 
     $ gem install enumerize
 
+## Supported Versions
+- Ruby 2.2+
+- Rails 4.2+
+
 ## Usage
 
 Basic:
