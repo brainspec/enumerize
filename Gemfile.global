@@ -6,7 +6,7 @@ gem 'rake'
 gem 'rspec', :require => false
 
 gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
-gem 'pg', :platform => [:ruby, :mswin, :mingw]
+gem 'pg', '~> 0.21.0', :platform => [:ruby, :mswin, :mingw]
 gem 'sequel'
 
 platforms :rbx do
