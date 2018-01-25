@@ -2,17 +2,17 @@ require 'test_helper'
 require 'yaml'
 
 describe Enumerize::Set do
-  let(:klass) do
+  let(:kklass) do
     Class.new do
       extend Enumerize
       enumerize :foo, :in => %w(a b c), :multiple => true
     end
   end
 
-  let(:object) { klass.new }
+  let(:object) { kklass.new }
 
   def build_set(values)
-    @set = Enumerize::Set.new(object, klass.foo, values)
+    @set = Enumerize::Set.new(object, kklass.foo, values)
   end
 
   def set
@@ -39,7 +39,7 @@ describe Enumerize::Set do
   end
 
   it 'equals to other set' do
-    set.must_equal Enumerize::Set.new(nil, klass.foo, %w(a))
+    set.must_equal Enumerize::Set.new(nil, kklass.foo, %w(a))
   end
 
   it 'equals to array' do
