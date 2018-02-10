@@ -76,7 +76,7 @@ module Enumerize
 
       def serialize(value)
         v = @attr.find_value(value)
-        v && v.value
+        (v && v.value) || value
       end
 
       alias type_cast_for_database serialize
