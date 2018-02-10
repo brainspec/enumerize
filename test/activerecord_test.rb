@@ -522,4 +522,12 @@ describe Enumerize::ActiveRecordSupport do
     user = YAML.load(User.create(status: :blocked).to_yaml)
     user.status.must_equal 'blocked'
   end
+
+  # https://github.com/brainspec/enumerize/issues/304
+  it "fallbacks to a raw passed value if AR type can't find value in the attribute" do
+    table = User.arel_table
+    sql = User.where(table[:account_type].matches '%foo%').to_sql
+
+    sql.must_include 'LIKE \'%foo%\''
+  end
 end

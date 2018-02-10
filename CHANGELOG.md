@@ -5,6 +5,7 @@
 ### bug fix
 
 * Fix RailsAdmin integration when enumerated field used on edit form and enumerated value wasn't set. (by [@nashby](https://github.com/nashby))
+* Fallback to a raw passed value instead of nil if AR type can't find value in the attribute. (by [@nashby](https://github.com/nashby))
 
 ## 2.1.2 (May 18, 2017)
 
@@ -43,11 +44,11 @@
 * Drop support for Rails 4.0 and 4.1. Support only Rails 4.2 and newer. (by [@lest](https://github.com/lest))
 * Support Rails 5.0. (by [@nashby](https://github.com/nashby) and [@lest](https://github.com/lest))
 * Allow to pass enumerize values to `ActiveRecord#update_all` (by [@DmitryTsepelev](https://github.com/DmitryTsepelev) and [@ianwhite](https://github.com/ianwhite))
-   
+
   ```ruby
   User.update_all(status: :blocked)
   ```
-  
+
 ### bug fix
 
 * Rescue MissingAttributeError on attribute writing. (by [@embs](https://github.com/embs))
