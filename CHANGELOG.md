@@ -4,6 +4,17 @@
 
 ### bug fix
 
+## 2.2.0 (February 13, 2018)
+
+### enhancements
+
+* Add integration with active_interaction. (by [@runephilosof](https://github.com/runephilosof))
+* Allow using `plugin :enumerize` with Sequel. (by [@jnylen](https://github.com/jnylen))
+* Support ActiveModel::Attributes from Rails 5.2. (by [@troter](https://github.com/troter))
+* Support Sequel 5.2.0. (by [@troter](https://github.com/troter))
+
+### bug fix
+
 * Fix RailsAdmin integration when enumerated field used on edit form and enumerated value wasn't set. (by [@nashby](https://github.com/nashby))
 * Fallback to a raw passed value instead of nil if AR type can't find value in the attribute. (by [@nashby](https://github.com/nashby))
 
