@@ -3,6 +3,7 @@
 ### enhancements
 
 ### bug fix
+  Fix issue with SimpleForm/Formtastic forms without object. (by [@nashby](https://github.com/nashby))
 
 ## 2.2.0 (February 13, 2018)
 
