@@ -128,4 +128,12 @@ class SimpleFormSpec < MiniTest::Spec
 
     assert_select 'input.string'
   end
+
+  it 'does not affect forms without object' do
+    concat(simple_form_for('') do |f|
+      f.input(:name)
+    end)
+
+    assert_select 'input.string'
+  end
 end

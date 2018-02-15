@@ -124,4 +124,12 @@ class FormtasticSpec < MiniTest::Spec
 
     assert_select 'input[type=text]'
   end
+
+  it 'does not affect forms without object' do
+    concat(semantic_form_for('') do |f|
+      f.input(:name)
+    end)
+
+    assert_select 'input[type=text]'
+  end
 end

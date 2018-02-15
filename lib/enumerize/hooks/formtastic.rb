@@ -5,7 +5,7 @@ module Enumerize
     module FormtasticFormBuilderExtension
 
       def input(method, options={})
-        klass = object.to_model.class
+        klass = object && object.to_model.class
 
         if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[method])
           options[:collection] ||= attr.options

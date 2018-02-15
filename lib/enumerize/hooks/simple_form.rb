@@ -17,7 +17,7 @@ module Enumerize
       private
 
       def add_input_options_for_enumerized_attribute(attribute_name, options)
-        klass = object.to_model.class
+        klass = object && object.to_model.class
 
         if klass.respond_to?(:enumerized_attributes) && (attr = klass.enumerized_attributes[attribute_name])
           options[:collection] ||= attr.options
