@@ -40,6 +40,12 @@ class SimpleFormSpec < MiniTest::Spec
     end
   end
 
+  class Registration < Struct.new(:sex)
+    extend Enumerize
+
+    enumerize :sex, in: [:male, :female]
+  end
+
   let(:user) { User.new }
   let(:post) { Post.new }
 
@@ -127,6 +133,15 @@ class SimpleFormSpec < MiniTest::Spec
     end)
 
     assert_select 'input.string'
+  end
+
+  it 'renders select with enumerized values for non-ActiveModel object' do
+    concat(simple_form_for(Registration.new, as: 'registration', url: '/') do |f|
+      f.input(:sex)
+    end)
+
+    assert_select 'select option[value=male]'
+    assert_select 'select option[value=female]'
   end
 
   it 'does not affect forms without object' do
