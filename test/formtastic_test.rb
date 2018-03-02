@@ -42,6 +42,12 @@ class FormtasticSpec < MiniTest::Spec
     end
   end
 
+  class Registration < Struct.new(:sex)
+    extend Enumerize
+
+    enumerize :sex, in: [:male, :female]
+  end
+
   before { $VERBOSE = nil }
   after  { $VERBOSE = true }
 
@@ -123,6 +129,15 @@ class FormtasticSpec < MiniTest::Spec
     end)
 
     assert_select 'input[type=text]'
+  end
+
+  it 'renders select with enumerized values for non-ActiveModel object' do
+    concat(semantic_form_for(Registration.new, as: 'registration', url: '/') do |f|
+      f.input(:sex)
+    end)
+
+    assert_select 'select option[value=male]'
+    assert_select 'select option[value=female]'
   end
 
   it 'does not affect forms without object' do
