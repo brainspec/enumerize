@@ -4,6 +4,12 @@
 
 ### bug fix
 
+## 2.2.2 (March 6, 2018)
+
+### bug fix
+
+* Support non-ActiveModel objects in SimpleForm/Formtastic integration. (by [@nashby](https://github.com/nashby))
+
 ## 2.2.1 (February 15, 2018)
 
 ### bug fix
