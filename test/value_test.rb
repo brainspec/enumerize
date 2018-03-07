@@ -5,8 +5,8 @@ describe Enumerize::Value do
   class Attr < Struct.new(:values, :name, :i18n_scopes)
   end
 
-  let(:attr)  { Attr.new([], "attribute_name", []) }
-  let(:val)  { Enumerize::Value.new(attr, 'test_value', 1) }
+  let(:attr) { Attr.new([], "attribute_name", []) }
+  let(:val) { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
     val.must_be_kind_of String
