@@ -14,6 +14,11 @@ describe Enumerize::Attribute do
     attr.values.must_equal %w[a b]
   end
 
+  it 'returns frozen values' do
+    build_attr nil, :foo, :in => [:a, :b]
+    attr.values.map(&:frozen?).must_equal [true, true]
+  end
+
   it 'converts name to symbol' do
     build_attr nil, 'foo', :in => %w[a b]
     attr.name.must_equal :foo

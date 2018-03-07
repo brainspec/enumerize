@@ -2,10 +2,10 @@ require 'test_helper'
 require 'yaml'
 
 describe Enumerize::Value do
-  class Attr < Struct.new(:values)
+  class Attr < Struct.new(:values, :name, :i18n_scopes)
   end
 
-  let(:attr) { Attr.new([]) }
+  let(:attr)  { Attr.new([], "attribute_name", []) }
   let(:val)  { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
@@ -30,7 +30,6 @@ describe Enumerize::Value do
   end
 
   describe 'translation' do
-    let(:attr)  { Struct.new(:values, :name, :i18n_scopes).new([], "attribute_name", []) }
 
     it 'uses common translation' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do

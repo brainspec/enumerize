@@ -263,7 +263,11 @@ describe Enumerize::ActiveRecordSupport do
   it 'stores custom values for multiple attributes' do
     User.delete_all
 
-    klass = Class.new(User)
+    klass = Class.new(User) do
+      def self.name
+        'UserSubclass'
+      end
+    end
     klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
 
     user = klass.new
@@ -433,7 +437,11 @@ describe Enumerize::ActiveRecordSupport do
   it 'allows using update_all for multiple enumerize' do
     User.delete_all
 
-    klass = Class.new(User)
+    klass = Class.new(User) do
+      def self.name
+        'UserSubclass'
+      end
+    end
     klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
 
     user = klass.create(status: :active)
