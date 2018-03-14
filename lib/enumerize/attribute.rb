@@ -11,16 +11,16 @@ module Enumerize
       @klass  = klass
       @name   = name.to_sym
 
-      value_class = options.fetch(:value_class, Value)
-      @values = Array(options[:in]).map { |v| value_class.new(self, *v) }
-
-      @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
-      @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
-
       if options[:i18n_scope]
         raise ArgumentError, ':i18n_scope option accepts only String or Array of strings' unless Array(options[:i18n_scope]).all? { |s| s.is_a?(String) }
         @i18n_scope = options[:i18n_scope]
       end
+
+      value_class = options.fetch(:value_class, Value)
+      @values = Array(options[:in]).map { |v| value_class.new(self, *v).freeze }
+
+      @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
+      @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
 
       if options[:default]
         @default_value = find_default_value(options[:default])
@@ -46,9 +46,9 @@ module Enumerize
 
     def i18n_scopes
       @i18n_scopes ||= if i18n_scope
-        scopes = Array(i18n_scope)
+        Array(i18n_scope)
       elsif @klass.respond_to?(:model_name)
-        scopes = ["enumerize.#{@klass.model_name.i18n_key}.#{name}"]
+        ["enumerize.#{@klass.model_name.i18n_key}.#{name}"]
       else
         []
       end
