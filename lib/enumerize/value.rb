@@ -7,6 +7,10 @@ module Enumerize
     attr_reader :value
 
     def initialize(attr, name, value=nil)
+      if self.class.method_defined?("#{name}?")
+        warn("It's not recommended to use `#{name}` as a field value since `#{name}?` is defined. (#{attr.klass.name}##{attr.name})")
+      end
+
       @attr  = attr
       @value = value.nil? ? name.to_s : value
 
