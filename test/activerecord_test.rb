@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
 
-  enumerize :sex, :in => [:male, :female]
+  enumerize :sex, :in => [:male, :female], predicates: true
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
@@ -108,6 +108,11 @@ describe Enumerize::ActiveRecordSupport do
     user = User.new
     user.sex = :invalid
     user.sex.must_be_nil
+  end
+
+  it 'returns false if no value is set' do
+    user = User.new
+    user.male?.must_equal false
   end
 
   it 'saves value' do
