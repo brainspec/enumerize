@@ -50,6 +50,19 @@ module Enumerize
 
         became
       end
+
+      def reload(options = nil)
+        reloaded = super
+
+        reloaded.class.enumerized_attributes.each do |attr|
+          begin
+            reloaded.send("#{attr.name}=", reloaded[attr.name])
+          rescue ActiveModel::MissingAttributeError
+          end
+        end
+
+        reloaded
+      end
     end
 
     module RelationMethods

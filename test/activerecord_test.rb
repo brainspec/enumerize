@@ -173,6 +173,13 @@ describe Enumerize::ActiveRecordSupport do
     user.errors[:role].must_include 'is not included in the list'
   end
 
+  it 'sets value to enumerized field from db when record is reloaded' do
+    user = InterestsRequiredUser.create!(interests: [:music])
+    user.update(interests: [])
+    user.reload
+    user.interests.must_equal ['music']
+  end
+
   it 'validates inclusion when using write_attribute with string attribute' do
     user = User.new
     user.send(:write_attribute, 'role', 'wrong')
