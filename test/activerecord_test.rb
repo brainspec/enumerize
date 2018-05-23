@@ -174,10 +174,11 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'sets value to enumerized field from db when record is reloaded' do
-    user = InterestsRequiredUser.create!(interests: [:music])
-    user.update(interests: [])
+    user = User.create!(interests: [:music])
+    User.find(user.id).update(interests: %i[music dancing])
+    user.interests.must_equal %w[music]
     user.reload
-    user.interests.must_equal ['music']
+    user.interests.must_equal %w[music dancing]
   end
 
   it 'validates inclusion when using write_attribute with string attribute' do
