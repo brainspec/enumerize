@@ -78,6 +78,14 @@ describe Enumerize do
     user.wont_be :valid?
   end
 
+  it 'sets value to enumerized field from db when record is reloaded' do
+    user = model.create!(mult: [:one])
+    model.find(user.id).update(mult: %i[two three])
+    user.mult.must_equal %w[one]
+    user.reload
+    user.mult.must_equal %w[two three]
+  end
+
   it 'assigns value on loaded record' do
     model.delete_all
     model.create!(:sex => :male)
