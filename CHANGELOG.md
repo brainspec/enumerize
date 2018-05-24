@@ -4,6 +4,8 @@
 
 ### bug fix
 
+* Fix issue with ActiveRecord and Mongoid `reload` method when enumberized attributes weren't synced from DB. (by [@nashby](https://github.com/nashby) and [@FunkyloverOne](https://github.com/FunkyloverOne))
+
 ## 2.2.2 (March 6, 2018)
 
 ### bug fix
