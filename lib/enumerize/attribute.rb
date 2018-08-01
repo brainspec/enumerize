@@ -48,6 +48,10 @@ module Enumerize
       values.map { |value| find_value(value) }.compact
     end
 
+    def each_value
+      values.each { |value| yield value }
+    end
+
     def i18n_scopes
       @i18n_scopes ||= if i18n_scope
         Array(i18n_scope)

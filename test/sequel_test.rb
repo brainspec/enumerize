@@ -23,6 +23,7 @@ module SequelTest
     String :name
     String :interests
     String :status
+    Integer :skill
     String :account_type, default: "basic"
     String :foo
   end
@@ -53,11 +54,13 @@ module SequelTest
     plugin :enumerize
     include RoleEnum
 
-    enumerize :sex, :in => [:male, :female]
+    enumerize :sex, :in => [:male, :female], scope: :shallow
 
     enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
     enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+    enumerize :skill, :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
 
     enumerize :account_type, :in => [:basic, :premium]
   end
@@ -256,6 +259,7 @@ module SequelTest
 
       user_1 = User.create(status: :active, role: :admin)
       user_2 = User.create(status: :blocked)
+      user_3 = User.create(sex: :male, skill: :pro)
 
       User.with_status(:active).to_a.must_equal [user_1]
       User.with_status(:blocked).to_a.must_equal [user_2]
@@ -265,6 +269,8 @@ module SequelTest
       User.without_status(:active, :blocked).to_a.must_equal []
 
       User.having_role(:admin).to_a.must_equal [user_1]
+      User.male.to_a.must_equal [user_3]
+      User.pro.to_a.must_equal [user_3]
     end
 
     it 'allows either key or value as valid' do

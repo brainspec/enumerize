@@ -20,6 +20,8 @@ module Enumerize
       private
 
       def _define_sequel_scope_methods!(name, options)
+        return _define_sequel_shallow_scopes!(name) if options[:scope] == :shallow
+
         klass = self
         scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
 
@@ -34,6 +36,14 @@ module Enumerize
           def_dataset_method "without_#{name}" do |*values|
             values = values.map { |value| klass.enumerized_attributes[name].find_value(value).value }
             exclude(name => values)
+          end
+        end
+      end
+
+      def _define_sequel_shallow_scopes!(attribute_name)
+        enumerized_attributes[attribute_name].each_value do |value_obj|
+          def_dataset_method(value_obj) do
+            where(attribute_name => value_obj.value.to_s)
           end
         end
       end
