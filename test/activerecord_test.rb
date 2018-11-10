@@ -44,6 +44,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :name
     t.string :interests
     t.integer :status
+    t.text :settings
     t.string :account_type, :default => :basic
   end
 
@@ -78,7 +79,10 @@ class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
 
+  store :settings, accessors: [:language]
+
   enumerize :sex, :in => [:male, :female]
+  enumerize :language, :in => [:en, :jp]
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
@@ -126,6 +130,21 @@ describe Enumerize::ActiveRecordSupport do
       user.sex.must_equal 'male'
       user.sex_text.must_equal 'Male'
     end
+  end
+
+  it 'sets nil if invalid stored attribute value is passed' do
+    user = User.new
+    user.language = :invalid
+    user.language.must_be_nil
+  end
+
+  it 'saves stored attribute value' do
+    User.delete_all
+    user = User.new
+    user.language = :en
+    user.save!
+    user.reload
+    user.language.must_equal 'en'
   end
 
   it 'has default value' do
