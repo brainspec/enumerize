@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   class Module < ::Module
     attr_reader :_class_methods
