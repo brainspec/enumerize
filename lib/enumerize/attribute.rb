@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   class Attribute
     attr_reader :klass, :name, :values, :default_value, :i18n_scope

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 Formtastic::FormBuilder.action_class_finder = Formtastic::ActionClassFinder
