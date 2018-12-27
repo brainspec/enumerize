@@ -20,10 +20,13 @@ describe Enumerize do
 
     field :sex
     field :role
+    field :foo
+
     enumerize :sex,    :in => %w[male female], scope: true
     enumerize :status, :in => %w[notice warning error], scope: true
     enumerize :role,   :in => %w[admin user], :default => 'user', scope: :having_role
     enumerize :mult,   :in => %w[one two three four], :multiple => true
+    enumerize :foo,    :in => %w[bar baz], :skip_validations => true
   end
 
   before { $VERBOSE = nil }
@@ -78,6 +81,12 @@ describe Enumerize do
     user = model.new
     user.role = 'wrong'
     user.wont_be :valid?
+  end
+
+  it 'does not validate inclusion when :skip_validations option passed' do
+    user = model.new
+    user.foo = 'wrong'
+    user.must_be :valid?
   end
 
   it 'sets value to enumerized field from db when record is reloaded' do

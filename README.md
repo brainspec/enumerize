@@ -58,6 +58,18 @@ class User < ActiveRecord::Base
 end
 ```
 
+:warning: By default, `enumerize` adds `inclusion` validation to the model. You can skip validations by passing `skip_validations` option. :warning:
+
+```ruby
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], skip_validations: lambda { |user| user.new_record? }
+
+  enumerize :role, in: [:user, :admin], skip_validations: true
+end
+```
+
 Mongoid:
 
 ```ruby

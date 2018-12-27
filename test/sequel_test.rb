@@ -24,6 +24,7 @@ module SequelTest
     String :interests
     String :status
     String :account_type, default: "basic"
+    String :foo
   end
 
   DB.create_table :documents do
@@ -67,6 +68,22 @@ module SequelTest
       validates_unique :status
       validates_presence :sex
     end
+  end
+
+  class SkipValidationsUser < Sequel::Model(:users)
+    include SkipValidationsEnum
+  end
+
+  class DoNotSkipValidationsUser < Sequel::Model(:users)
+    include DoNotSkipValidationsEnum
+  end
+
+  class SkipValidationsLambdaUser < Sequel::Model(:users)
+    include SkipValidationsLambdaEnum
+  end
+
+  class SkipValidationsLambdaWithParamUser < Sequel::Model(:users)
+    include SkipValidationsLambdaWithParamEnum
   end
 
   describe Enumerize::SequelSupport do
@@ -150,6 +167,31 @@ module SequelTest
       user = User.new
       user.role = ''
       user.values[:role].must_be_nil
+    end
+
+    it 'validates inclusion when :skip_validations = false' do
+      user = DoNotSkipValidationsUser.new
+      user.foo = 'wrong'
+      user.wont_be :valid?
+      user.errors[:foo].must_include 'is not included in the list'
+    end
+
+    it 'does not validate inclusion when :skip_validations = true' do
+      user = SkipValidationsUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
+    end
+
+    it 'supports :skip_validations option as lambda' do
+      user = SkipValidationsLambdaUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
+    end
+
+    it 'supports :skip_validations option as lambda with a parameter' do
+      user = SkipValidationsLambdaWithParamUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
     end
 
     it 'supports multiple attributes' do
