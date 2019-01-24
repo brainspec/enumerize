@@ -21,7 +21,7 @@ module Enumerize
         super
 
         self.class.enumerized_attributes.each do |attr|
-          skip_validations = _call_if_callable(attr.skip_validations_value)
+          skip_validations = Utils.call_if_callable(attr.skip_validations_value, self)
           next if skip_validations
 
           value = read_attribute_for_validation(attr.name)
