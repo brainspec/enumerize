@@ -45,6 +45,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :interests
     t.integer :status
     t.text :settings
+    t.integer :skill
     t.string :account_type, :default => :basic
     t.string :foo
   end
@@ -82,13 +83,15 @@ class User < ActiveRecord::Base
 
   store :settings, accessors: [:language]
 
-  enumerize :sex, :in => [:male, :female]
+  enumerize :sex, :in => [:male, :female], scope: :shallow
   enumerize :language, :in => [:en, :jp]
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
   enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+  enumerize :skill, :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
 
   enumerize :account_type, :in => [:basic, :premium]
 
@@ -358,6 +361,7 @@ describe Enumerize::ActiveRecordSupport do
 
     user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
+    user_3 = User.create!(sex: :male, skill: :pro)
 
     User.with_status(:active).must_equal [user_1]
     User.with_status(:blocked).must_equal [user_2]
@@ -366,7 +370,8 @@ describe Enumerize::ActiveRecordSupport do
     User.without_status(:active).must_equal [user_2]
     User.without_status(:active, :blocked).must_equal []
 
-    User.having_role(:admin).must_equal [user_1]
+    User.male.must_equal [user_3]
+    User.pro.must_equal [user_3]
   end
 
   it 'ignores not enumerized values that passed to the scope method' do

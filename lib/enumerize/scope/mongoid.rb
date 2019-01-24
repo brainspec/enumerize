@@ -18,6 +18,7 @@ module Enumerize
       private
 
       def _define_mongoid_scope_methods!(name, options)
+        return _define_mongoid_shallow_scopes!(name) if options[:scope] == :shallow
         scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
 
         define_singleton_method scope_name do |*values|
@@ -29,6 +30,14 @@ module Enumerize
           define_singleton_method "without_#{name}" do |*values|
             values = enumerized_attributes[name].find_values(*values).map(&:value)
             not_in(name => values)
+          end
+        end
+      end
+
+      def _define_mongoid_shallow_scopes!(attribute_name)
+        enumerized_attributes[attribute_name].each_value do |value_obj|
+          define_singleton_method(value_obj) do
+            self.in(attribute_name => value_obj.value)
           end
         end
       end
