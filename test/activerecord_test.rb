@@ -46,6 +46,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.integer :status
     t.text :settings
     t.string :account_type, :default => :basic
+    t.string :foo
   end
 
   create_table :documents do |t|
@@ -105,6 +106,26 @@ end
 
 class InterestsRequiredUser < User
   validates :interests, presence: true
+end
+
+class SkipValidationsUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsEnum
+end
+
+class  DoNotSkipValidationsUser < ActiveRecord::Base
+  self.table_name = "users"
+  include DoNotSkipValidationsEnum
+end
+
+class SkipValidationsLambdaUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsLambdaEnum
+end
+
+class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsLambdaWithParamEnum
 end
 
 describe Enumerize::ActiveRecordSupport do
@@ -237,6 +258,31 @@ describe Enumerize::ActiveRecordSupport do
     user = User.new
     user.role = ''
     user.read_attribute(:role).must_be_nil
+  end
+
+  it 'validates inclusion when :skip_validations = false' do
+    user = DoNotSkipValidationsUser.new
+    user.foo = 'wrong'
+    user.wont_be :valid?
+    user.errors[:foo].must_include 'is not included in the list'
+  end
+
+  it 'does not validate inclusion when :skip_validations = true' do
+    user = SkipValidationsUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
+  it 'supports :skip_validations option as lambda' do
+    user = SkipValidationsLambdaUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
+  it 'supports :skip_validations option as lambda with a parameter' do
+    user = SkipValidationsLambdaWithParamUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
   end
 
   it 'supports multiple attributes' do

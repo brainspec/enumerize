@@ -2,7 +2,7 @@
 
 module Enumerize
   class Attribute
-    attr_reader :klass, :name, :values, :default_value, :i18n_scope
+    attr_reader :klass, :name, :values, :default_value, :i18n_scope, :skip_validations_value
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
@@ -28,6 +28,8 @@ module Enumerize
         @default_value = find_default_value(options[:default])
         raise ArgumentError, 'invalid default value' unless @default_value
       end
+
+      @skip_validations_value = options.fetch(:skip_validations, false)
     end
 
     def find_default_value(value)

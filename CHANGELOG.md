@@ -2,6 +2,8 @@
 
 ### enhancements
 
+* Add ability to skip validations by passing `:skip_validations` option. (by [@chumakoff](https://github.com/chumakoff))
+
 ### bug fix
 
 * Fix issue with ActiveRecord and Mongoid `reload` method when enumberized attributes weren't synced from DB. (by [@nashby](https://github.com/nashby) and [@FunkyloverOne](https://github.com/FunkyloverOne))

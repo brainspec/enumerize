@@ -12,6 +12,7 @@ module Enumerize
   autoload :Module,       'enumerize/module'
   autoload :Predicates,   'enumerize/predicates'
   autoload :Predicatable, 'enumerize/predicatable'
+  autoload :Utils,        'enumerize/utils'
   autoload :ModuleAttributes, 'enumerize/module_attributes'
 
   autoload :ActiveModelAttributesSupport, 'enumerize/activemodel'

@@ -18,9 +18,11 @@ describe Enumerize do
 
     key :sex
     key :role
+    key :foo
 
-    enumerize :sex, :in => %w[male female]
+    enumerize :sex,  :in => %w[male female]
     enumerize :role, :in => %w[admin user], :default => 'user'
+    enumerize :foo,  :in => %w[bar baz], :skip_validations => true
   end
 
   before { $VERBOSE = nil }
@@ -60,6 +62,12 @@ describe Enumerize do
     user = model.new
     user.role = 'wrong'
     user.wont_be :valid?
+  end
+
+  it 'does not validate inclusion when :skip_validations option passed' do
+    user = model.new
+    user.foo = 'wrong'
+    user.must_be :valid?
   end
 
   it 'assigns value on loaded record' do
