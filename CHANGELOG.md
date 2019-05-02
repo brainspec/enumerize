@@ -2,6 +2,12 @@
 
 ### enhancements
 
+### bug fix
+
+## 2.3.1 (May 2, 2019)
+
+### enhancements
+
 * Add ability to skip validations by passing `:skip_validations` option. (by [@chumakoff](https://github.com/chumakoff))
 * Add option `scope: shallow` to extend scopes based on enumerized attribute values (by [@moofkit](https://github.com/moofkit/))
 
