@@ -8,6 +8,7 @@ gemfile:
   - Gemfile.rails42
   - Gemfile.rails50
   - Gemfile.rails52
+  - Gemfile.rails60
   - Gemfile.mongo_mapper
 rvm:
   - 2.2.9
@@ -35,6 +36,12 @@ matrix:
   exclude:
     - gemfile: Gemfile.mongo_mapper
       env: DB=postgresql
+    - rvm: 2.2.9
+      gemfile: Gemfile.rails60
+    - rvm: 2.3.6
+      gemfile: Gemfile.rails60
+    - rvm: 2.4.3
+      gemfile: Gemfile.rails60
 branches:
   only:
     - master
