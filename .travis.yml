@@ -1,8 +1,9 @@
 language: ruby
 sudo: false
 services:
-  - postgresql
   - mongodb
+addons:
+  postgresql: 9.3
 gemfile:
   - Gemfile
   - Gemfile.rails42
