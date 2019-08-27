@@ -3,7 +3,7 @@ sudo: false
 services:
   - mongodb
 addons:
-  postgresql: 9.3
+  postgresql: 9.6
 gemfile:
   - Gemfile
   - Gemfile.rails42
