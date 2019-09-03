@@ -121,6 +121,10 @@ describe Enumerize::Value do
     it "doesn't respond to a method for not existing value" do
       val.wont_respond_to :some_method?
     end
+
+    it "doesn't fail after changed to an invalid value" do
+      val.upcase.wont_respond_to :some_method?
+    end
   end
 
   describe 'serialization' do

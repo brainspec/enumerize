@@ -4,6 +4,8 @@
 
 ### bug fix
 
+* Fix exception when using predicate methods on enumerized value transformed into invalid value. (by [@guigs](https://github.com/guigs))
+
 ## 2.3.1 (May 2, 2019)
 
 ### enhancements

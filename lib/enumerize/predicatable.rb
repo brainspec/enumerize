@@ -17,7 +17,7 @@ module Enumerize
     end
 
     def predicate_method?(method)
-      method[-1] == '?' && @attr.values.include?(method[0..-2])
+      method[-1] == '?' && @attr && @attr.values.include?(method[0..-2])
     end
   end
 end
