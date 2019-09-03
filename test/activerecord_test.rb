@@ -44,7 +44,10 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :name
     t.string :interests
     t.integer :status
+    t.text :settings
+    t.integer :skill
     t.string :account_type, :default => :basic
+    t.string :foo
   end
 
   create_table :documents do |t|
@@ -78,12 +81,17 @@ class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
 
-  enumerize :sex, :in => [:male, :female]
+  store :settings, accessors: [:language]
+
+  enumerize :sex, :in => [:male, :female], scope: :shallow
+  enumerize :language, :in => [:en, :jp]
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
   enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+  enumerize :skill, :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
 
   enumerize :account_type, :in => [:basic, :premium]
 
@@ -101,6 +109,26 @@ end
 
 class InterestsRequiredUser < User
   validates :interests, presence: true
+end
+
+class SkipValidationsUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsEnum
+end
+
+class  DoNotSkipValidationsUser < ActiveRecord::Base
+  self.table_name = "users"
+  include DoNotSkipValidationsEnum
+end
+
+class SkipValidationsLambdaUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsLambdaEnum
+end
+
+class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
+  self.table_name = "users"
+  include SkipValidationsLambdaWithParamEnum
 end
 
 describe Enumerize::ActiveRecordSupport do
@@ -126,6 +154,21 @@ describe Enumerize::ActiveRecordSupport do
       user.sex.must_equal 'male'
       user.sex_text.must_equal 'Male'
     end
+  end
+
+  it 'sets nil if invalid stored attribute value is passed' do
+    user = User.new
+    user.language = :invalid
+    user.language.must_be_nil
+  end
+
+  it 'saves stored attribute value' do
+    User.delete_all
+    user = User.new
+    user.language = :en
+    user.save!
+    user.reload
+    user.language.must_equal 'en'
   end
 
   it 'has default value' do
@@ -220,6 +263,31 @@ describe Enumerize::ActiveRecordSupport do
     user.read_attribute(:role).must_be_nil
   end
 
+  it 'validates inclusion when :skip_validations = false' do
+    user = DoNotSkipValidationsUser.new
+    user.foo = 'wrong'
+    user.wont_be :valid?
+    user.errors[:foo].must_include 'is not included in the list'
+  end
+
+  it 'does not validate inclusion when :skip_validations = true' do
+    user = SkipValidationsUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
+  it 'supports :skip_validations option as lambda' do
+    user = SkipValidationsLambdaUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
+  it 'supports :skip_validations option as lambda with a parameter' do
+    user = SkipValidationsLambdaWithParamUser.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
   it 'supports multiple attributes' do
     user = User.new
     user.interests.must_be_empty
@@ -293,6 +361,7 @@ describe Enumerize::ActiveRecordSupport do
 
     user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
+    user_3 = User.create!(sex: :male, skill: :pro)
 
     User.with_status(:active).must_equal [user_1]
     User.with_status(:blocked).must_equal [user_2]
@@ -301,7 +370,8 @@ describe Enumerize::ActiveRecordSupport do
     User.without_status(:active).must_equal [user_2]
     User.without_status(:active, :blocked).must_equal []
 
-    User.having_role(:admin).must_equal [user_1]
+    User.male.must_equal [user_3]
+    User.pro.must_equal [user_3]
   end
 
   it 'ignores not enumerized values that passed to the scope method' do

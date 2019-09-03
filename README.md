@@ -58,6 +58,18 @@ class User < ActiveRecord::Base
 end
 ```
 
+:warning: By default, `enumerize` adds `inclusion` validation to the model. You can skip validations by passing `skip_validations` option. :warning:
+
+```ruby
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  enumerize :sex, in: [:male, :female], skip_validations: lambda { |user| user.new_record? }
+
+  enumerize :role, in: [:user, :admin], skip_validations: true
+end
+```
+
 Mongoid:
 
 ```ruby
@@ -254,6 +266,24 @@ User.without_sex(:male)
 
 User.having_status(:blocked).with_sex(:male, :female)
 # SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
+```
+
+Shallow scopes:
+
+Adds named scopes to the class directly
+
+```ruby
+class User < ActiveRecord::Base
+  extend Enumerize
+  enumerize :sex, :in => [:male, :female], scope: :shallow
+  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :shallow
+end
+
+User.male
+# SELECT "users".* FROM "users" WHERE "users"."sex" = 'male'
+
+User.active
+# SELECT "users".* FROM "users" WHERE "users"."status" = 1
 ```
 
 :warning: It is not possible to define a scope when using the `:multiple` option. :warning:

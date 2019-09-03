@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 describe Enumerize::Base do
@@ -43,7 +45,7 @@ describe Enumerize::Base do
 
   it 'scopes translation by i18n key' do
     def kklass.model_name
-      name = "ExampleClass"
+      name = String.new("ExampleClass")
       def name.i18n_key
         'example_class'
       end

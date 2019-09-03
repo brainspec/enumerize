@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 begin
@@ -18,10 +20,16 @@ describe Enumerize do
 
     field :sex
     field :role
+    field :foo
+    field :skill
+
     enumerize :sex,    :in => %w[male female], scope: true
     enumerize :status, :in => %w[notice warning error], scope: true
     enumerize :role,   :in => %w[admin user], :default => 'user', scope: :having_role
     enumerize :mult,   :in => %w[one two three four], :multiple => true
+    enumerize :foo,    :in => %w[bar baz], :skip_validations => true
+    enumerize :skill,  :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
+    enumerize :account_type, :in => %w[basic premium], scope: :shallow
   end
 
   before { $VERBOSE = nil }
@@ -78,6 +86,12 @@ describe Enumerize do
     user.wont_be :valid?
   end
 
+  it 'does not validate inclusion when :skip_validations option passed' do
+    user = model.new
+    user.foo = 'wrong'
+    user.must_be :valid?
+  end
+
   it 'sets value to enumerized field from db when record is reloaded' do
     user = model.create!(mult: [:one])
     model.find(user.id).update(mult: %i[two three])
@@ -107,17 +121,21 @@ describe Enumerize do
 
     user_1 = model.create!(sex: :male, role: :admin)
     user_2 = model.create!(sex: :female, role: :user)
+    user_3 = model.create!(skill: :pro, account_type: :premium)
 
     model.with_sex(:male).to_a.must_equal [user_1]
     model.with_sex(:female).to_a.must_equal [user_2]
     model.with_sex(:male, :female).to_set.must_equal [user_1, user_2].to_set
 
-    model.without_sex(:male).to_a.must_equal [user_2]
-    model.without_sex(:female).to_a.must_equal [user_1]
-    model.without_sex(:male, :female).to_a.must_equal []
+    model.without_sex(:male).to_set.must_equal [user_2, user_3].to_set
+    model.without_sex(:female).to_set.must_equal [user_1, user_3].to_set
+    model.without_sex(:male, :female).to_a.must_equal [user_3]
 
     model.having_role(:admin).to_a.must_equal [user_1]
-    model.having_role(:user).to_a.must_equal [user_2]
+    model.having_role(:user).to_a.must_equal [user_2, user_3]
+
+    model.pro.to_a.must_equal [user_3]
+    model.premium.to_a.must_equal [user_3]
   end
 
   it 'chains scopes' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/concern'
 require 'active_support/testing/setup_and_teardown'
 
@@ -5,10 +7,21 @@ if defined?(ActionView::RoutingUrlFor)
   ActionView::RoutingUrlFor.send(:include, ActionDispatch::Routing::UrlFor)
 end
 
-module ViewTestHelper
+module SetupAndTeardownHelper
   extend ActiveSupport::Concern
 
   include ActiveSupport::Testing::SetupAndTeardown
+
+  included do
+    include ActiveSupport::Callbacks
+    define_callbacks :setup, :teardown
+  end
+end
+
+module ViewTestHelper
+  extend ActiveSupport::Concern
+
+  include SetupAndTeardownHelper
   include ActionView::TestCase::Behavior
 
   included do

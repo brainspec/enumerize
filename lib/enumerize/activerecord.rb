@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   module ActiveRecordSupport
     def enumerize(name, options={})
@@ -56,7 +58,16 @@ module Enumerize
 
         reloaded.class.enumerized_attributes.each do |attr|
           begin
-            reloaded.send("#{attr.name}=", reloaded[attr.name])
+            # Checks first if the enumerized attribute is in ActiveRecord::Store
+            store_attr, _ = reloaded.class.stored_attributes.detect do |store_attr, keys|
+              keys.include?(attr.name)
+            end
+
+            if store_attr.present?
+              reloaded.send("#{attr.name}=", reloaded.send(store_attr).with_indifferent_access[attr.name])
+            else
+              reloaded.send("#{attr.name}=", reloaded[attr.name])
+            end
           rescue ActiveModel::MissingAttributeError
           end
         end

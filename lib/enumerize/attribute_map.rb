@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   class AttributeMap
     attr_reader :attributes

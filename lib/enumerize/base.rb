@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   module Base
     def self.included(base)
@@ -72,6 +74,9 @@ module Enumerize
 
     def _validate_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
+        skip_validations = Utils.call_if_callable(attr.skip_validations_value, self)
+        next if skip_validations
+
         value = read_attribute_for_validation(attr.name)
         next if value.blank?
 
@@ -96,12 +101,7 @@ module Enumerize
           value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
 
           if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
-            value = attr.default_value
-
-            if value.respond_to?(:call)
-              value = value.arity == 0 ? value.call : value.call(self)
-            end
-
+            value = Utils.call_if_callable(attr.default_value, self)
             public_send("#{attr.name}=", value)
           end
         rescue ActiveModel::MissingAttributeError

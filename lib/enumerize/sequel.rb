@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerize
   module SequelSupport
     def enumerize(name, options={})
@@ -17,8 +19,11 @@ module Enumerize
     module InstanceMethods
       def validate
         super
-        
+
         self.class.enumerized_attributes.each do |attr|
+          skip_validations = Utils.call_if_callable(attr.skip_validations_value, self)
+          next if skip_validations
+
           value = read_attribute_for_validation(attr.name)
           next if value.blank?
 
@@ -38,13 +43,13 @@ module Enumerize
         if defined?(Sequel::Plugins::Serialization::InstanceMethods)
           modules = self.class.ancestors
           plugin_idx = modules.index(Sequel::Plugins::Serialization::InstanceMethods)
-          
+
           if plugin_idx && plugin_idx < modules.index(Enumerize::SequelSupport::InstanceMethods)
             abort "ERROR: You need to enable the Sequel serialization plugin before calling any enumerize methods on a model."
           end
-          
+
           plugin_idx = modules.index(Sequel::Plugins::ValidationHelpers::InstanceMethods)
-          
+
           if plugin_idx && plugin_idx < modules.index(Enumerize::SequelSupport::InstanceMethods)
             abort "ERROR: You need to enable the Sequel validation_helpers plugin before calling any enumerize methods on a model."
           end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 require 'sequel'
 require 'logger'
@@ -21,7 +23,9 @@ module SequelTest
     String :name
     String :interests
     String :status
+    Integer :skill
     String :account_type, default: "basic"
+    String :foo
   end
 
   DB.create_table :documents do
@@ -50,11 +54,13 @@ module SequelTest
     plugin :enumerize
     include RoleEnum
 
-    enumerize :sex, :in => [:male, :female]
+    enumerize :sex, :in => [:male, :female], scope: :shallow
 
     enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
     enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
+
+    enumerize :skill, :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
 
     enumerize :account_type, :in => [:basic, :premium]
   end
@@ -65,6 +71,22 @@ module SequelTest
       validates_unique :status
       validates_presence :sex
     end
+  end
+
+  class SkipValidationsUser < Sequel::Model(:users)
+    include SkipValidationsEnum
+  end
+
+  class DoNotSkipValidationsUser < Sequel::Model(:users)
+    include DoNotSkipValidationsEnum
+  end
+
+  class SkipValidationsLambdaUser < Sequel::Model(:users)
+    include SkipValidationsLambdaEnum
+  end
+
+  class SkipValidationsLambdaWithParamUser < Sequel::Model(:users)
+    include SkipValidationsLambdaWithParamEnum
   end
 
   describe Enumerize::SequelSupport do
@@ -150,6 +172,31 @@ module SequelTest
       user.values[:role].must_be_nil
     end
 
+    it 'validates inclusion when :skip_validations = false' do
+      user = DoNotSkipValidationsUser.new
+      user.foo = 'wrong'
+      user.wont_be :valid?
+      user.errors[:foo].must_include 'is not included in the list'
+    end
+
+    it 'does not validate inclusion when :skip_validations = true' do
+      user = SkipValidationsUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
+    end
+
+    it 'supports :skip_validations option as lambda' do
+      user = SkipValidationsLambdaUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
+    end
+
+    it 'supports :skip_validations option as lambda with a parameter' do
+      user = SkipValidationsLambdaWithParamUser.new
+      user.foo = 'wrong'
+      user.must_be :valid?
+    end
+
     it 'supports multiple attributes' do
       user = User.new
       user.interests ||= []
@@ -212,6 +259,7 @@ module SequelTest
 
       user_1 = User.create(status: :active, role: :admin)
       user_2 = User.create(status: :blocked)
+      user_3 = User.create(sex: :male, skill: :pro)
 
       User.with_status(:active).to_a.must_equal [user_1]
       User.with_status(:blocked).to_a.must_equal [user_2]
@@ -221,6 +269,8 @@ module SequelTest
       User.without_status(:active, :blocked).to_a.must_equal []
 
       User.having_role(:admin).to_a.must_equal [user_1]
+      User.male.to_a.must_equal [user_3]
+      User.pro.to_a.must_equal [user_3]
     end
 
     it 'allows either key or value as valid' do
