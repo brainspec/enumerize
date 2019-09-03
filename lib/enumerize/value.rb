@@ -22,7 +22,7 @@ module Enumerize
     end
 
     def text
-      I18n.t(@i18n_keys[0], :default => @i18n_keys[1..-1])
+      I18n.t(@i18n_keys[0], :default => @i18n_keys[1..-1]) if @i18n_keys
     end
 
     def ==(other)

@@ -32,7 +32,6 @@ describe Enumerize::Value do
   end
 
   describe 'translation' do
-
     it 'uses common translation' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
         val.text.must_be :==, "Common translation"
@@ -82,6 +81,13 @@ describe Enumerize::Value do
         val.text.must_be :==, "Scope specific translation"
       end
     end
+
+    it 'returns nil if value was modified' do
+      store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
+        modified_val = val.upcase
+        modified_val.text.must_be_nil
+      end
+    end
   end
 
   describe 'boolean methods comparison' do
@@ -122,8 +128,12 @@ describe Enumerize::Value do
       val.wont_respond_to :some_method?
     end
 
-    it "doesn't fail after changed to an invalid value" do
-      val.upcase.wont_respond_to :some_method?
+    it "doesn't respond to methods is value was modified" do
+      modified_value = val.upcase
+
+      modified_value.upcase.wont_respond_to :some_method?
+      modified_value.upcase.wont_respond_to :test_value?
+      modified_value.upcase.wont_respond_to :other_value?
     end
   end
 
