@@ -2,6 +2,8 @@
 
 ### enhancements
 
+* Show warning when enumerized value name conflicts with existing object's methods. (by [@aki77](https://github.com/aki77))
+
 ### bug fix
 
 * Fix exception when using predicate methods on enumerized value transformed into invalid value. (by [@guigs](https://github.com/guigs))
