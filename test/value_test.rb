@@ -4,10 +4,13 @@ require 'test_helper'
 require 'yaml'
 
 describe Enumerize::Value do
-  class Attr < Struct.new(:values, :name, :i18n_scopes)
+  class Model
   end
 
-  let(:attr) { Attr.new([], "attribute_name", []) }
+  class Attr < Struct.new(:values, :name, :i18n_scopes, :klass)
+  end
+
+  let(:attr) { Attr.new([], "attribute_name", [], Model) }
   let(:val) { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
@@ -147,6 +150,16 @@ describe Enumerize::Value do
     it 'serializes with Marshal' do
       dump_value = Marshal.dump(val)
       Marshal.load(dump_value).must_equal 'test_value'
+    end
+  end
+
+  describe 'initialize' do
+    it 'no output if undefined boolean method' do
+      assert_silent() { Enumerize::Value.new(attr, 'test_value') }
+    end
+
+    it 'error output if defined boolean method' do
+      assert_output(nil, /`empty\?` is defined/) { Enumerize::Value.new(attr, 'empty') }
     end
   end
 end
