@@ -110,7 +110,7 @@ module Enumerize
 
         def matches_predicates?
           if expected_predicates.is_a?(TrueClass)
-            subject.respond_to?("#{sorted_values.first}?")
+            subject.respond_to?("#{enumerized_values.first}?")
           else
             subject.respond_to?("#{expected_attr}_#{attributes.values.first}?")
           end

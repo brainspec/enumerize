@@ -7,6 +7,7 @@
 ### bug fix
 
 * Fix exception when using predicate methods on enumerized value transformed into invalid value. (by [@guigs](https://github.com/guigs))
+* Fix issue with RSpec#with_predicates matcher when custom values are used as attribute. (by [@nashby](https://github.com/nashby))
 
 ## 2.3.1 (May 2, 2019)
 
