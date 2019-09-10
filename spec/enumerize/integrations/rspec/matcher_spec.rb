@@ -41,7 +41,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe 'without qualifier' do
-
     it 'accepts when has defined a enumerize' do
       model.enumerize(:sex, :in => [:male, :female])
       expect(subject).to enumerize(:sex)
@@ -56,9 +55,7 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#in' do
-
     context 'defined as array' do
-
       before do
         model.enumerize(:sex, :in => [:male, :female])
       end
@@ -91,7 +88,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
     end
 
     context 'defined as hash' do
-
       before do
         model.enumerize(:sex, :in => { male: 0, female: 1 })
       end
@@ -130,7 +126,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#with_default' do
-
     before do
       model.enumerize(:sex, :in => [:male, :female], default: :female)
     end
@@ -161,9 +156,7 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#with_i18n_scope' do
-
     context 'defined as string' do
-
       before do
         model.enumerize(:sex, :in => [:male, :female], i18n_scope: 'sex')
       end
@@ -200,7 +193,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#with_predicates' do
-
     it 'accepts when predicates is defined as a boolean' do
       model.enumerize(:sex, :in => [:male, :female], predicates: true)
       expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(true)
@@ -209,6 +201,11 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
     it 'accepts when predicates is defined as a hash' do
       model.enumerize(:sex, :in => [:male, :female], predicates: { prefix: true })
       expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(prefix: true)
+    end
+
+    it 'accepts when custom values are used as attribute' do
+      model.enumerize(:sex, :in => { male: 0, female: 1 }, predicates: true)
+      expect(subject).to enumerize(:sex).in(:male, :female).with_predicates(true)
     end
 
     it 'rejects when predicates is not defined' do
@@ -221,7 +218,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#with_multiple' do
-
     it 'accepts when has defined the multiple' do
       model.enumerize(:sex, :in => [:male, :female], multiple: true)
       expect(subject).to enumerize(:sex).in(:male, :female).with_multiple(true)
@@ -237,7 +233,6 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
   end
 
   describe '#with_scope' do
-
     subject do
       User.new
     end
