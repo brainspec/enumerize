@@ -56,4 +56,10 @@ describe Enumerize::Base do
       kklass.enumerize :foos, in: %w(a b c), multiple: true, scope: true
     end
   end
+
+  it 'assign a name with the first letter capitalized' do
+    kklass.enumerize :Foos, in: %w(a b c), multiple: true
+    object.Foos = %w(a c)
+    object.Foos.must_equal %w(a c)
+  end
 end

@@ -172,7 +172,7 @@ module Enumerize
 
         def #{name}=(values)
           @_#{name}_enumerized_set = Enumerize::Set.new(self, self.class.enumerized_attributes[:#{name}], values)
-          raw_values = #{name}.values.map(&:value)
+          raw_values = self.#{name}.values.map(&:value)
 
           if defined?(super)
             super raw_values
@@ -184,7 +184,7 @@ module Enumerize
 
           _enumerized_values_for_validation['#{name}'] = values.respond_to?(:map) ? values.reject(&:blank?).map(&:to_s) : values
 
-          #{name}
+          self.#{name}
         end
       RUBY
     end
