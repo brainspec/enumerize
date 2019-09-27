@@ -14,8 +14,9 @@ gemfile:
 rvm:
   - 2.2.9
   - 2.3.6
-  - 2.4.3
-  - 2.5.0
+  - 2.4.7
+  - 2.5.6
+  - 2.6.4
   - jruby-9.1.14.0
 before_install:
   # Rubygems > 3.0.0 no longer supported rubies < 2.3
@@ -41,7 +42,7 @@ matrix:
       gemfile: Gemfile.rails60
     - rvm: 2.3.6
       gemfile: Gemfile.rails60
-    - rvm: 2.4.3
+    - rvm: 2.4.7
       gemfile: Gemfile.rails60
 branches:
   only:
