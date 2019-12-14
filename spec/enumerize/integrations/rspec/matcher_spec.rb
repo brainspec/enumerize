@@ -13,6 +13,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :sex
     t.string :role
     t.string :account_type
+    t.string :status
   end
 end
 
@@ -22,6 +23,7 @@ class User < ActiveRecord::Base
   enumerize :sex, :in => [:male, :female], scope: true
   enumerize :role, :in => [:user, :admin], scope: :having_role
   enumerize :account_type, :in => [:basic, :premium]
+  enumerize :status, :in => [:active, :disabled], scope: :shallow
 end
 
 RSpec.describe Enumerize::Integrations::RSpec::Matcher do
@@ -243,6 +245,10 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
 
     it 'accepts when scope is defined as a hash' do
       expect(subject).to enumerize(:role).in(:user, :admin).with_scope(scope: :having_role)
+    end
+
+    it 'accepts shallow scope' do
+      expect(subject).to enumerize(:status).in(:active, :disabled).with_scope(:shallow)
     end
 
     it 'rejects when scope is not defined' do

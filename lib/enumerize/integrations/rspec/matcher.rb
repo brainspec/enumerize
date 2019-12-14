@@ -121,8 +121,11 @@ module Enumerize
         end
 
         def matches_scope?
-          if expected_scope.is_a?(TrueClass)
+          case expected_scope
+          when TrueClass
             subject_class.respond_to?("with_#{expected_attr}")
+          when :shallow
+            enumerized_values.all? { |value| subject_class.respond_to?(value) }
           else
             subject_class.respond_to?(expected_scope[:scope])
           end
