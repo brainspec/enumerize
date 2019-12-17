@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'i18n'
+require 'active_support/inflector'
 
 module Enumerize
   class Value < String
@@ -21,7 +22,7 @@ module Enumerize
       @i18n_keys = @attr.i18n_scopes.map { |s| :"#{s}.#{self}" }
       @i18n_keys << :"enumerize.defaults.#{@attr.name}.#{self}"
       @i18n_keys << :"enumerize.#{@attr.name}.#{self}"
-      @i18n_keys << self.underscore.humanize # humanize value if there are no translations
+      @i18n_keys << ActiveSupport::Inflector.humanize(ActiveSupport::Inflector.underscore(self)) # humanize value if there are no translations
       @i18n_keys
     end
 
