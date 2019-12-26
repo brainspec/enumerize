@@ -8,6 +8,7 @@ module Enumerize
       _enumerize_module.dependent_eval do
         if self < ::ActiveRecord::Base
           include InstanceMethods
+          extend Rails6ClassMethods if Rails::VERSION::MAJOR >= 6
 
           const_get(:ActiveRecord_Relation).include(RelationMethods)
           const_get(:ActiveRecord_AssociationRelation).include(RelationMethods)
@@ -26,6 +27,19 @@ module Enumerize
             end
           end
         end
+      end
+    end
+
+    module AttributeSubstitution
+      def subs_enumerized_values(values)
+        if values.is_a?(Hash)
+          enumerized_attributes.each do |attr|
+            next if values[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
+            enumerize_value = attr.find_value(values[attr.name])
+            values[attr.name] = enumerize_value && enumerize_value.value
+          end
+        end
+        values
       end
     end
 
@@ -76,17 +90,38 @@ module Enumerize
       end
     end
 
-    module RelationMethods
-      def update_all(updates)
-        if updates.is_a?(Hash)
-          enumerized_attributes.each do |attr|
-            next if updates[attr.name].blank? || attr.kind_of?(Enumerize::Multiple)
-            enumerize_value = attr.find_value(updates[attr.name])
-            updates[attr.name] = enumerize_value && enumerize_value.value
-          end
-        end
+    module Rails6ClassMethods
+      include AttributeSubstitution
 
-        super(updates)
+      def insert_all(attributes, returning: nil, unique_by: nil)
+        super(
+          attributes.map { |values| subs_enumerized_values(values) },
+          returning: returning,
+          unique_by: unique_by
+        )
+      end
+
+      def insert_all!(attributes, returning: nil)
+        super(
+          attributes.map { |values| subs_enumerized_values(values) },
+          returning: returning
+        )
+      end
+
+      def upsert_all(attributes, returning: nil, unique_by: nil)
+        super(
+          attributes.map { |values| subs_enumerized_values(values) },
+          returning: returning,
+          unique_by: unique_by
+        )
+      end
+    end
+
+    module RelationMethods
+      include AttributeSubstitution
+
+      def update_all(updates)
+        super(subs_enumerized_values(updates))
       end
     end
 

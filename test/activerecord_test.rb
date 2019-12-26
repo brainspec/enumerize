@@ -132,6 +132,10 @@ class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
 end
 
 describe Enumerize::ActiveRecordSupport do
+  before do
+    User.delete_all
+  end
+
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
@@ -139,7 +143,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'saves value' do
-    User.delete_all
     user = User.new
     user.sex = :female
     user.save!
@@ -147,7 +150,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'loads value' do
-    User.delete_all
     User.create!(:sex => :male)
     store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
       user = User.first
@@ -163,7 +165,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'saves stored attribute value' do
-    User.delete_all
     user = User.new
     user.language = :en
     user.save!
@@ -177,7 +178,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'does not set default value for not selected attributes' do
-    User.delete_all
     User.create!(:sex => :male)
 
     assert_equal ['id'], User.select(:id).first.attributes.keys
@@ -189,7 +189,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'uses after_initialize callback to set default value' do
-    User.delete_all
     User.create!(sex: 'male', lambda_role: nil)
 
     user = User.where(:sex => 'male').first
@@ -337,8 +336,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'stores custom values for multiple attributes' do
-    User.delete_all
-
     klass = Class.new(User) do
       def self.name
         'UserSubclass'
@@ -357,8 +354,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'adds scope' do
-    User.delete_all
-
     user_1 = User.create!(status: :active, role: :admin)
     user_2 = User.create!(status: :blocked)
     user_3 = User.create!(sex: :male, skill: :pro)
@@ -375,8 +370,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'ignores not enumerized values that passed to the scope method' do
-    User.delete_all
-
     User.with_status(:foo).must_equal []
   end
 
@@ -442,7 +435,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'is valid after #becomes' do
-    User.delete_all
     user = User.new
     user.sex = :male
     user.save!
@@ -454,8 +446,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'supports multiple attributes in #becomes' do
-    User.delete_all
-
     uniq_user = UniqStatusUser.new
     uniq_user.interests = [:sports, :dancing]
     uniq_user.sex = :male
@@ -498,8 +488,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'allows using update_all' do
-    User.delete_all
-
     user = User.create(status: :active, account_type: :premium)
 
     User.update_all(status: :blocked)
@@ -513,8 +501,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'allows using update_all for multiple enumerize' do
-    User.delete_all
-
     klass = Class.new(User) do
       def self.name
         'UserSubclass'
@@ -531,8 +517,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'allows using update_all with values' do
-    User.delete_all
-
     user = User.create(status: :active)
 
     User.update_all(status: 2)
@@ -541,8 +525,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'allows using update_all on relation objects' do
-    User.delete_all
-
     user = User.create(status: :active, account_type: :premium)
 
     User.all.update_all(status: :blocked)
@@ -551,7 +533,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'allows using update_all on association relation objects' do
-    User.delete_all
     Document.delete_all
 
     user = User.create
@@ -563,8 +544,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'preserves string usage of update_all' do
-    User.delete_all
-
     user = User.create(name: "Fred")
 
     User.update_all("name = 'Frederick'")
@@ -573,8 +552,6 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'preserves interpolated array usage of update_all' do
-    User.delete_all
-
     user = User.create(name: "Fred")
 
     User.update_all(["name = :name", {name: 'Frederick'}])
@@ -583,13 +560,83 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it 'sets attribute to nil if given one is not valid' do
-    User.delete_all
-
     user = User.create(status: :active)
 
     User.update_all(status: :foo)
     user.reload
     user.status.must_be_nil
+  end
+
+  it 'allows using insert_all' do
+    skip if Rails::VERSION::MAJOR < 6
+    skip if db == :sqlite3 # does not support skipping duplicates. Only 'insert_all!' will work
+
+    User.insert_all(
+      [
+        { name: 'Active User', status: :active, account_type: :premium },
+        { name: 'Blocked User', status: :blocked, account_type: :basic }
+      ]
+    )
+
+    User.count.must_equal 2
+
+    user1 = User.all[0]
+    user1.name.must_equal 'Active User'
+    user1.status.must_equal 'active'
+    user1.account_type.must_equal 'premium'
+
+    user2 = User.all[1]
+    user2.name.must_equal 'Blocked User'
+    user2.status.must_equal 'blocked'
+    user2.account_type.must_equal 'basic'
+  end
+
+  it 'allows using insert_all!' do
+    skip if Rails::VERSION::MAJOR < 6
+
+    User.insert_all!(
+      [
+        { name: 'Noob User', sex: :male, skill: :noob },
+        { name: 'Pro User', sex: :female, skill: :pro }
+      ]
+    )
+
+    User.count.must_equal 2
+
+    user1 = User.all[0]
+    user1.name.must_equal 'Noob User'
+    user1.sex.must_equal 'male'
+    user1.skill.must_equal 'noob'
+
+    user2 = User.all[1]
+    user2.name.must_equal 'Pro User'
+    user2.sex.must_equal 'female'
+    user2.skill.must_equal 'pro'
+  end
+
+  it 'allows using upsert_all' do
+    skip if Rails::VERSION::MAJOR < 6
+    skip if db == :sqlite3 # does not support upsert
+
+    existing_user = User.create!(name: 'Existing User', status: :active)
+
+    User.upsert_all(
+      [
+        { id: existing_user.id, name: 'Existing User (updated)', status: :blocked },
+        { id: existing_user.id + 1, name: 'Active User', status: :active }
+      ]
+    )
+
+    User.count.must_equal 2
+
+    user1 = User.all[0]
+    user1.id.must_equal existing_user.id
+    user1.name.must_equal 'Existing User (updated)'
+    user1.status.must_equal 'blocked'
+
+    user2 = User.all[1]
+    user2.name.must_equal 'Active User'
+    user2.status.must_equal 'active'
   end
 
   it 'supports AR types serialization' do
