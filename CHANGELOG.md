@@ -3,6 +3,7 @@
 ### enhancements
 
 * Show warning when enumerized value name conflicts with existing object's methods. (by [@aki77](https://github.com/aki77))
+* Add RSpec support for shallow scopes. (by [@nashby](https://github.com/nashby))
 
 ### bug fix
 
