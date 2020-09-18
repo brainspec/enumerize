@@ -2,7 +2,5 @@ eval_gemfile('Gemfile.global')
 
 gem 'minitest', '~> 5.8'
 gem 'rails',    '~> 6.0.0', require: false
-gem 'activerecord-jdbcsqlite3-adapter', github: 'jruby/activerecord-jdbc-adapter', branch: 'master', platform: :jruby
-gem 'activerecord-jdbcpostgresql-adapter', github: 'jruby/activerecord-jdbc-adapter', branch: 'master', platform: :jruby
 gem 'mongoid',  github: 'mongodb/mongoid'
 gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]

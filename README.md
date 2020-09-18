@@ -17,8 +17,8 @@ Or install it yourself as:
     $ gem install enumerize
 
 ## Supported Versions
-- Ruby 2.2+
-- Rails 4.2+
+- Ruby 2.5+
+- Rails 5.2+
 
 ## Usage
 

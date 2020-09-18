@@ -8,8 +8,7 @@ silence_warnings do
   require 'mongo_mapper'
 end
 
-MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
-MongoMapper.database   = 'enumerize-test-suite-of-mongomapper'
+MongoMapper.connection = Mongo::Client.new(['localhost:27017'], database: 'enumerize-test-suite-of-mongomapper')
 
 describe Enumerize do
   class MongoMapperUser
