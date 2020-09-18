@@ -1,9 +1,9 @@
+dist: focal
 language: ruby
 sudo: false
 services:
   - mongodb
-addons:
-  postgresql: 9.6
+  - postgresql
 gemfile:
   - Gemfile
   - Gemfile.rails60
