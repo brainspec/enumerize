@@ -616,4 +616,30 @@ describe Enumerize::ActiveRecordSupport do
 
     sql.must_include 'LIKE \'%foo%\''
   end
+
+  if Rails::VERSION::MAJOR >= 6
+    it 'supports AR#insert_all' do
+      User.delete_all
+
+      User.insert_all([{ sex: :male }])
+      User.insert_all([{ status: :active }])
+      User.insert_all([{ interests: [:music, :sports] }])
+
+      User.exists?(sex: :male).must_equal true
+      User.exists?(status: :active).must_equal true
+      User.exists?(interests: [:music, :sports]).must_equal true
+    end
+
+    it 'supports AR#upsert_all' do
+      User.delete_all
+
+      User.upsert_all([{ sex: :male }])
+      User.upsert_all([{ status: :active }])
+      User.upsert_all([{ interests: [:music, :sports] }])
+
+      User.exists?(sex: :male).must_equal true
+      User.exists?(status: :active).must_equal true
+      User.exists?(interests: [:music, :sports]).must_equal true
+    end
+  end
 end
