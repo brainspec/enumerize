@@ -4,6 +4,8 @@
 
 * Show warning when enumerized value name conflicts with existing object's methods. (by [@aki77](https://github.com/aki77))
 * Add RSpec support for shallow scopes. (by [@nashby](https://github.com/nashby))
+* Drop support for Ruby older than 2.5. Support only Ruby 2.5+. (by [@nashby](https://github.com/nashby))
+* Drop support for Rails 4. Support only Rails 5.2+. (by [@nashby](https://github.com/nashby))
 
 ### bug fix
 
