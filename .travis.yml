@@ -1,3 +1,4 @@
+dist: focal
 language: ruby
 sudo: false
 services:
