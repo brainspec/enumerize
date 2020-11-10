@@ -8,6 +8,7 @@ addons:
 gemfile:
   - Gemfile
   - Gemfile.rails60
+  - Gemfile.rails61
   - Gemfile.mongo_mapper
 rvm:
   - 2.5.8
