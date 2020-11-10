@@ -180,7 +180,9 @@ describe Enumerize::ActiveRecordSupport do
     User.delete_all
     User.create!(:sex => :male)
 
-    assert_equal ['id'], User.select(:id).first.attributes.keys
+    user = User.select(:id).first
+    user.attributes['role'].must_equal nil
+    user.attributes['lambda_role'].must_equal nil
   end
 
   it 'has default value with lambda' do
