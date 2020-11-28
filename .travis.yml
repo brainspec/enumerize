@@ -3,7 +3,8 @@ language: ruby
 sudo: false
 services:
   - mongodb
-  - postgresql
+addons:
+  postgresql: "13"
 gemfile:
   - Gemfile
   - Gemfile.rails60
