@@ -1,4 +1,4 @@
-## master
+## 2.4.0 (December 12, 2020)
 
 ### enhancements
 
@@ -6,6 +6,7 @@
 * Add RSpec support for shallow scopes. (by [@nashby](https://github.com/nashby))
 * Drop support for Ruby older than 2.5. Support only Ruby 2.5+. (by [@nashby](https://github.com/nashby))
 * Drop support for Rails 4. Support only Rails 5.2+. (by [@nashby](https://github.com/nashby))
+* Add support for Rails 6.1 (by [@y-yagi](https://github.com/y-yagi))
 
 ### bug fix
 
