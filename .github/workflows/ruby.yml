@@ -1,0 +1,48 @@
+name: Ruby
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017 
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+           
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['2.5', '2.6', '2.7', '3.0']
+        gemfile:
+          - Gemfile
+          - Gemfile.rails60
+          - Gemfile.rails61
+          - Gemfile.mongo_mapper
+        env:
+          - DB=sqlite3
+          - DB=postgresql
+        exclude:
+          - gemfile: Gemfile.mongo_mapper
+            env: DB=postgresql
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Run tests
+      env:
+        DB_USER: 'postgres'
+      run: bundle exec rake
