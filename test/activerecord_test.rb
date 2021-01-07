@@ -16,14 +16,16 @@ silence_warnings do
     },
     'postgresql' => {
       'adapter' => 'postgresql',
-      'username' => ENV['DB_USER'],
-      'password' => ENV['DB_PASSD'],
-      'database' => 'enumerize_test'
+      'host' => 'localhost',
+      'username' => ENV['POSTGRES_USER'],
+      'password' => ENV['POSTGRES_PASSWORD'],
+      'database' => 'enumerize_test',
     },
     'postgresql_master' => {
       'adapter' => 'postgresql',
-      'username' => ENV['DB_USER'],
-      'password' => ENV['DB_PASS'],
+      'host' => 'localhost',
+      'username' => ENV['POSTGRES_USER'],
+      'password' => ENV['POSTGRES_PASSWORD'],
       'database' => 'template1',
       'schema_search_path' => 'public'
     }
