@@ -83,6 +83,10 @@ module Enumerize
       values.map { |v| [v.text, v.to_s] }
     end
 
+    def find_name(text)
+      options.to_h[text]
+    end
+
     def respond_to_missing?(method, include_private=false)
       @value_hash.include?(method.to_s) || super
     end

@@ -77,6 +77,15 @@ describe Enumerize::Attribute do
     end
   end
 
+  describe 'find name' do
+    it 'returns the name from the argument text' do
+      store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
+        build_attr nil, :foo, :in => %w[a b]
+        attr.find_name('a text').must_equal 'a'
+      end
+    end
+  end
+
   describe 'values hash' do
     before do
       build_attr nil, :foo, :in => {:a => 1, :b => 2}
