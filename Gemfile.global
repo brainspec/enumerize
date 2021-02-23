@@ -9,3 +9,4 @@ gem 'pg', '~> 1.2.3', :platform => [:ruby, :mswin, :mingw]
 gem 'sequel'
 gem 'simple_form'
 gem 'formtastic'
+gem 'mysql2'

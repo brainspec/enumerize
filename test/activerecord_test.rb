@@ -14,12 +14,20 @@ silence_warnings do
       'adapter' => 'sqlite3',
       'database' => ':memory:'
     },
+    'mysql2' => {
+      'adapter' => 'mysql2',
+      'host' => '127.0.0.1',
+      'username' => 'root',
+      'password' => ENV['MYSQL_ROOT_PASSWORD'],
+      'database' => 'enumerize_test',
+      'encoding' => 'utf8mb4',
+      'charset' => 'utf8mb4'
+    },
     'postgresql' => {
       'adapter' => 'postgresql',
       'host' => 'localhost',
       'username' => ENV['POSTGRES_USER'],
-      'password' => ENV['POSTGRES_PASSWORD'],
-      'database' => 'enumerize_test',
+      'password' => ENV['POSTGRES_PASSWORD']
     },
     'postgresql_master' => {
       'adapter' => 'postgresql',
@@ -30,12 +38,16 @@ silence_warnings do
       'schema_search_path' => 'public'
     }
   }
-  if db == :postgresql
+  case db
+  when :postgresql
     ActiveRecord::Base.establish_connection(:postgresql_master)
     ActiveRecord::Base.connection.recreate_database('enumerize_test')
+  when :mysql2
+    ActiveRecord::Tasks::DatabaseTasks.create ActiveRecord::Base.configurations[db.to_s]
+    ActiveRecord::Base.establish_connection(db)
+  else
+    ActiveRecord::Base.establish_connection(db)
   end
-
-  ActiveRecord::Base.establish_connection(db)
 end
 
 ActiveRecord::Base.connection.instance_eval do
