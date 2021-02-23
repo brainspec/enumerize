@@ -17,6 +17,7 @@ describe Enumerize::Base do
 
   it 'returns [] when not set' do
     kklass.enumerize :foos, in: %w(a b), multiple: true
+    pp '===========come here==========='
     object.foos.must_equal []
   end
 
