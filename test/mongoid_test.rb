@@ -40,7 +40,7 @@ describe Enumerize do
   it 'sets nil if invalid value is passed' do
     user = model.new
     user.sex = :invalid
-    user.sex.must_be_nil
+    expect(user.sex).must_be_nil
   end
 
   it 'saves value' do
@@ -48,7 +48,7 @@ describe Enumerize do
     user = model.new
     user.sex = :female
     user.save!
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 
   it 'loads value' do
@@ -56,13 +56,13 @@ describe Enumerize do
     model.create!(:sex => :male)
     store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
       user = model.first
-      user.sex.must_equal 'male'
-      user.sex_text.must_equal 'Male'
+      expect(user.sex).must_equal 'male'
+      expect(user.sex_text).must_equal 'Male'
     end
   end
 
   it 'has default value' do
-    model.new.role.must_equal 'user'
+    expect(model.new.role).must_equal 'user'
   end
 
   it 'uses after_initialize callback to set default value' do
@@ -70,7 +70,7 @@ describe Enumerize do
     model.create!(sex: 'male', role: nil)
 
     user = model.where(sex: 'male').first
-    user.role.must_equal 'user'
+    expect(user.role).must_equal 'user'
   end
 
   it 'does not set default value for not selected attributes' do
@@ -83,21 +83,21 @@ describe Enumerize do
   it 'validates inclusion' do
     user = model.new
     user.role = 'wrong'
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
   end
 
   it 'does not validate inclusion when :skip_validations option passed' do
     user = model.new
     user.foo = 'wrong'
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'sets value to enumerized field from db when record is reloaded' do
     user = model.create!(mult: [:one])
     model.find(user.id).update(mult: %i[two three])
-    user.mult.must_equal %w[one]
+    expect(user.mult).must_equal %w[one]
     user.reload
-    user.mult.must_equal %w[two three]
+    expect(user.mult).must_equal %w[two three]
   end
 
   it 'assigns value on loaded record' do
@@ -105,7 +105,7 @@ describe Enumerize do
     model.create!(:sex => :male)
     user = model.first
     user.sex = :female
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 
   it 'loads multiple properly' do
@@ -113,7 +113,7 @@ describe Enumerize do
 
     model.create!(:mult => ['one', 'two'])
     user = model.first
-    user.mult.to_a.must_equal ['one', 'two']
+    expect(user.mult.to_a).must_equal ['one', 'two']
   end
 
   it 'adds scope' do
@@ -123,19 +123,19 @@ describe Enumerize do
     user_2 = model.create!(sex: :female, role: :user)
     user_3 = model.create!(skill: :pro, account_type: :premium)
 
-    model.with_sex(:male).to_a.must_equal [user_1]
-    model.with_sex(:female).to_a.must_equal [user_2]
-    model.with_sex(:male, :female).to_set.must_equal [user_1, user_2].to_set
+    expect(model.with_sex(:male).to_a).must_equal [user_1]
+    expect(model.with_sex(:female).to_a).must_equal [user_2]
+    expect(model.with_sex(:male, :female).to_set).must_equal [user_1, user_2].to_set
 
-    model.without_sex(:male).to_set.must_equal [user_2, user_3].to_set
-    model.without_sex(:female).to_set.must_equal [user_1, user_3].to_set
-    model.without_sex(:male, :female).to_a.must_equal [user_3]
+    expect(model.without_sex(:male).to_set).must_equal [user_2, user_3].to_set
+    expect(model.without_sex(:female).to_set).must_equal [user_1, user_3].to_set
+    expect(model.without_sex(:male, :female).to_a).must_equal [user_3]
 
-    model.having_role(:admin).to_a.must_equal [user_1]
-    model.having_role(:user).to_a.must_equal [user_2, user_3]
+    expect(model.having_role(:admin).to_a).must_equal [user_1]
+    expect(model.having_role(:user).to_a).must_equal [user_2, user_3]
 
-    model.pro.to_a.must_equal [user_3]
-    model.premium.to_a.must_equal [user_3]
+    expect(model.pro.to_a).must_equal [user_3]
+    expect(model.premium.to_a).must_equal [user_3]
   end
 
   it 'chains scopes' do
@@ -145,14 +145,14 @@ describe Enumerize do
     user_2 = model.create!(status: :warning)
     user_3 = model.create!(status: :error)
 
-    model.with_status(:notice, :warning).with_status(:notice, :error).to_a.must_equal [user_1]
-    model.with_status(:notice, :warning).union.with_status(:notice, :error).to_a.must_equal [user_1, user_2, user_3]
+    expect(model.with_status(:notice, :warning).with_status(:notice, :error).to_a).must_equal [user_1]
+    expect(model.with_status(:notice, :warning).union.with_status(:notice, :error).to_a).must_equal [user_1, user_2, user_3]
   end
 
   it 'ignores not enumerized values that passed to the scope method' do
     model.delete_all
 
-    model.with_sex(:foo).must_equal []
+    expect(model.with_sex(:foo)).must_equal []
   end
 end
 

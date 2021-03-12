@@ -65,7 +65,7 @@ module Enumerize
         reloaded.class.enumerized_attributes.each do |attr|
           begin
             # Checks first if the enumerized attribute is in ActiveRecord::Store
-            store_attr, _ = reloaded.class.stored_attributes.detect do |store_attr, keys|
+            store_attr, _ = reloaded.class.stored_attributes.detect do |_store_attr, keys|
               keys.include?(attr.name)
             end
 

@@ -93,7 +93,7 @@ module SequelTest
     it 'sets nil if invalid value is passed' do
       user = User.new
       user.sex = :invalid
-      user.sex.must_be_nil
+      expect(user.sex).must_be_nil
     end
 
     it 'saves value' do
@@ -101,7 +101,7 @@ module SequelTest
       user = User.new
       user.sex = :female
       user.save
-      user.sex.must_equal 'female'
+      expect(user.sex).must_equal 'female'
     end
 
     it 'loads value' do
@@ -109,14 +109,14 @@ module SequelTest
       User.create(:sex => :male)
       store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
         user = User.first
-        user.sex.must_equal 'male'
-        user.sex_text.must_equal 'Male'
+        expect(user.sex).must_equal 'male'
+        expect(user.sex_text).must_equal 'Male'
       end
     end
 
     it 'has default value' do
-      User.new.role.must_equal 'user'
-      User.new.values[:role].must_equal 'user'
+      expect(User.new.role).must_equal 'user'
+      expect(User.new.values[:role]).must_equal 'user'
     end
 
     it 'does not set default value for not selected attributes' do
@@ -127,26 +127,26 @@ module SequelTest
     end
 
     it 'has default value with lambda' do
-      User.new.lambda_role.must_equal 'admin'
-      User.new.values[:lambda_role].must_equal 'admin'
+      expect(User.new.lambda_role).must_equal 'admin'
+      expect(User.new.values[:lambda_role]).must_equal 'admin'
     end
     it 'uses after_initialize callback to set default value' do
       User.filter{ true }.delete
       User.create(sex: 'male', lambda_role: nil)
 
       user = User.where(:sex => 'male').first
-      user.lambda_role.must_equal 'admin'
+      expect(user.lambda_role).must_equal 'admin'
     end
 
     it 'uses default value from db column' do
-      User.new.account_type.must_equal 'basic'
+      expect(User.new.account_type).must_equal 'basic'
     end
 
     it 'validates inclusion' do
       user = User.new
       user.role = 'wrong'
-      user.wont_be :valid?
-      user.errors[:role].must_include 'is not included in the list'
+      expect(user).wont_be :valid?
+      expect(user.errors[:role]).must_include 'is not included in the list'
     end
 
     it 'validates inclusion on mass assignment' do
@@ -157,66 +157,66 @@ module SequelTest
 
     it "uses persisted value for validation if it hasn't been set" do
       user = User.create :sex => :male
-      User[user.id].read_attribute_for_validation(:sex).must_equal 'male'
+      expect(User[user.id].read_attribute_for_validation(:sex)).must_equal 'male'
     end
 
     it 'is valid with empty string assigned' do
       user = User.new
       user.role = ''
-      user.must_be :valid?
+      expect(user).must_be :valid?
     end
 
     it 'stores nil when empty string assigned' do
       user = User.new
       user.role = ''
-      user.values[:role].must_be_nil
+      expect(user.values[:role]).must_be_nil
     end
 
     it 'validates inclusion when :skip_validations = false' do
       user = DoNotSkipValidationsUser.new
       user.foo = 'wrong'
-      user.wont_be :valid?
-      user.errors[:foo].must_include 'is not included in the list'
+      expect(user).wont_be :valid?
+      expect(user.errors[:foo]).must_include 'is not included in the list'
     end
 
     it 'does not validate inclusion when :skip_validations = true' do
       user = SkipValidationsUser.new
       user.foo = 'wrong'
-      user.must_be :valid?
+      expect(user).must_be :valid?
     end
 
     it 'supports :skip_validations option as lambda' do
       user = SkipValidationsLambdaUser.new
       user.foo = 'wrong'
-      user.must_be :valid?
+      expect(user).must_be :valid?
     end
 
     it 'supports :skip_validations option as lambda with a parameter' do
       user = SkipValidationsLambdaWithParamUser.new
       user.foo = 'wrong'
-      user.must_be :valid?
+      expect(user).must_be :valid?
     end
 
     it 'supports multiple attributes' do
       user = User.new
       user.interests ||= []
-      user.interests.must_be_empty
+      expect(user.interests).must_be_empty
       user.interests << "music"
-      user.interests.must_equal %w(music)
+      expect(user.interests).must_equal %w(music)
       user.save
 
       user = User[user.id]
-      user.interests.must_be_instance_of Enumerize::Set
-      user.interests.must_equal %w(music)
+      expect(user.interests).must_be_instance_of Enumerize::Set
+      expect(user.interests).must_equal %w(music)
       user.interests << "sports"
-      user.interests.must_equal %w(music sports)
+      expect(user.interests).must_equal %w(music sports)
 
       user.interests = []
       interests = user.interests
       interests << "music"
-      interests.must_equal %w(music)
+      expect(interests).must_equal %w(music)
       interests << "dancing"
-      interests.must_equal %w(music dancing)
+      expect(interests).must_equal %w(music dancing)
     end
 
     it 'returns invalid multiple value for validation' do
@@ -224,19 +224,19 @@ module SequelTest
       user.interests << :music
       user.interests << :invalid
       values = user.read_attribute_for_validation(:interests)
-      values.must_equal %w(music invalid)
+      expect(values).must_equal %w(music invalid)
     end
 
     it 'validates multiple attributes' do
       user = User.new
       user.interests << :invalid
-      user.wont_be :valid?
+      expect(user).wont_be :valid?
 
       user.interests = Object.new
-      user.wont_be :valid?
+      expect(user).wont_be :valid?
 
       user.interests = ['music', '']
-      user.must_be :valid?
+      expect(user).must_be :valid?
     end
 
     it 'stores custom values for multiple attributes' do
@@ -247,11 +247,11 @@ module SequelTest
 
       user = klass.new
       user.interests << :music
-      user.interests.must_equal %w(music)
+      expect(user.interests).must_equal %w(music)
       user.save
 
       user = klass[user.id]
-      user.interests.must_equal %w(music)
+      expect(user.interests).must_equal %w(music)
     end
 
     it 'adds scope' do
@@ -261,16 +261,16 @@ module SequelTest
       user_2 = User.create(status: :blocked)
       user_3 = User.create(sex: :male, skill: :pro)
 
-      User.with_status(:active).to_a.must_equal [user_1]
-      User.with_status(:blocked).to_a.must_equal [user_2]
-      User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
+      expect(User.with_status(:active).to_a).must_equal [user_1]
+      expect(User.with_status(:blocked).to_a).must_equal [user_2]
+      expect(User.with_status(:active, :blocked).to_set).must_equal [user_1, user_2].to_set
 
-      User.without_status(:active).to_a.must_equal [user_2]
-      User.without_status(:active, :blocked).to_a.must_equal []
+      expect(User.without_status(:active).to_a).must_equal [user_2]
+      expect(User.without_status(:active, :blocked).to_a).must_equal []
 
-      User.having_role(:admin).to_a.must_equal [user_1]
-      User.male.to_a.must_equal [user_3]
-      User.pro.to_a.must_equal [user_3]
+      expect(User.having_role(:admin).to_a).must_equal [user_1]
+      expect(User.male.to_a).must_equal [user_3]
+      expect(User.pro.to_a).must_equal [user_3]
     end
 
     it 'allows either key or value as valid' do
@@ -278,13 +278,13 @@ module SequelTest
       user_2 = User.new(status: 1)
       user_3 = User.new(status: '1')
 
-      user_1.status.must_equal 'active'
-      user_2.status.must_equal 'active'
-      user_3.status.must_equal 'active'
+      expect(user_1.status).must_equal 'active'
+      expect(user_2.status).must_equal 'active'
+      expect(user_3.status).must_equal 'active'
 
-      user_1.must_be :valid?
-      user_2.must_be :valid?
-      user_3.must_be :valid?
+      expect(user_1).must_be :valid?
+      expect(user_2).must_be :valid?
+      expect(user_3).must_be :valid?
     end
 
     it 'supports defining enumerized attributes on abstract class' do
@@ -292,7 +292,7 @@ module SequelTest
 
       document = Document.new
       document.visibility = :protected
-      document.visibility.must_equal 'protected'
+      expect(document.visibility).must_equal 'protected'
     end
 
     it 'supports defining enumerized scopes on abstract class' do
@@ -301,7 +301,7 @@ module SequelTest
       document_1 = Document.create(visibility: :public)
       document_2 = Document.create(visibility: :private)
 
-      Document.with_visibility(:public).to_a.must_equal [document_1]
+      expect(Document.with_visibility(:public).to_a).must_equal [document_1]
     end
 
     it 'validates uniqueness' do
@@ -310,9 +310,9 @@ module SequelTest
       user = UniqStatusUser.new
       user.sex = "male"
       user.status = :active
-      user.valid?.must_equal false
+      expect(user.valid?).must_equal false
 
-      user.errors[:status].wont_be :empty?
+      expect(user.errors[:status]).wont_be :empty?
     end
 
     it "doesn't update record" do

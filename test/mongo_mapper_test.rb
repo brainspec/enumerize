@@ -32,7 +32,7 @@ describe Enumerize do
   it 'sets nil if invalid value is passed' do
     user = model.new
     user.sex = :invalid
-    user.sex.must_be_nil
+    expect(user.sex).must_be_nil
   end
 
   it 'saves value' do
@@ -40,7 +40,7 @@ describe Enumerize do
     user = model.new
     user.sex = :female
     user.save!
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 
   it 'loads value' do
@@ -48,25 +48,25 @@ describe Enumerize do
     model.create!(:sex => :male)
     store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
       user = model.first
-      user.sex.must_equal 'male'
-      user.sex_text.must_equal 'Male'
+      expect(user.sex).must_equal 'male'
+      expect(user.sex_text).must_equal 'Male'
     end
   end
 
   it 'has default value' do
-    model.new.role.must_equal 'user'
+    expect(model.new.role).must_equal 'user'
   end
 
   it 'validates inclusion' do
     user = model.new
     user.role = 'wrong'
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
   end
 
   it 'does not validate inclusion when :skip_validations option passed' do
     user = model.new
     user.foo = 'wrong'
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'assigns value on loaded record' do
@@ -74,7 +74,7 @@ describe Enumerize do
     model.create!(:sex => :male)
     user = model.first
     user.sex = :female
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 end
 

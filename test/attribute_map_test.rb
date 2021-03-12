@@ -11,12 +11,12 @@ module Enumerize
     end
 
     it 'empty when no attrs' do
-      subject.must_be_empty
+      expect(subject).must_be_empty
     end
 
     it 'not empty when attr added' do
       subject << make_attr(:a)
-      subject.wont_be_empty
+      expect(subject).wont_be_empty
     end
 
     it 'iterates over added attrs' do
@@ -34,20 +34,20 @@ module Enumerize
         actual << element
       end
 
-      count.must_equal 2
-      actual.must_equal [attr_1, attr_2]
+      expect(count).must_equal 2
+      expect(actual).must_equal [attr_1, attr_2]
     end
 
     it 'reads attribute by name' do
       attr = make_attr(:a)
       subject << attr
-      subject[:a].must_equal attr
+      expect(subject[:a]).must_equal attr
     end
 
     it 'reads attribute by name using string' do
       attr = make_attr(:a)
       subject << attr
-      subject['a'].must_equal attr
+      expect(subject['a']).must_equal attr
     end
 
     it 'updates dependants' do
@@ -64,7 +64,7 @@ module Enumerize
       subject << attr
       dependant = AttributeMap.new
       subject.add_dependant dependant
-      dependant[:a].must_equal attr
+      expect(dependant[:a]).must_equal attr
     end
   end
 end

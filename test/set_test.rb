@@ -41,36 +41,36 @@ describe Enumerize::Set do
   end
 
   it 'equals to other set' do
-    set.must_equal Enumerize::Set.new(nil, kklass.foo, %w(a))
+    expect(set).must_equal Enumerize::Set.new(nil, kklass.foo, %w(a))
   end
 
   it 'equals to array' do
-    set.must_equal %w(a)
+    expect(set).must_equal %w(a)
   end
 
   it 'equals to array of symbols' do
-    set.must_equal [:a]
+    expect(set).must_equal [:a]
   end
 
   it 'has unique values' do
     set << :a
-    set.must_equal %w(a)
+    expect(set).must_equal %w(a)
   end
 
   it 'equals to array with different value order' do
     set << :b
-    set.must_equal %w(b a)
+    expect(set).must_equal %w(b a)
   end
 
   it "isn't equal to a part of values" do
     set << :b
-    set.wont_equal %w(a)
+    expect(set).wont_equal %w(a)
   end
 
   describe '#push' do
     it 'appends values' do
       set.push :b
-      set.must_include :b
+      expect(set).must_include :b
     end
 
     it 'reassigns attribute' do
@@ -83,7 +83,7 @@ describe Enumerize::Set do
   describe '#delete' do
     it 'deletes value' do
       set.delete :a
-      set.wont_include :a
+      expect(set).wont_include :a
     end
 
     it 'reassigns attribute' do
@@ -96,64 +96,64 @@ describe Enumerize::Set do
   describe '#inspect' do
     it 'returns custom string' do
       set << :b
-      set.inspect.must_equal '#<Enumerize::Set {a, b}>'
+      expect(set.inspect).must_equal '#<Enumerize::Set {a, b}>'
     end
   end
 
   describe '#to_ary' do
     it 'returns array' do
-      set.to_ary.must_be_instance_of Array
+      expect(set.to_ary).must_be_instance_of Array
     end
   end
 
   describe '#texts' do
     it 'returns array of text values' do
-      set.texts.must_equal ['A']
+      expect(set.texts).must_equal ['A']
     end
   end
 
   describe '#join' do
     it 'joins values' do
       set << :b
-      set.join(', ').must_equal 'a, b'
+      expect(set.join(', ')).must_equal 'a, b'
     end
   end
 
   describe 'boolean methods comparison' do
     it 'returns true if value equals method' do
       set << :a
-      set.a?.must_equal true
+      expect(set.a?).must_equal true
     end
 
     it 'returns false if value does not equal method' do
       set << :a
-      set.b?.must_equal false
+      expect(set.b?).must_equal false
     end
 
     it 'raises NoMethodError if there are no values like boolean method' do
-      proc {
+      expect(proc {
         set.some_method?
-      }.must_raise NoMethodError
+      }).must_raise NoMethodError
     end
 
     it 'raises ArgumentError if arguments are passed' do
-      proc {
+      expect(proc {
         set.a?('<3')
-      }.must_raise ArgumentError
+      }).must_raise ArgumentError
     end
 
     it 'responds to methods for existing values' do
-      set.must_respond_to :a?
-      set.must_respond_to :b?
-      set.must_respond_to :c?
+      expect(set).must_respond_to :a?
+      expect(set).must_respond_to :b?
+      expect(set).must_respond_to :c?
     end
 
     it 'returns a method object' do
-      set.method(:a?).must_be_instance_of Method
+      expect(set.method(:a?)).must_be_instance_of Method
     end
 
     it 'does not respond to a method for not existing value' do
-      set.wont_respond_to :some_method?
+      expect(set).wont_respond_to :some_method?
     end
   end
 

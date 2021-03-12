@@ -17,38 +17,38 @@ describe Enumerize::Base do
 
   it 'returns [] when not set' do
     kklass.enumerize :foos, in: %w(a b), multiple: true
-    object.foos.must_equal []
+    expect(object.foos).must_equal []
   end
 
   it 'returns setted array' do
     kklass.enumerize :foos, in: %w(a b c), multiple: true
     object.foos = %w(a c)
-    object.foos.must_equal %w(a c)
+    expect(object.foos).must_equal %w(a c)
   end
 
   it 'sets default value as single value' do
     kklass.enumerize :foos, in: %w(a b c), default: 'b', multiple: true
-    object.foos.must_equal %w(b)
+    expect(object.foos).must_equal %w(b)
   end
 
   it 'sets default value as array of one element' do
     kklass.enumerize :foos, in: %w(a b c), default: %w(b), multiple: true
-    object.foos.must_equal %w(b)
+    expect(object.foos).must_equal %w(b)
   end
 
   it 'sets default value as array of several elements' do
     kklass.enumerize :foos, in: %w(a b c), default: %w(b c), multiple: true
-    object.foos.must_equal %w(b c)
+    expect(object.foos).must_equal %w(b c)
   end
 
   it "doesn't define _text method" do
     kklass.enumerize :foos, in: %w(a b c), multiple: true
-    object.wont_respond_to :foos_text
+    expect(object).wont_respond_to :foos_text
   end
 
   it "doesn't define _value method" do
     kklass.enumerize :foos, in: %w(a b c), multiple: true
-    object.wont_respond_to :foos_value
+    expect(object).wont_respond_to :foos_value
   end
 
   it "cannot define multiple with scope" do
@@ -60,6 +60,6 @@ describe Enumerize::Base do
   it 'assign a name with the first letter capitalized' do
     kklass.enumerize :Foos, in: %w(a b c), multiple: true
     object.Foos = %w(a c)
-    object.Foos.must_equal %w(a c)
+    expect(object.Foos).must_equal %w(a c)
   end
 end

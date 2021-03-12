@@ -24,50 +24,50 @@ describe Enumerize do
 
   it 'initialize value' do
     user = model.new(:name => 'active_model_user', :sex => :male, :role => :user, :interests => [:music, :programming])
-    user.sex.must_equal 'male'
-    user.sex_text.must_equal 'Male'
-    user.role.must_equal 'user'
-    user.role_text.must_equal 'User'
-    user.interests.must_equal %w(music programming)
+    expect(user.sex).must_equal 'male'
+    expect(user.sex_text).must_equal 'Male'
+    expect(user.role).must_equal 'user'
+    expect(user.role_text).must_equal 'User'
+    expect(user.interests).must_equal %w(music programming)
   end
 
   it 'sets nil if invalid value is passed' do
     user = model.new
     user.sex = :invalid
-    user.sex.must_be_nil
+    expect(user.sex).must_be_nil
   end
 
   it 'stores value' do
     user = model.new
     user.sex = :female
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 
   it 'has default value' do
-    model.new.role.must_equal 'user'
+    expect(model.new.role).must_equal 'user'
   end
 
   it 'validates inclusion' do
     user = model.new
     user.role = 'wrong'
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
   end
 
   it 'supports multiple attributes' do
     user = ActiveModelUser.new
-    user.interests.must_be_instance_of Enumerize::Set
-    user.interests.must_be_empty
+    expect(user.interests).must_be_instance_of Enumerize::Set
+    expect(user.interests).must_be_empty
     user.interests << :music
-    user.interests.must_equal %w(music)
+    expect(user.interests).must_equal %w(music)
     user.interests << :sports
-    user.interests.must_equal %w(music sports)
+    expect(user.interests).must_equal %w(music sports)
 
     user.interests = []
     interests = user.interests
     interests << :music
-    interests.must_equal %w(music)
+    expect(interests).must_equal %w(music)
     interests << :dancing
-    interests.must_equal %w(music dancing)
+    expect(interests).must_equal %w(music dancing)
   end
 
   it 'returns invalid multiple value for validation' do
@@ -75,19 +75,19 @@ describe Enumerize do
     user.interests << :music
     user.interests << :invalid
     values = user.read_attribute_for_validation(:interests)
-    values.must_equal %w(music invalid)
+    expect(values).must_equal %w(music invalid)
   end
 
   it 'validates multiple attributes' do
     user = ActiveModelUser.new
     user.interests << :invalid
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
 
     user.interests = Object.new
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
 
     user.interests = ['music', '']
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'validates presence with multiple attributes' do
@@ -95,17 +95,17 @@ describe Enumerize do
     user.interests = []
     user.valid?
 
-    user.errors[:interests].wont_be :empty?
+    expect(user.errors[:interests]).wont_be :empty?
 
     user.interests = ['']
     user.valid?
 
-    user.errors[:interests].wont_be :empty?
+    expect(user.errors[:interests]).wont_be :empty?
 
     user.interests = [:dancing, :programming]
     user.valid?
 
-    user.errors[:interests].must_be_empty
+    expect(user.errors[:interests]).must_be_empty
   end
 end
 

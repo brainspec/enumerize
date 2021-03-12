@@ -135,7 +135,7 @@ describe Enumerize::ActiveRecordSupport do
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
-    user.sex.must_be_nil
+    expect(user.sex).must_be_nil
   end
 
   it 'saves value' do
@@ -143,7 +143,7 @@ describe Enumerize::ActiveRecordSupport do
     user = User.new
     user.sex = :female
     user.save!
-    user.sex.must_equal 'female'
+    expect(user.sex).must_equal 'female'
   end
 
   it 'loads value' do
@@ -151,15 +151,15 @@ describe Enumerize::ActiveRecordSupport do
     User.create!(:sex => :male)
     store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
       user = User.first
-      user.sex.must_equal 'male'
-      user.sex_text.must_equal 'Male'
+      expect(user.sex).must_equal 'male'
+      expect(user.sex_text).must_equal 'Male'
     end
   end
 
   it 'sets nil if invalid stored attribute value is passed' do
     user = User.new
     user.language = :invalid
-    user.language.must_be_nil
+    expect(user.language).must_be_nil
   end
 
   it 'saves stored attribute value' do
@@ -168,12 +168,12 @@ describe Enumerize::ActiveRecordSupport do
     user.language = :en
     user.save!
     user.reload
-    user.language.must_equal 'en'
+    expect(user.language).must_equal 'en'
   end
 
   it 'has default value' do
-    User.new.role.must_equal 'user'
-    User.new.attributes['role'].must_equal 'user'
+    expect(User.new.role).must_equal 'user'
+    expect(User.new.attributes['role']).must_equal 'user'
   end
 
   it 'does not set default value for not selected attributes' do
@@ -181,13 +181,13 @@ describe Enumerize::ActiveRecordSupport do
     User.create!(:sex => :male)
 
     user = User.select(:id).first
-    user.attributes['role'].must_equal nil
-    user.attributes['lambda_role'].must_equal nil
+    expect(user.attributes['role']).must_be_nil
+    expect(user.attributes['lambda_role']).must_be_nil
   end
 
   it 'has default value with lambda' do
-    User.new.lambda_role.must_equal 'admin'
-    User.new.attributes['lambda_role'].must_equal 'admin'
+    expect(User.new.lambda_role).must_equal 'admin'
+    expect(User.new.attributes['lambda_role']).must_equal 'admin'
   end
 
   it 'uses after_initialize callback to set default value' do
@@ -195,11 +195,11 @@ describe Enumerize::ActiveRecordSupport do
     User.create!(sex: 'male', lambda_role: nil)
 
     user = User.where(:sex => 'male').first
-    user.lambda_role.must_equal 'admin'
+    expect(user.lambda_role).must_equal 'admin'
   end
 
   it 'uses default value from db column' do
-    User.new.account_type.must_equal 'basic'
+    expect(User.new.account_type).must_equal 'basic'
   end
 
   it 'has default value with default scope' do
@@ -207,39 +207,39 @@ describe Enumerize::ActiveRecordSupport do
       default_scope -> { having_role(:user) }
     end
 
-    UserWithDefaultScope.new.role.must_equal 'user'
-    UserWithDefaultScope.new.attributes['role'].must_equal 'user'
+    expect(UserWithDefaultScope.new.role).must_equal 'user'
+    expect(UserWithDefaultScope.new.attributes['role']).must_equal 'user'
   end
 
   it 'validates inclusion' do
     user = User.new
     user.role = 'wrong'
-    user.wont_be :valid?
-    user.errors[:role].must_include 'is not included in the list'
+    expect(user).wont_be :valid?
+    expect(user.errors[:role]).must_include 'is not included in the list'
   end
 
   it 'sets value to enumerized field from db when record is reloaded' do
     user = User.create!(interests: [:music])
     User.find(user.id).update(interests: %i[music dancing])
-    user.interests.must_equal %w[music]
+    expect(user.interests).must_equal %w[music]
     user.reload
-    user.interests.must_equal %w[music dancing]
+    expect(user.interests).must_equal %w[music dancing]
   end
 
   it 'validates inclusion when using write_attribute with string attribute' do
     user = User.new
     user.send(:write_attribute, 'role', 'wrong')
-    user.read_attribute_for_validation(:role).must_equal 'wrong'
-    user.wont_be :valid?
-    user.errors[:role].must_include 'is not included in the list'
+    expect(user.read_attribute_for_validation(:role)).must_equal 'wrong'
+    expect(user).wont_be :valid?
+    expect(user.errors[:role]).must_include 'is not included in the list'
   end
 
   it 'validates inclusion when using write_attribute with symbol attribute' do
     user = User.new
     user.send(:write_attribute, :role, 'wrong')
-    user.read_attribute_for_validation(:role).must_equal 'wrong'
-    user.wont_be :valid?
-    user.errors[:role].must_include 'is not included in the list'
+    expect(user.read_attribute_for_validation(:role)).must_equal 'wrong'
+    expect(user).wont_be :valid?
+    expect(user.errors[:role]).must_include 'is not included in the list'
   end
 
   it 'validates inclusion on mass assignment' do
@@ -250,72 +250,72 @@ describe Enumerize::ActiveRecordSupport do
 
   it "uses persisted value for validation if it hasn't been set" do
     user = User.create! :sex => :male
-    User.find(user.id).read_attribute_for_validation(:sex).must_equal 'male'
+    expect(User.find(user.id).read_attribute_for_validation(:sex)).must_equal 'male'
   end
 
   it 'is valid with empty string assigned' do
     user = User.new
     user.role = ''
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'stores nil when empty string assigned' do
     user = User.new
     user.role = ''
-    user.read_attribute(:role).must_be_nil
+    expect(user.read_attribute(:role)).must_be_nil
   end
 
   it 'validates inclusion when :skip_validations = false' do
     user = DoNotSkipValidationsUser.new
     user.foo = 'wrong'
-    user.wont_be :valid?
-    user.errors[:foo].must_include 'is not included in the list'
+    expect(user).wont_be :valid?
+    expect(user.errors[:foo]).must_include 'is not included in the list'
   end
 
   it 'does not validate inclusion when :skip_validations = true' do
     user = SkipValidationsUser.new
     user.foo = 'wrong'
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'supports :skip_validations option as lambda' do
     user = SkipValidationsLambdaUser.new
     user.foo = 'wrong'
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'supports :skip_validations option as lambda with a parameter' do
     user = SkipValidationsLambdaWithParamUser.new
     user.foo = 'wrong'
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'supports multiple attributes' do
     user = User.new
-    user.interests.must_be_empty
+    expect(user.interests).must_be_empty
     user.interests << :music
-    user.interests.must_equal %w(music)
+    expect(user.interests).must_equal %w(music)
     user.save!
 
     user = User.find(user.id)
-    user.interests.must_be_instance_of Enumerize::Set
-    user.interests.must_equal %w(music)
+    expect(user.interests).must_be_instance_of Enumerize::Set
+    expect(user.interests).must_equal %w(music)
     user.interests << :sports
-    user.interests.must_equal %w(music sports)
+    expect(user.interests).must_equal %w(music sports)
 
     user.interests = []
     interests = user.interests
     interests << :music
-    interests.must_equal %w(music)
+    expect(interests).must_equal %w(music)
     interests << :dancing
-    interests.must_equal %w(music dancing)
+    expect(interests).must_equal %w(music dancing)
   end
 
   it 'stores multiple value passed passed to new' do
     user = User.new(interests: [:music, :dancing])
     user.save!
-    user.interests.must_equal %w(music dancing)
-    User.find(user.id).interests.must_equal %w(music dancing)
+    expect(user.interests).must_equal %w(music dancing)
+    expect(User.find(user.id).interests).must_equal %w(music dancing)
   end
 
   it 'returns invalid multiple value for validation' do
@@ -323,19 +323,19 @@ describe Enumerize::ActiveRecordSupport do
     user.interests << :music
     user.interests << :invalid
     values = user.read_attribute_for_validation(:interests)
-    values.must_equal %w(music invalid)
+    expect(values).must_equal %w(music invalid)
   end
 
   it 'validates multiple attributes' do
     user = User.new
     user.interests << :invalid
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
 
     user.interests = Object.new
-    user.wont_be :valid?
+    expect(user).wont_be :valid?
 
     user.interests = ['music', '']
-    user.must_be :valid?
+    expect(user).must_be :valid?
   end
 
   it 'stores custom values for multiple attributes' do
@@ -350,12 +350,12 @@ describe Enumerize::ActiveRecordSupport do
 
     user = klass.new
     user.interests << :music
-    user.read_attribute(:interests).must_equal [0]
-    user.interests.must_equal %w(music)
+    expect(user.read_attribute(:interests)).must_equal [0]
+    expect(user.interests).must_equal %w(music)
     user.save
 
     user = klass.find(user.id)
-    user.interests.must_equal %w(music)
+    expect(user.interests).must_equal %w(music)
   end
 
   it 'adds scope' do
@@ -365,21 +365,21 @@ describe Enumerize::ActiveRecordSupport do
     user_2 = User.create!(status: :blocked)
     user_3 = User.create!(sex: :male, skill: :pro)
 
-    User.with_status(:active).must_equal [user_1]
-    User.with_status(:blocked).must_equal [user_2]
-    User.with_status(:active, :blocked).to_set.must_equal [user_1, user_2].to_set
+    expect(User.with_status(:active)).must_equal [user_1]
+    expect(User.with_status(:blocked)).must_equal [user_2]
+    expect(User.with_status(:active, :blocked).to_set).must_equal [user_1, user_2].to_set
 
-    User.without_status(:active).must_equal [user_2]
-    User.without_status(:active, :blocked).must_equal []
+    expect(User.without_status(:active)).must_equal [user_2]
+    expect(User.without_status(:active, :blocked)).must_equal []
 
-    User.male.must_equal [user_3]
-    User.pro.must_equal [user_3]
+    expect(User.male).must_equal [user_3]
+    expect(User.pro).must_equal [user_3]
   end
 
   it 'ignores not enumerized values that passed to the scope method' do
     User.delete_all
 
-    User.with_status(:foo).must_equal []
+    expect(User.with_status(:foo)).must_equal []
   end
 
   it 'allows either key or value as valid' do
@@ -387,13 +387,13 @@ describe Enumerize::ActiveRecordSupport do
     user_2 = User.new(status: 1)
     user_3 = User.new(status: '1')
 
-    user_1.status.must_equal 'active'
-    user_2.status.must_equal 'active'
-    user_3.status.must_equal 'active'
+    expect(user_1.status).must_equal 'active'
+    expect(user_2.status).must_equal 'active'
+    expect(user_3.status).must_equal 'active'
 
-    user_1.must_be :valid?
-    user_2.must_be :valid?
-    user_3.must_be :valid?
+    expect(user_1).must_be :valid?
+    expect(user_2).must_be :valid?
+    expect(user_3).must_be :valid?
   end
 
   it 'supports defining enumerized attributes on abstract class' do
@@ -401,7 +401,7 @@ describe Enumerize::ActiveRecordSupport do
 
     document = Document.new
     document.visibility = :protected
-    document.visibility.must_equal 'protected'
+    expect(document.visibility).must_equal 'protected'
   end
 
   it 'supports defining enumerized scopes on abstract class' do
@@ -410,7 +410,7 @@ describe Enumerize::ActiveRecordSupport do
     document_1 = Document.create!(visibility: :public)
     document_2 = Document.create!(visibility: :private)
 
-    Document.with_visibility(:public).must_equal [document_1]
+    expect(Document.with_visibility(:public)).must_equal [document_1]
   end
 
   it 'validates uniqueness' do
@@ -422,7 +422,7 @@ describe Enumerize::ActiveRecordSupport do
     user.status = :active
     user.valid?
 
-    user.errors[:status].wont_be :empty?
+    expect(user.errors[:status]).wont_be :empty?
   end
 
   it 'validates presence with multiple attributes' do
@@ -430,17 +430,17 @@ describe Enumerize::ActiveRecordSupport do
     user.interests = []
     user.valid?
 
-    user.errors[:interests].wont_be :empty?
+    expect(user.errors[:interests]).wont_be :empty?
 
     user.interests = ['']
     user.valid?
 
-    user.errors[:interests].wont_be :empty?
+    expect(user.errors[:interests]).wont_be :empty?
 
     user.interests = [:dancing, :programming]
     user.valid?
 
-    user.errors[:interests].must_be_empty
+    expect(user.errors[:interests]).must_be_empty
   end
 
   it 'is valid after #becomes' do
@@ -452,7 +452,7 @@ describe Enumerize::ActiveRecordSupport do
     uniq_user = User.find(user.id).becomes(UniqStatusUser)
     uniq_user.valid?
 
-    uniq_user.errors.must_be_empty
+    expect(uniq_user.errors).must_be_empty
   end
 
   it 'supports multiple attributes in #becomes' do
@@ -465,8 +465,8 @@ describe Enumerize::ActiveRecordSupport do
 
     user = uniq_user.becomes(User)
 
-    user.sex.must_equal uniq_user.sex
-    user.interests.must_equal uniq_user.interests
+    expect(user.sex).must_equal uniq_user.sex
+    expect(user.interests).must_equal uniq_user.interests
   end
 
   it "doesn't update record" do
@@ -496,7 +496,7 @@ describe Enumerize::ActiveRecordSupport do
     user.reload
     user.status = 'active'
 
-    user.changes.must_be_empty
+    expect(user.changes).must_be_empty
   end
 
   it 'allows using update_all' do
@@ -506,12 +506,12 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(status: :blocked)
     user.reload
-    user.status.must_equal 'blocked'
+    expect(user.status).must_equal 'blocked'
 
     User.update_all(status: :active, account_type: :basic)
     user.reload
-    user.status.must_equal 'active'
-    user.account_type.must_equal 'basic'
+    expect(user.status).must_equal 'active'
+    expect(user.account_type).must_equal 'basic'
   end
 
   it 'allows using update_all for multiple enumerize' do
@@ -528,8 +528,8 @@ describe Enumerize::ActiveRecordSupport do
     klass.update_all(status: :blocked, interests: [:music, :dancing])
 
     user = klass.find(user.id)
-    user.status.must_equal 'blocked'
-    user.interests.must_equal %w(music dancing)
+    expect(user.status).must_equal 'blocked'
+    expect(user.interests).must_equal %w(music dancing)
   end
 
   it 'allows using update_all with values' do
@@ -539,7 +539,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(status: 2)
     user.reload
-    user.status.must_equal 'blocked'
+    expect(user.status).must_equal 'blocked'
   end
 
   it 'allows using update_all on relation objects' do
@@ -549,7 +549,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.all.update_all(status: :blocked)
     user.reload
-    user.status.must_equal 'blocked'
+    expect(user.status).must_equal 'blocked'
   end
 
   it 'allows using update_all on association relation objects' do
@@ -561,7 +561,7 @@ describe Enumerize::ActiveRecordSupport do
 
     user.documents.update_all(status: :release)
     document.reload
-    document.status.must_equal 'release'
+    expect(document.status).must_equal 'release'
   end
 
   it 'preserves string usage of update_all' do
@@ -571,7 +571,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all("name = 'Frederick'")
     user.reload
-    user.name.must_equal 'Frederick'
+    expect(user.name).must_equal 'Frederick'
   end
 
   it 'preserves interpolated array usage of update_all' do
@@ -581,7 +581,7 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(["name = :name", {name: 'Frederick'}])
     user.reload
-    user.name.must_equal 'Frederick'
+    expect(user.name).must_equal 'Frederick'
   end
 
   it 'sets attribute to nil if given one is not valid' do
@@ -591,24 +591,24 @@ describe Enumerize::ActiveRecordSupport do
 
     User.update_all(status: :foo)
     user.reload
-    user.status.must_be_nil
+    expect(user.status).must_be_nil
   end
 
   it 'supports AR types serialization' do
     type = User.type_for_attribute('status')
-    type.must_be_instance_of Enumerize::ActiveRecordSupport::Type
+    expect(type).must_be_instance_of Enumerize::ActiveRecordSupport::Type
     serialized = type.serialize('blocked')
-    serialized.must_equal 2
+    expect(serialized).must_equal 2
   end
 
   it 'has AR type itself JSON serializable' do
     type = User.type_for_attribute('status')
-    type.as_json['attr'].must_equal 'status'
+    expect(type.as_json['attr']).must_equal 'status'
   end
 
   it "doesn't break YAML serialization" do
     user = YAML.load(User.create(status: :blocked).to_yaml)
-    user.status.must_equal 'blocked'
+    expect(user.status).must_equal 'blocked'
   end
 
   # https://github.com/brainspec/enumerize/issues/304
@@ -616,7 +616,7 @@ describe Enumerize::ActiveRecordSupport do
     table = User.arel_table
     sql = User.where(table[:account_type].matches '%foo%').to_sql
 
-    sql.must_include 'LIKE \'%foo%\''
+    expect(sql).must_include 'LIKE \'%foo%\''
   end
 
   if Rails::VERSION::MAJOR >= 6
@@ -627,9 +627,9 @@ describe Enumerize::ActiveRecordSupport do
       User.insert_all([{ status: :active }])
       User.insert_all([{ interests: [:music, :sports] }])
 
-      User.exists?(sex: :male).must_equal true
-      User.exists?(status: :active).must_equal true
-      User.exists?(interests: [:music, :sports]).must_equal true
+      expect(User.exists?(sex: :male)).must_equal true
+      expect(User.exists?(status: :active)).must_equal true
+      expect(User.exists?(interests: [:music, :sports])).must_equal true
     end
 
     it 'supports AR#upsert_all' do
@@ -639,9 +639,9 @@ describe Enumerize::ActiveRecordSupport do
       User.upsert_all([{ status: :active }])
       User.upsert_all([{ interests: [:music, :sports] }])
 
-      User.exists?(sex: :male).must_equal true
-      User.exists?(status: :active).must_equal true
-      User.exists?(interests: [:music, :sports]).must_equal true
+      expect(User.exists?(sex: :male)).must_equal true
+      expect(User.exists?(status: :active)).must_equal true
+      expect(User.exists?(interests: [:music, :sports])).must_equal true
     end
   end
 end

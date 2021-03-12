@@ -14,36 +14,36 @@ describe Enumerize::Value do
   let(:val) { Enumerize::Value.new(attr, 'test_value', 1) }
 
   it 'is a string' do
-    val.must_be_kind_of String
+    expect(val).must_be_kind_of String
   end
 
   describe 'equality' do
     it 'is compared to string' do
-      val.must_be :==, 'test_value'
-      val.wont_be :==, 'not_value'
+      expect(val).must_be :==, 'test_value'
+      expect(val).wont_be :==, 'not_value'
     end
 
     it 'is compared to symbol' do
-      val.must_be :==, :test_value
-      val.wont_be :==, :not_value
+      expect(val).must_be :==, :test_value
+      expect(val).wont_be :==, :not_value
     end
 
     it 'is compared to integer' do
-      val.must_be :==, 1
-      val.wont_be :==, 2
+      expect(val).must_be :==, 1
+      expect(val).wont_be :==, 2
     end
   end
 
   describe 'translation' do
     it 'uses common translation' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
-        val.text.must_be :==, "Common translation"
+        expect(val.text).must_be :==, "Common translation"
       end
     end
 
     it 'uses default translation from the "default" section if its present' do
       store_translations(:en, :enumerize => {:defaults => {:attribute_name => {:test_value => "Common translation"}}}) do
-        val.text.must_be :==, "Common translation"
+        expect(val.text).must_be :==, "Common translation"
       end
     end
 
@@ -51,7 +51,7 @@ describe Enumerize::Value do
       attr.i18n_scopes = ["enumerize.model_name.attribute_name"]
 
       store_translations(:en, :enumerize => {:model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
-        val.text.must_be :==, "Model Specific translation"
+        expect(val.text).must_be :==, "Model Specific translation"
       end
     end
 
@@ -59,13 +59,13 @@ describe Enumerize::Value do
       attr.i18n_scopes = ["enumerize.model_name.attribute_name"]
 
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}, :model_name => {:attribute_name => {:test_value => "Model Specific translation"}}}) do
-        val.text.must_be :==, "Model Specific translation"
+        expect(val.text).must_be :==, "Model Specific translation"
       end
     end
 
     it 'uses simply humanized value when translation is undefined' do
       store_translations(:en, :enumerize => {}) do
-        val.text.must_be :==, "Test value"
+        expect(val.text).must_be :==, "Test value"
       end
     end
 
@@ -73,7 +73,7 @@ describe Enumerize::Value do
       attr.i18n_scopes = ["other.scope"]
 
       store_translations(:en, :other => {:scope => {:test_value => "Scope specific translation"}}) do
-        val.text.must_be :==, "Scope specific translation"
+        expect(val.text).must_be :==, "Scope specific translation"
       end
     end
 
@@ -81,14 +81,14 @@ describe Enumerize::Value do
       attr.i18n_scopes = ["nonexistent.scope", "other.scope"]
 
       store_translations(:en, :other => {:scope => {:test_value => "Scope specific translation"}}) do
-        val.text.must_be :==, "Scope specific translation"
+        expect(val.text).must_be :==, "Scope specific translation"
       end
     end
 
     it 'returns nil if value was modified' do
       store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
         modified_val = val.upcase
-        modified_val.text.must_be_nil
+        expect(modified_val.text).must_be_nil
       end
     end
   end
@@ -99,44 +99,44 @@ describe Enumerize::Value do
     end
 
     it 'returns true if value equals method' do
-      val.test_value?.must_equal true
+      expect(val.test_value?).must_equal true
     end
 
     it 'returns false if value does not equal method' do
-      val.other_value?.must_equal false
+      expect(val.other_value?).must_equal false
     end
 
     it 'raises NoMethodError if there are no values like boolean method' do
-      proc {
+      expect(proc {
         val.some_method?
-      }.must_raise NoMethodError
+      }).must_raise NoMethodError
     end
 
     it 'raises ArgumentError if arguments are passed' do
-      proc {
+      expect(proc {
         val.other_value?('<3')
-      }.must_raise ArgumentError
+      }).must_raise ArgumentError
     end
 
     it 'responds to methods for existing values' do
-      val.must_respond_to :test_value?
-      val.must_respond_to :other_value?
+      expect(val).must_respond_to :test_value?
+      expect(val).must_respond_to :other_value?
     end
 
     it 'returns a method object' do
-      val.method(:test_value?).must_be_instance_of Method
+      expect(val.method(:test_value?)).must_be_instance_of Method
     end
 
     it "doesn't respond to a method for not existing value" do
-      val.wont_respond_to :some_method?
+      expect(val).wont_respond_to :some_method?
     end
 
     it "doesn't respond to methods is value was modified" do
       modified_value = val.upcase
 
-      modified_value.upcase.wont_respond_to :some_method?
-      modified_value.upcase.wont_respond_to :test_value?
-      modified_value.upcase.wont_respond_to :other_value?
+      expect(modified_value.upcase).wont_respond_to :some_method?
+      expect(modified_value.upcase).wont_respond_to :test_value?
+      expect(modified_value.upcase).wont_respond_to :other_value?
     end
   end
 
@@ -149,7 +149,7 @@ describe Enumerize::Value do
 
     it 'serializes with Marshal' do
       dump_value = Marshal.dump(val)
-      Marshal.load(dump_value).must_equal 'test_value'
+      expect(Marshal.load(dump_value)).must_equal 'test_value'
     end
   end
 
