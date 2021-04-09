@@ -120,7 +120,7 @@ You can also pass `i18n_scope` option to specify scope (or array of scopes) stor
 
 
 ```ruby
-class Person
+class Cat
   extend Enumerize
   extend ActiveModel::Naming
 
