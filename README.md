@@ -2,6 +2,46 @@
 
 Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper/Sequel support
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Supported Versions](#supported-versions)
+- [Usage](#usage)
+- [Database support](#database-support)
+  - [ActiveRecord](#activerecord)
+  - [Mongoid](#mongoid)
+  - [MongoMapper](#mongomapper)
+- [I18n Support](#i18n-support)
+  - [I18n Helper Methods](#i18n-helper-methods)
+    - [\*\_text / .text](#----text---text)
+    - [values](#values)
+- [Boolean Helper Methods](#boolean-helper-methods)
+  - [Basic](#basic)
+  - [Predicate Methods](#predicate-methods)
+    - [Predicate Prefixes](#predicate-prefixes)
+- [Optimzations and Tips](#optimzations-and-tips)
+  - [Extendable Module](#extendable-module)
+  - [Customizing Enumerize Value](#customizing-enumerize-value)
+  - [ActiveRecord scopes:](#activerecord-scopes-)
+    - [Basic](#basic-1)
+    - [Shallow Scopes](#shallow-scopes)
+  - [Array-like Attributes](#array-like-attributes)
+- [Forms](#forms)
+  - [SimpleForm](#simpleform)
+  - [Formtastic](#formtastic)
+- [Testing](#testing)
+  - [RSpec](#rspec)
+    - [Qualifiers](#qualifiers)
+      - [in](#in)
+      - [with_default](#with-default)
+      - [with_i18n_scope](#with-i18n-scope)
+      - [with_predicates](#with-predicates)
+      - [with_scope](#with-scope)
+      - [with_multiple](#with-multiple)
+  - [Minitest with Shoulda](#minitest-with-shoulda)
+  - [Other Integrations](#other-integrations)
+- [Contributing](#contributing)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -17,6 +57,7 @@ Or install it yourself as:
     $ gem install enumerize
 
 ## Supported Versions
+
 - Ruby 2.5+
 - Rails 5.2+
 
@@ -28,20 +69,23 @@ Basic:
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female]
+  enumerize :role, in: [:user, :admin]
 end
 ```
 
-Note that enumerized values are just identificators so if you want to use multi-word, etc. values you should use `I18n` feature.
+Note that enumerized values are just identificators so if you want to use multi-word, etc. values then you should use `I18n` feature.
 
+---
 
-ActiveRecord:
+## Database support
+
+### ActiveRecord
 
 ```ruby
 class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
-      t.string :sex
+      t.string :status
       t.string :role
 
       t.timestamps
@@ -52,7 +96,7 @@ end
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], default: lambda { |user| SexIdentifier.sex_for_name(user.name).to_sym }
+  enumerize :status, in: [:student, :employed, :retired], default: lambda { |user| StatusIdentifier.status_for_age(user.age).to_sym }
 
   enumerize :role, in: [:user, :admin], default: :user
 end
@@ -64,13 +108,13 @@ end
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], skip_validations: lambda { |user| user.new_record? }
+  enumerize :status, in: [:student, :employed, :retired], skip_validations: lambda { |user| user.new_record? }
 
   enumerize :role, in: [:user, :admin], skip_validations: true
 end
 ```
 
-Mongoid:
+### Mongoid
 
 ```ruby
 class User
@@ -82,7 +126,7 @@ class User
 end
 ```
 
-MongoMapper:
+### MongoMapper
 
 ```ruby
 class User
@@ -94,50 +138,54 @@ class User
 end
 ```
 
-I18n:
+---
+
+## I18n Support
 
 ```ruby
 en:
   enumerize:
     user:
-      sex:
-        male: "Male"
-        female: "Female"
+      status:
+        student: "Student"
+        employed: "Employed"
+        retired: "Retiree"
 ```
 
-or if you use `sex` attribute across several models you can use `defaults` scope:
+or if you use `status` attribute across several models you can use `defaults` scope:
 
 ```ruby
 en:
   enumerize:
     defaults:
-      sex:
-        male: "Male"
-        female: "Female"
+      status:
+        student: "Student"
+        employed: "Employed"
+        retired: "Retiree"
 ```
 
 You can also pass `i18n_scope` option to specify scope (or array of scopes) storing the translations.
-
 
 ```ruby
 class Person
   extend Enumerize
   extend ActiveModel::Naming
 
-  enumerize :sex, in: %w[male female], i18n_scope: "sex"
-  enumerize :color, in: %w[black white], i18n_scope: ["various.colors", "colors"]
+  enumerize :status, in: %w[student employed retired], i18n_scope: "status"
+  enumerize :roles, in: %w[user admin], i18n_scope: ["user.roles", "roles"]
 end
 
 # localization file
 en:
-  sex:
-    male: "Male"
-    female: "Female"
-  various:
-    colors:
-      black: "Black"
-  colors:
-    white: "White"
+  status:
+    student: "Student"
+    employed: "Employed"
+    retired: "Retiree"
+  user:
+    roles:
+      user: "User"
+  roles:
+    admin: "Admin"
 ```
 
 Note that if you want to use I18n feature with plain Ruby object don't forget to extend it with `ActiveModel::Naming`:
@@ -149,87 +197,109 @@ class User
 end
 ```
 
-get attribute value:
+### I18n Helper Methods
+
+#### \*\_text / .text
+
+Attribute's I18n text value:
 
 ```ruby
-@user.sex_text # or @user.sex.text
+@user.status_text # or @user.status.text
 ```
 
-get all values for enumerized attribute:
+#### values
+
+List of I18n text values for an enumerized attribute:
 
 ```ruby
-User.sex.values # or User.enumerized_attributes[:sex].values
+User.status.values # or User.enumerized_attributes[:status].values
 ```
+
+Form example:
 
 use it with forms (it supports `:only` and `:except` options):
 
 ```erb
 <%= form_for @user do |f| %>
-  <%= f.select :sex, User.sex.options %>
+  <%= f.select :tatus, User.status.options %>
 <% end %>
 ```
 
-Boolean methods:
+---
+
+## Boolean Helper Methods
+
+### Basic
 
 ```ruby
-user.sex = :male
-user.sex.male? #=> true
-user.sex.female? #=> false
+user.status = :student
+user.status.student? #=> true
+user.status.retired? #=> false
 ```
 
-Predicate methods:
+### Predicate Methods
 
 ```ruby
 class User
   extend Enumerize
 
-  enumerize :sex, in: %w(male female), predicates: true
+  enumerize :status, in: %w(student employed retired), predicates: true
 end
 
 user = User.new
 
-user.male?   # => false
-user.female? # => false
+user.student?   # => false
+user.employed?  # => false
 
-user.sex = 'male'
+user.status = :student
 
-user.male?   # => true
-user.female? # => false
+user.student?   # => true
+user.employed? # => false
 ```
+
 :warning: If `enumerize` is used with Mongoid, it's not recommended to use `"writer"` as a field value since `writer?` is defined by Mongoid. [See more](https://github.com/brainspec/enumerize/issues/235). :warning:
 
-Using prefix:
+#### Predicate Prefixes
 
 ```ruby
 class User
   extend Enumerize
 
-  enumerize :sex, in: %w(male female), predicates: { prefix: true }
+  enumerize :status, in: %w(student employed retired), predicates: { prefix: true }
 end
 
 user = User.new
-user.sex = 'female'
-user.sex_female? # => true
+user.status = 'student'
+user.status_student? # => true
 ```
+
 Use `:only` and `:except` options to specify what values create predicate methods for.
+
+---
+
+## Optimzations and Tips
+
+### Extendable Module
 
 To make some attributes shared across different classes it's possible to define them in a separate module and then include it into classes:
 
 ```ruby
-module PersonEnumerations
+module RoleEnumerations
   extend Enumerize
 
-  enumerize :sex, in: %w[male female]
+  enumerize :roles, in: %w[user admin]
 end
 
-class Person
-  include PersonEnumerations
+class Buyer
+  include RoleEnumerations
 end
 
-class User
-  include PersonEnumerations
+class Seller
+  include RoleEnumerations
 end
 ```
+
+### Customizing Enumerize Value
 
 It's also possible to store enumerized attribute value using custom values (e.g. integers). You can pass a hash as `:in` option to achieve this:
 
@@ -249,44 +319,48 @@ User.role.find_value(:user).value #=> 1
 User.role.find_value(:admin).value #=> 2
 ```
 
-ActiveRecord scopes:
+### ActiveRecord scopes:
+
+#### Basic
 
 ```ruby
 class User < ActiveRecord::Base
   extend Enumerize
-  enumerize :sex, :in => [:male, :female], scope: true
-  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :having_status
+  enumerize :role, :in => [:user, :admin], scope: true
+  enumerize :status, :in => { student: 1, employed: 2, retired: 3 }, scope: :having_status
 end
 
-User.with_sex(:female)
-# SELECT "users".* FROM "users" WHERE "users"."sex" IN ('female')
+User.with_role(:admin)
+# SELECT "users".* FROM "users" WHERE "users"."role" IN ('admin')
 
-User.without_sex(:male)
-# SELECT "users".* FROM "users" WHERE "users"."sex" NOT IN ('male')
+User.without_admin(:male)
+# SELECT "users".* FROM "users" WHERE "users"."role" NOT IN ('admin')
 
-User.having_status(:blocked).with_sex(:male, :female)
-# SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."sex" IN ('male', 'female')
+User.having_status(:employed).with_role(:user, :admin)
+# SELECT "users".* FROM "users" WHERE "users"."status" IN (2) AND "users"."role" IN ('user', 'admin')
 ```
 
-Shallow scopes:
+#### Shallow Scopes
 
-Adds named scopes to the class directly
+Adds named scopes to the class directly.
 
 ```ruby
 class User < ActiveRecord::Base
   extend Enumerize
-  enumerize :sex, :in => [:male, :female], scope: :shallow
-  enumerize :status, :in => { active: 1, blocked: 2 }, scope: :shallow
+  enumerize :status, :in => [:student, :employed, :retired], scope: :shallow
+  enumerize :role, :in => { user: 1, admin: 2 }, scope: :shallow
 end
 
-User.male
-# SELECT "users".* FROM "users" WHERE "users"."sex" = 'male'
+User.student
+# SELECT "users".* FROM "users" WHERE "users"."status" = 'student'
 
-User.active
-# SELECT "users".* FROM "users" WHERE "users"."status" = 1
+User.admin
+# SELECT "users".* FROM "users" WHERE "users"."role" = 2
 ```
 
 :warning: It is not possible to define a scope when using the `:multiple` option. :warning:
+
+### Array-like Attributes
 
 Array-like attributes with plain ruby objects:
 
@@ -322,14 +396,18 @@ get an array of all text values:
 Also, the reader method can be overridden, referencing the enumerized attribute value using `super`:
 
 ```ruby
-def sex
+def status
   if current_user.admin?
-    "Super#{super}"
+    "Super #{super}"
   else
     super
   end
 end
 ```
+
+---
+
+## Forms
 
 ### SimpleForm
 
@@ -337,7 +415,7 @@ If you are using SimpleForm gem you don't need to specify input type (`:select` 
 
 ```erb
 <%= simple_form_for @user do |f| %>
-  <%= f.input :sex %>
+  <%= f.input :status %>
 <% end %>
 ```
 
@@ -345,7 +423,7 @@ and if you want it as radio buttons:
 
 ```erb
 <%= simple_form_for @user do |f| %>
-  <%= f.input :sex, :as => :radio_buttons %>
+  <%= f.input :status, :as => :radio_buttons %>
 <% end %>
 ```
 
@@ -357,7 +435,7 @@ If you are using Formtastic gem you also don't need to specify input type (`:sel
 
 ```erb
 <%= semantic_form_for @user do |f| %>
-  <%= f.input :sex %>
+  <%= f.input :status %>
 <% end %>
 ```
 
@@ -365,9 +443,13 @@ and if you want it as radio buttons:
 
 ```erb
 <%= semantic_form_for @user do |f| %>
-  <%= f.input :sex, :as => :radio %>
+  <%= f.input :status, :as => :radio %>
 <% end %>
 ```
+
+---
+
+## Testing
 
 ### RSpec
 
@@ -377,14 +459,14 @@ Also you can use builtin RSpec matcher:
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female]
+  enumerize :status, in: [:student, :employed, :retired]
 end
 
 describe User do
-  it { should enumerize(:sex) }
+  it { should enumerize(:status) }
 
   # or with RSpec 3 expect syntax
-  it { is_expected.to enumerize(:sex) }
+  it { is_expected.to enumerize(:status) }
 end
 ```
 
@@ -398,11 +480,11 @@ Use `in` to test usage of the `:in` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female]
+  enumerize :status, in: [:student, :employed, :retired]
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female) }
+  it { should enumerize(:status).in(:student, :employed, :retired) }
 end
 ```
 
@@ -413,11 +495,11 @@ qualifier.
 class User
   extend Enumerize
 
-  enumerize :sex, in: { male: 0, female: 1 }
+  enumerize :role, in: { user: 0, admin: 1 }
 end
 
 describe User do
-  it { should enumerize(:sex).in(male: 0, female: 1) }
+  it { should enumerize(:role).in(user: 0, admin: 1) }
 end
 ```
 
@@ -429,11 +511,11 @@ Use `with_default` to test usage of the `:default` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], default: :female
+  enumerize :role, in: [:user, :admin], default: :user
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_default(:female) }
+  it { should enumerize(:user).in(:user, :admin).with_default(:user) }
 end
 ```
 
@@ -445,11 +527,11 @@ Use `with_i18n_scope` to test usage of the `:i18n_scope` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], i18n_scope: 'sex'
+  enumerize :status, in: [:student, :employed, :retired], i18n_scope: 'status'
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_i18n_scope('sex') }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_i18n_scope('status') }
 end
 ```
 
@@ -461,11 +543,11 @@ Use `with_predicates` to test usage of the `:predicates` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], predicates: true
+  enumerize :status, in: [:student, :employed, :retired], predicates: true
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_predicates(true) }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_predicates(true) }
 end
 ```
 
@@ -475,11 +557,11 @@ You can text prefixed predicates with the `with_predicates` qualifiers.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], predicates: { prefix: true }
+  enumerize :status, in: [:student, :employed, :retired],  predicates: { prefix: true }
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_predicates(prefix: true) }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_predicates(prefix: true) }
 end
 ```
 
@@ -491,25 +573,25 @@ Use `with_scope` to test usage of the `:scope` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], scope: true
+  enumerize :status, in: [:student, :employed, :retired], scope: true
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_scope(true) }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_scope(true) }
 end
 ```
 
-You can text custom scope with the `with_scope` qualifiers.
+You can test a custom scope with the `with_scope` qualifiers.
 
 ```ruby
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], scope: :having_sex
+  enumerize :status, in: [:student, :employed], scope: :employable
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_scope(scope: :having_sex) }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_scope(scope: :employable) }
 end
 ```
 
@@ -521,11 +603,11 @@ Use `with_multiple` to test usage of the `:multiple` option.
 class User
   extend Enumerize
 
-  enumerize :sex, in: [:male, :female], multiple: true
+  enumerize :status, in: [:student, :employed, :retired], multiple: true
 end
 
 describe User do
-  it { should enumerize(:sex).in(:male, :female).with_multiple(true) }
+  it { should enumerize(:status).in(:student, :employed, :retired).with_multiple(true) }
 end
 ```
 
@@ -548,8 +630,9 @@ end
 
 Enumerize integrates with the following automatically:
 
-* [RailsAdmin](https://github.com/sferik/rails_admin/)
+- [RailsAdmin](https://github.com/sferik/rails_admin/)
 
+---
 
 ## Contributing
 
