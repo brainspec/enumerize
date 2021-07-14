@@ -9,6 +9,7 @@ gemfile:
   - Gemfile
   - Gemfile.rails60
   - Gemfile.rails61
+  - Gemfile.railsmaster
   - Gemfile.mongo_mapper
 rvm:
   - 2.5.8
