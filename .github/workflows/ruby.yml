@@ -37,6 +37,7 @@ jobs:
           - Gemfile
           - Gemfile.rails60
           - Gemfile.rails61
+          - Gemfile.railsmaster
           - Gemfile.mongo_mapper
         db:
           - sqlite3
@@ -45,9 +46,9 @@ jobs:
         exclude:
           - gemfile: Gemfile.mongo_mapper
             db: postgresql
-          - ruby-version: '3.0'
+          - ruby-version: '3.0.2'
             gemfile: Gemfile
-          - ruby-version: '3.0'
+          - ruby-version: '3.0.2'
             gemfile: Gemfile.mongo_mapper
     env:
       BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
