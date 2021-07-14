@@ -50,6 +50,10 @@ jobs:
             gemfile: Gemfile
           - ruby-version: '3.0.2'
             gemfile: Gemfile.mongo_mapper
+          - ruby-version: '2.5'
+            gemfile: Gemfile.railsmaster
+          - ruby-version: '2.6'
+            gemfile: Gemfile.railsmaster
     env:
       BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
       DB: "${{ matrix.db }}"
