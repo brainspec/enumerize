@@ -1,3 +1,9 @@
+## master
+
+### enhancements
+
+* Add support for Rails 7.0.0.alpha. (by [@f-mer](https://github.com/f-mer))
+
 ## 2.4.0 (December 12, 2020)
 
 ### enhancements
