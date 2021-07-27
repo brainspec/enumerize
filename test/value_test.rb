@@ -84,13 +84,6 @@ describe Enumerize::Value do
         expect(val.text).must_be :==, "Scope specific translation"
       end
     end
-
-    it 'returns nil if value was modified' do
-      store_translations(:en, :enumerize => {:attribute_name => {:test_value => "Common translation"}}) do
-        modified_val = val.upcase
-        expect(modified_val.text).must_be_nil
-      end
-    end
   end
 
   describe 'boolean methods comparison' do

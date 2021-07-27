@@ -1,0 +1,72 @@
+name: Ruby
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      mysql:
+        image: mysql:5.6
+        env:
+          MYSQL_ROOT_PASSWORD: mysql
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['2.5', '2.6', '2.7', '3.0.2']
+        gemfile:
+          - Gemfile
+          - Gemfile.rails60
+          - Gemfile.rails61
+          - Gemfile.railsmaster
+          - Gemfile.mongo_mapper
+        db:
+          - sqlite3
+          - postgresql
+          - mysql2
+        exclude:
+          - gemfile: Gemfile.mongo_mapper
+            db: postgresql
+          - ruby-version: '3.0.2'
+            gemfile: Gemfile
+          - ruby-version: '3.0.2'
+            gemfile: Gemfile.mongo_mapper
+          - ruby-version: '2.5'
+            gemfile: Gemfile.railsmaster
+          - ruby-version: '2.6'
+            gemfile: Gemfile.railsmaster
+    env:
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
+      DB: "${{ matrix.db }}"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Run tests
+      run: bundle exec rake
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        MYSQL_ROOT_PASSWORD: mysql
