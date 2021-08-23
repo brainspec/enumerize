@@ -236,12 +236,12 @@ end
 
 user = User.new
 
-user.student?   # => false
-user.employed?  # => false
+user.student?  # => false
+user.employed? # => false
 
 user.status = :student
 
-user.student?   # => true
+user.student?  # => true
 user.employed? # => false
 ```
 
