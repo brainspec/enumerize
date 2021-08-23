@@ -209,7 +209,7 @@ use it with forms (it supports `:only` and `:except` options):
 
 ```erb
 <%= form_for @user do |f| %>
-  <%= f.select :tatus, User.status.options %>
+  <%= f.select :status, User.status.options %>
 <% end %>
 ```
 
