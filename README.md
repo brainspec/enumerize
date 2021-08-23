@@ -545,7 +545,7 @@ You can text prefixed predicates with the `with_predicates` qualifiers.
 class User
   extend Enumerize
 
-  enumerize :status, in: [:student, :employed, :retired],  predicates: { prefix: true }
+  enumerize :status, in: [:student, :employed, :retired], predicates: { prefix: true }
 end
 
 describe User do
