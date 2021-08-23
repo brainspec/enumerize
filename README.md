@@ -209,7 +209,7 @@ use it with forms (it supports `:only` and `:except` options):
 
 ```erb
 <%= form_for @user do |f| %>
-  <%= f.select :tatus, User.status.options %>
+  <%= f.select :status, User.status.options %>
 <% end %>
 ```
 
@@ -236,12 +236,12 @@ end
 
 user = User.new
 
-user.student?   # => false
-user.employed?  # => false
+user.student?  # => false
+user.employed? # => false
 
 user.status = :student
 
-user.student?   # => true
+user.student?  # => true
 user.employed? # => false
 ```
 
@@ -545,7 +545,7 @@ You can text prefixed predicates with the `with_predicates` qualifiers.
 class User
   extend Enumerize
 
-  enumerize :status, in: [:student, :employed, :retired],  predicates: { prefix: true }
+  enumerize :status, in: [:student, :employed, :retired], predicates: { prefix: true }
 end
 
 describe User do
