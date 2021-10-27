@@ -321,7 +321,7 @@ end
 User.with_role(:admin)
 # SELECT "users".* FROM "users" WHERE "users"."role" IN ('admin')
 
-User.without_admin(:male)
+User.without_role(:admin)
 # SELECT "users".* FROM "users" WHERE "users"."role" NOT IN ('admin')
 
 User.having_status(:employed).with_role(:user, :admin)
