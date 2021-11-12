@@ -375,8 +375,8 @@ describe Enumerize::ActiveRecordSupport do
   it 'adds scope' do
     User.delete_all
 
-    user_1 = User.create!(status: :active, role: :admin)
-    user_2 = User.create!(status: :blocked)
+    user_1 = User.create!(sex: :female, skill: :noob, status: :active, role: :admin)
+    user_2 = User.create!(sex: :female, skill: :casual, status: :blocked)
     user_3 = User.create!(sex: :male, skill: :pro)
 
     expect(User.with_status(:active)).must_equal [user_1]
@@ -388,6 +388,9 @@ describe Enumerize::ActiveRecordSupport do
 
     expect(User.male).must_equal [user_3]
     expect(User.pro).must_equal [user_3]
+
+    expect(User.not_male.to_set).must_equal [user_1, user_2].to_set
+    expect(User.not_pro.to_set).must_equal [user_1, user_2].to_set
   end
 
   it 'ignores not enumerized values that passed to the scope method' do

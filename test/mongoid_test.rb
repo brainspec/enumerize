@@ -119,8 +119,8 @@ describe Enumerize do
   it 'adds scope' do
     model.delete_all
 
-    user_1 = model.create!(sex: :male, role: :admin)
-    user_2 = model.create!(sex: :female, role: :user)
+    user_1 = model.create!(sex: :male, skill: :noob, role: :admin, account_type: :basic)
+    user_2 = model.create!(sex: :female, skill: :noob, role: :user, account_type: :basic)
     user_3 = model.create!(skill: :pro, account_type: :premium)
 
     expect(model.with_sex(:male).to_a).must_equal [user_1]
@@ -136,6 +136,9 @@ describe Enumerize do
 
     expect(model.pro.to_a).must_equal [user_3]
     expect(model.premium.to_a).must_equal [user_3]
+
+    expect(model.not_pro.to_set).must_equal [user_1, user_2].to_set
+    expect(model.not_premium.to_set).must_equal [user_1, user_2].to_set
   end
 
   it 'chains scopes' do

@@ -257,8 +257,8 @@ module SequelTest
     it 'adds scope' do
       User.filter{ true }.delete
 
-      user_1 = User.create(status: :active, role: :admin)
-      user_2 = User.create(status: :blocked)
+      user_1 = User.create(sex: :female, skill: :noob, status: :active, role: :admin)
+      user_2 = User.create(sex: :female, skill: :casual, status: :blocked)
       user_3 = User.create(sex: :male, skill: :pro)
 
       expect(User.with_status(:active).to_a).must_equal [user_1]
@@ -271,6 +271,9 @@ module SequelTest
       expect(User.having_role(:admin).to_a).must_equal [user_1]
       expect(User.male.to_a).must_equal [user_3]
       expect(User.pro.to_a).must_equal [user_3]
+
+      expect(User.not_male.to_set).must_equal [user_1, user_2].to_set
+      expect(User.not_pro.to_set).must_equal [user_1, user_2].to_set
     end
 
     it 'allows either key or value as valid' do

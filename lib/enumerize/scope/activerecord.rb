@@ -42,6 +42,10 @@ module Enumerize
           define_singleton_method(value_obj) do
             where(attribute_name => value_obj.value)
           end
+
+          define_singleton_method("not_#{value_obj}") do
+            where.not(attribute_name => value_obj.value)
+          end
         end
       end
     end
