@@ -45,6 +45,10 @@ module Enumerize
           def_dataset_method(value_obj) do
             where(attribute_name => value_obj.value.to_s)
           end
+
+          def_dataset_method("not_#{value_obj}") do
+            exclude(attribute_name => value_obj.value.to_s)
+          end
         end
       end
     end

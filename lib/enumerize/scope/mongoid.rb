@@ -39,6 +39,10 @@ module Enumerize
           define_singleton_method(value_obj) do
             self.in(attribute_name => value_obj.value)
           end
+
+          define_singleton_method("not_#{value_obj}") do
+            self.not_in(attribute_name => value_obj.value)
+          end
         end
       end
     end

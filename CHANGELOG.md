@@ -3,6 +3,7 @@
 ### enhancements
 
 * Add support for Rails 7.0.0.alpha. (by [@f-mer](https://github.com/f-mer))
+* Add support for negative shallow scopes. (by [@nashby](https://github.com/nashby))
 
 ## 2.4.0 (December 12, 2020)
 
