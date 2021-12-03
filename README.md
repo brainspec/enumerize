@@ -197,7 +197,7 @@ Attribute's I18n text value:
 
 #### values
 
-List of I18n text values for an enumerized attribute:
+List of possible values for an enumerized attribute:
 
 ```ruby
 User.status.values # or User.enumerized_attributes[:status].values
