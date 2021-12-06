@@ -201,11 +201,21 @@ List of possible values for an enumerized attribute:
 
 ```ruby
 User.status.values # or User.enumerized_attributes[:status].values
+# => ['student', 'employed', 'retired']
 ```
 
-Form example:
+#### I18n text values
 
-use it with forms (it supports `:only` and `:except` options):
+List of possible I18n text values for an enumerized attribute:
+
+```ruby
+User.status.values.collect(&:text)
+# => ['Student', 'Employed', 'Retiree']
+```
+
+#### Form example
+
+Use it with forms (it supports `:only` and `:except` options):
 
 ```erb
 <%= form_for @user do |f| %>
