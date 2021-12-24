@@ -1,0 +1,9 @@
+eval_gemfile('Gemfile.global')
+
+gem 'minitest', '~> 5.8'
+gem 'rails',    github: 'rails/rails', branch: '7-0-stable', require: false
+
+# TODO: Mongoid doesn't support Rails 7 yet. Uncomment when it's fixed https://jira.mongodb.org/browse/MONGOID-5193
+# gem 'mongoid',  github: 'mongodb/mongoid'
+
+gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]

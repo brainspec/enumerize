@@ -38,12 +38,18 @@ silence_warnings do
       'schema_search_path' => 'public'
     }
   }
+
   case db
   when :postgresql
     ActiveRecord::Base.establish_connection(:postgresql_master)
     ActiveRecord::Base.connection.recreate_database('enumerize_test')
   when :mysql2
-    ActiveRecord::Tasks::DatabaseTasks.create ActiveRecord::Base.configurations[db.to_s]
+    if ActiveRecord::Base.configurations.respond_to?(:[])
+      ActiveRecord::Tasks::DatabaseTasks.create ActiveRecord::Base.configurations[db.to_s]
+    else
+      ActiveRecord::Tasks::DatabaseTasks.create ActiveRecord::Base.configurations.find_db_config(db.to_s)
+    end
+
     ActiveRecord::Base.establish_connection(db)
   else
     ActiveRecord::Base.establish_connection(db)

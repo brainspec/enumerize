@@ -32,11 +32,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ['2.5', '2.6', '2.7', '3.0.2']
+        ruby-version: ['2.6', '2.7', '3.0.2']
         gemfile:
           - Gemfile
           - Gemfile.rails60
           - Gemfile.rails61
+          - Gemfile.rails70
           - Gemfile.railsmaster
           - Gemfile.mongo_mapper
         db:
@@ -50,8 +51,8 @@ jobs:
             gemfile: Gemfile
           - ruby-version: '3.0.2'
             gemfile: Gemfile.mongo_mapper
-          - ruby-version: '2.5'
-            gemfile: Gemfile.railsmaster
+          - ruby-version: '2.6'
+            gemfile: Gemfile.rails70
           - ruby-version: '2.6'
             gemfile: Gemfile.railsmaster
     env:
