@@ -1,4 +1,4 @@
-## master
+## 2.5.0 (December 24, 2021)
 
 ### enhancements
 
