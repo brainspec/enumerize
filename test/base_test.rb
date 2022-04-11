@@ -201,4 +201,22 @@ describe Enumerize::Base do
     object.foo = :b
     expect(object.foo_value).must_equal 2
   end
+
+  it 'allows kwargs in Ruby 3.x' do
+    klass = Class.new do
+      include accessors
+      extend Enumerize
+
+      enumerize :foo, :in => %w[test]
+
+      def initialize(argument, key_word_argument: nil)
+        super
+      end
+    end
+
+    expect(proc {
+      klass.new('arg1', key_word_argument: 'kwargs1')
+    }).wont_raise ArgumentError
+
+  end
 end
