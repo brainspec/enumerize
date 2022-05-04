@@ -201,4 +201,30 @@ describe Enumerize::Base do
     object.foo = :b
     expect(object.foo_value).must_equal 2
   end
+
+  it 'allows initialize method with arguments' do
+    klass = Class.new do
+      extend Enumerize
+
+      def initialize(argument, key_word_argument: nil); end
+    end
+
+    klass.new('arg1', key_word_argument: 'kwargs1')
+  end
+
+  it 'allows initialize method with arguments for inherited classes' do
+    parent_klass = Class.new do
+      def initialize(argument, key_word_argument: nil); end
+    end
+
+    klass = Class.new(parent_klass) do
+      extend Enumerize
+
+      def initialize(argument, key_word_argument: nil)
+        super
+      end
+    end
+
+    klass.new('arg1', key_word_argument: 'kwargs1')
+  end
 end
