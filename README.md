@@ -46,7 +46,7 @@ Or install it yourself as:
 
 ## Supported Versions
 
-- Ruby 2.6+
+- Ruby 2.7+
 - Rails 5.2+
 
 ## Usage
