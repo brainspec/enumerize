@@ -1,3 +1,9 @@
+## master
+
+### enhancements
+
+* Allow usage of kwargs with inheritance in Ruby 3.x. Support only Ruby 2.7+. (by [@mortik](https://github.com/mortik))
+
 ## 2.5.0 (December 24, 2021)
 
 ### enhancements
