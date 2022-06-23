@@ -151,7 +151,7 @@ class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
   include SkipValidationsLambdaWithParamEnum
 end
 
-describe Enumerize::ActiveRecordSupport do
+class Enumerize::ActiveRecordSupportSpec < MiniTest::Spec
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
@@ -244,6 +244,15 @@ describe Enumerize::ActiveRecordSupport do
     expect(user.interests).must_equal %w[music]
     user.reload
     expect(user.interests).must_equal %w[music dancing]
+  end
+
+  it 'has enumerized values in active record attributes after reload' do
+    User.delete_all
+    user = User.new
+    user.status = :blocked
+    user.save!
+    user.reload
+    expect(user.attributes["status"]).must_equal 'blocked'
   end
 
   it 'validates inclusion when using write_attribute with string attribute' do

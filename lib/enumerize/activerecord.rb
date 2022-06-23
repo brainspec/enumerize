@@ -115,11 +115,11 @@ module Enumerize
 
       alias type_cast_for_database serialize
 
-      def deserialize(value)
+      def cast(value)
         @attr.find_value(value)
       end
 
-      alias type_cast_from_database deserialize
+      alias type_cast_from_database cast
 
       def as_json(options = nil)
         {attr: @attr.name, subtype: @subtype}.as_json(options)
