@@ -101,10 +101,11 @@ class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
 
-  store :settings, accessors: [:language]
+  store :settings, accessors: [:language, 'country_code']
 
   enumerize :sex, :in => [:male, :female], scope: :shallow
   enumerize :language, :in => [:en, :jp]
+  enumerize :country_code, :in => [:us, :ca]
 
   serialize :interests, Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
@@ -189,6 +190,15 @@ describe Enumerize::ActiveRecordSupport do
     user.save!
     user.reload
     expect(user.language).must_equal 'en'
+  end
+
+  it 'saves stored attribute value for store accessor with string key' do
+    User.delete_all
+    user = User.new
+    user.country_code = :us
+    user.save!
+    user.reload
+    expect(user.country_code).must_equal 'us'
   end
 
   it 'has default value' do
