@@ -52,6 +52,10 @@ module Enumerize
       values.each { |value| yield value }
     end
 
+    def value?(value)
+      values.include?(value)
+    end
+
     def i18n_scopes
       @i18n_scopes ||= if i18n_scope
         Array(i18n_scope)
