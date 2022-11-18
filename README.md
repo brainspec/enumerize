@@ -1,4 +1,4 @@
-# Enumerize [![TravisCI](https://secure.travis-ci.org/brainspec/enumerize.svg?branch=master)](http://travis-ci.org/brainspec/enumerize)
+# Enumerize [![Ruby](https://github.com/brainspec/enumerize/actions/workflows/ruby.yml/badge.svg)](https://github.com/brainspec/enumerize/actions/workflows/ruby.yml)
 
 Enumerated attributes with I18n and ActiveRecord/Mongoid/MongoMapper/Sequel support
 
