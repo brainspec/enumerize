@@ -90,22 +90,26 @@ module Enumerize
 
     def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
-        next if attr.default_value.nil?
-        begin
-          if respond_to?(attr.name)
-            attr_value = public_send(attr.name)
-          else
-            next
-          end
+        _set_default_value_for_enumerized_attribute(attr)
+      end
+    end
 
-          value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
-
-          if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
-            value = Utils.call_if_callable(attr.default_value, self)
-            public_send("#{attr.name}=", value)
-          end
-        rescue ActiveModel::MissingAttributeError
+    def _set_default_value_for_enumerized_attribute(attr)
+      return if attr.default_value.nil?
+      begin
+        if respond_to?(attr.name)
+          attr_value = public_send(attr.name)
+        else
+          return
         end
+
+        value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
+
+        if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
+          value = Utils.call_if_callable(attr.default_value, self)
+          public_send("#{attr.name}=", value)
+        end
+      rescue ActiveModel::MissingAttributeError
       end
     end
   end
