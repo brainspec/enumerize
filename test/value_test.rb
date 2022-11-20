@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'yaml'
 
-describe Enumerize::Value do
+class ValueTest < MiniTest::Spec
   class Model
   end
 

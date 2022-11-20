@@ -10,7 +10,7 @@ end
 
 MongoMapper.connection = Mongo::Client.new(['localhost:27017'], database: 'enumerize-test-suite-of-mongomapper')
 
-describe Enumerize do
+class MongoMapperTest < MiniTest::Spec
   class MongoMapperUser
     include MongoMapper::Document
     extend Enumerize
