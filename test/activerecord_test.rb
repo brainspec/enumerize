@@ -7,10 +7,6 @@ require 'logger'
 db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
-  ActiveRecord::Base.yaml_column_permitted_classes = [
-    Symbol, ActiveSupport::HashWithIndifferentAccess
-  ]
-
   ActiveRecord::Migration.verbose = false
   ActiveRecord::Base.logger = Logger.new(nil)
   ActiveRecord::Base.configurations = {
@@ -153,6 +149,16 @@ end
 class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
   self.table_name = "users"
   include SkipValidationsLambdaWithParamEnum
+end
+
+safe_classes = [Symbol, ActiveSupport::HashWithIndifferentAccess, User]
+
+if (ActiveRecord::Base.respond_to?(:yaml_column_permitted_classes))
+  ActiveRecord::Base.yaml_column_permitted_classes = safe_classes
+end
+
+if (ActiveRecord.respond_to?(:yaml_column_permitted_classes))
+  ActiveRecord.yaml_column_permitted_classes = safe_classes
 end
 
 class ActiveRecordTest < MiniTest::Spec

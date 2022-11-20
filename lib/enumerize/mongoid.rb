@@ -24,6 +24,13 @@ module Enumerize
 
         reloaded
       end
+
+      private
+
+      def _set_default_value_for_enumerized_attribute(attr)
+        super
+      rescue Mongoid::Errors::AttributeNotLoaded
+      end
     end
   end
 end
