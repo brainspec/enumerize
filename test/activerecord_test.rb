@@ -7,6 +7,10 @@ require 'logger'
 db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
+  ActiveRecord::Base.yaml_column_permitted_classes = [
+    Symbol, ActiveSupport::HashWithIndifferentAccess
+  ]
+
   ActiveRecord::Migration.verbose = false
   ActiveRecord::Base.logger = Logger.new(nil)
   ActiveRecord::Base.configurations = {
