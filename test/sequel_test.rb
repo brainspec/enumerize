@@ -5,7 +5,7 @@ require 'sequel'
 require 'logger'
 require 'jdbc/sqlite3' if RUBY_PLATFORM == 'java'
 
-module SequelTest
+class SequelTest < MiniTest::Spec
   silence_warnings do
     DB = if RUBY_PLATFORM == 'java'
       Sequel.connect('jdbc:sqlite::memory:')
@@ -89,256 +89,254 @@ module SequelTest
     include SkipValidationsLambdaWithParamEnum
   end
 
-  describe Enumerize::SequelSupport do
-    it 'sets nil if invalid value is passed' do
-      user = User.new
-      user.sex = :invalid
-      expect(user.sex).must_be_nil
+  it 'sets nil if invalid value is passed' do
+    user = User.new
+    user.sex = :invalid
+    expect(user.sex).must_be_nil
+  end
+
+  it 'saves value' do
+    User.filter{ true }.delete
+    user = User.new
+    user.sex = :female
+    user.save
+    expect(user.sex).must_equal 'female'
+  end
+
+  it 'loads value' do
+    User.filter{ true }.delete
+    User.create(:sex => :male)
+    store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
+      user = User.first
+      expect(user.sex).must_equal 'male'
+      expect(user.sex_text).must_equal 'Male'
     end
+  end
 
-    it 'saves value' do
-      User.filter{ true }.delete
-      user = User.new
-      user.sex = :female
-      user.save
-      expect(user.sex).must_equal 'female'
+  it 'has default value' do
+    expect(User.new.role).must_equal 'user'
+    expect(User.new.values[:role]).must_equal 'user'
+  end
+
+  it 'does not set default value for not selected attributes' do
+    User.filter{ true }.delete
+    User.create(:sex => :male)
+
+    assert_equal [:id], User.select(:id).first.values.keys
+  end
+
+  it 'has default value with lambda' do
+    expect(User.new.lambda_role).must_equal 'admin'
+    expect(User.new.values[:lambda_role]).must_equal 'admin'
+  end
+  it 'uses after_initialize callback to set default value' do
+    User.filter{ true }.delete
+    User.create(sex: 'male', lambda_role: nil)
+
+    user = User.where(:sex => 'male').first
+    expect(user.lambda_role).must_equal 'admin'
+  end
+
+  it 'uses default value from db column' do
+    expect(User.new.account_type).must_equal 'basic'
+  end
+
+  it 'validates inclusion' do
+    user = User.new
+    user.role = 'wrong'
+    expect(user).wont_be :valid?
+    expect(user.errors[:role]).must_include 'is not included in the list'
+  end
+
+  it 'validates inclusion on mass assignment' do
+    assert_raises Sequel::ValidationFailed do
+      User.create(role: 'wrong')
     end
+  end
 
-    it 'loads value' do
-      User.filter{ true }.delete
-      User.create(:sex => :male)
-      store_translations(:en, :enumerize => {:sex => {:male => 'Male'}}) do
-        user = User.first
-        expect(user.sex).must_equal 'male'
-        expect(user.sex_text).must_equal 'Male'
-      end
-    end
+  it "uses persisted value for validation if it hasn't been set" do
+    user = User.create :sex => :male
+    expect(User[user.id].read_attribute_for_validation(:sex)).must_equal 'male'
+  end
 
-    it 'has default value' do
-      expect(User.new.role).must_equal 'user'
-      expect(User.new.values[:role]).must_equal 'user'
-    end
+  it 'is valid with empty string assigned' do
+    user = User.new
+    user.role = ''
+    expect(user).must_be :valid?
+  end
 
-    it 'does not set default value for not selected attributes' do
-      User.filter{ true }.delete
-      User.create(:sex => :male)
+  it 'stores nil when empty string assigned' do
+    user = User.new
+    user.role = ''
+    expect(user.values[:role]).must_be_nil
+  end
 
-      assert_equal [:id], User.select(:id).first.values.keys
-    end
+  it 'validates inclusion when :skip_validations = false' do
+    user = DoNotSkipValidationsUser.new
+    user.foo = 'wrong'
+    expect(user).wont_be :valid?
+    expect(user.errors[:foo]).must_include 'is not included in the list'
+  end
 
-    it 'has default value with lambda' do
-      expect(User.new.lambda_role).must_equal 'admin'
-      expect(User.new.values[:lambda_role]).must_equal 'admin'
-    end
-    it 'uses after_initialize callback to set default value' do
-      User.filter{ true }.delete
-      User.create(sex: 'male', lambda_role: nil)
+  it 'does not validate inclusion when :skip_validations = true' do
+    user = SkipValidationsUser.new
+    user.foo = 'wrong'
+    expect(user).must_be :valid?
+  end
 
-      user = User.where(:sex => 'male').first
-      expect(user.lambda_role).must_equal 'admin'
-    end
+  it 'supports :skip_validations option as lambda' do
+    user = SkipValidationsLambdaUser.new
+    user.foo = 'wrong'
+    expect(user).must_be :valid?
+  end
 
-    it 'uses default value from db column' do
-      expect(User.new.account_type).must_equal 'basic'
-    end
+  it 'supports :skip_validations option as lambda with a parameter' do
+    user = SkipValidationsLambdaWithParamUser.new
+    user.foo = 'wrong'
+    expect(user).must_be :valid?
+  end
 
-    it 'validates inclusion' do
-      user = User.new
-      user.role = 'wrong'
-      expect(user).wont_be :valid?
-      expect(user.errors[:role]).must_include 'is not included in the list'
-    end
+  it 'supports multiple attributes' do
+    user = User.new
+    user.interests ||= []
+    expect(user.interests).must_be_empty
+    user.interests << "music"
+    expect(user.interests).must_equal %w(music)
+    user.save
 
-    it 'validates inclusion on mass assignment' do
-      assert_raises Sequel::ValidationFailed do
-        User.create(role: 'wrong')
-      end
-    end
+    user = User[user.id]
+    expect(user.interests).must_be_instance_of Enumerize::Set
+    expect(user.interests).must_equal %w(music)
+    user.interests << "sports"
+    expect(user.interests).must_equal %w(music sports)
 
-    it "uses persisted value for validation if it hasn't been set" do
-      user = User.create :sex => :male
-      expect(User[user.id].read_attribute_for_validation(:sex)).must_equal 'male'
-    end
+    user.interests = []
+    interests = user.interests
+    interests << "music"
+    expect(interests).must_equal %w(music)
+    interests << "dancing"
+    expect(interests).must_equal %w(music dancing)
+  end
 
-    it 'is valid with empty string assigned' do
-      user = User.new
-      user.role = ''
-      expect(user).must_be :valid?
-    end
+  it 'returns invalid multiple value for validation' do
+    user = User.new
+    user.interests << :music
+    user.interests << :invalid
+    values = user.read_attribute_for_validation(:interests)
+    expect(values).must_equal %w(music invalid)
+  end
 
-    it 'stores nil when empty string assigned' do
-      user = User.new
-      user.role = ''
-      expect(user.values[:role]).must_be_nil
-    end
+  it 'validates multiple attributes' do
+    user = User.new
+    user.interests << :invalid
+    expect(user).wont_be :valid?
 
-    it 'validates inclusion when :skip_validations = false' do
-      user = DoNotSkipValidationsUser.new
-      user.foo = 'wrong'
-      expect(user).wont_be :valid?
-      expect(user.errors[:foo]).must_include 'is not included in the list'
-    end
+    user.interests = Object.new
+    expect(user).wont_be :valid?
 
-    it 'does not validate inclusion when :skip_validations = true' do
-      user = SkipValidationsUser.new
-      user.foo = 'wrong'
-      expect(user).must_be :valid?
-    end
+    user.interests = ['music', '']
+    expect(user).must_be :valid?
+  end
 
-    it 'supports :skip_validations option as lambda' do
-      user = SkipValidationsLambdaUser.new
-      user.foo = 'wrong'
-      expect(user).must_be :valid?
-    end
+  it 'stores custom values for multiple attributes' do
+    User.filter{ true }.delete
 
-    it 'supports :skip_validations option as lambda with a parameter' do
-      user = SkipValidationsLambdaWithParamUser.new
-      user.foo = 'wrong'
-      expect(user).must_be :valid?
-    end
+    klass = Class.new(User)
+    klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
 
-    it 'supports multiple attributes' do
-      user = User.new
-      user.interests ||= []
-      expect(user.interests).must_be_empty
-      user.interests << "music"
-      expect(user.interests).must_equal %w(music)
-      user.save
+    user = klass.new
+    user.interests << :music
+    expect(user.interests).must_equal %w(music)
+    user.save
 
-      user = User[user.id]
-      expect(user.interests).must_be_instance_of Enumerize::Set
-      expect(user.interests).must_equal %w(music)
-      user.interests << "sports"
-      expect(user.interests).must_equal %w(music sports)
+    user = klass[user.id]
+    expect(user.interests).must_equal %w(music)
+  end
 
-      user.interests = []
-      interests = user.interests
-      interests << "music"
-      expect(interests).must_equal %w(music)
-      interests << "dancing"
-      expect(interests).must_equal %w(music dancing)
-    end
+  it 'adds scope' do
+    User.filter{ true }.delete
 
-    it 'returns invalid multiple value for validation' do
-      user = User.new
-      user.interests << :music
-      user.interests << :invalid
-      values = user.read_attribute_for_validation(:interests)
-      expect(values).must_equal %w(music invalid)
-    end
+    user_1 = User.create(sex: :female, skill: :noob, status: :active, role: :admin)
+    user_2 = User.create(sex: :female, skill: :casual, status: :blocked)
+    user_3 = User.create(sex: :male, skill: :pro)
 
-    it 'validates multiple attributes' do
-      user = User.new
-      user.interests << :invalid
-      expect(user).wont_be :valid?
+    expect(User.with_status(:active).to_a).must_equal [user_1]
+    expect(User.with_status(:blocked).to_a).must_equal [user_2]
+    expect(User.with_status(:active, :blocked).to_set).must_equal [user_1, user_2].to_set
 
-      user.interests = Object.new
-      expect(user).wont_be :valid?
+    expect(User.without_status(:active).to_a).must_equal [user_2]
+    expect(User.without_status(:active, :blocked).to_a).must_equal []
 
-      user.interests = ['music', '']
-      expect(user).must_be :valid?
-    end
+    expect(User.having_role(:admin).to_a).must_equal [user_1]
+    expect(User.male.to_a).must_equal [user_3]
+    expect(User.pro.to_a).must_equal [user_3]
 
-    it 'stores custom values for multiple attributes' do
-      User.filter{ true }.delete
+    expect(User.not_male.to_set).must_equal [user_1, user_2].to_set
+    expect(User.not_pro.to_set).must_equal [user_1, user_2].to_set
+  end
 
-      klass = Class.new(User)
-      klass.enumerize :interests, in: { music: 0, sports: 1, dancing: 2, programming: 3}, multiple: true
+  it 'allows either key or value as valid' do
+    user_1 = User.new(status: :active)
+    user_2 = User.new(status: 1)
+    user_3 = User.new(status: '1')
 
-      user = klass.new
-      user.interests << :music
-      expect(user.interests).must_equal %w(music)
-      user.save
+    expect(user_1.status).must_equal 'active'
+    expect(user_2.status).must_equal 'active'
+    expect(user_3.status).must_equal 'active'
 
-      user = klass[user.id]
-      expect(user.interests).must_equal %w(music)
-    end
+    expect(user_1).must_be :valid?
+    expect(user_2).must_be :valid?
+    expect(user_3).must_be :valid?
+  end
 
-    it 'adds scope' do
-      User.filter{ true }.delete
+  it 'supports defining enumerized attributes on abstract class' do
+    Document.filter{ true }.delete
 
-      user_1 = User.create(sex: :female, skill: :noob, status: :active, role: :admin)
-      user_2 = User.create(sex: :female, skill: :casual, status: :blocked)
-      user_3 = User.create(sex: :male, skill: :pro)
+    document = Document.new
+    document.visibility = :protected
+    expect(document.visibility).must_equal 'protected'
+  end
 
-      expect(User.with_status(:active).to_a).must_equal [user_1]
-      expect(User.with_status(:blocked).to_a).must_equal [user_2]
-      expect(User.with_status(:active, :blocked).to_set).must_equal [user_1, user_2].to_set
+  it 'supports defining enumerized scopes on abstract class' do
+    Document.filter{ true }.delete
 
-      expect(User.without_status(:active).to_a).must_equal [user_2]
-      expect(User.without_status(:active, :blocked).to_a).must_equal []
+    document_1 = Document.create(visibility: :public)
+    document_2 = Document.create(visibility: :private)
 
-      expect(User.having_role(:admin).to_a).must_equal [user_1]
-      expect(User.male.to_a).must_equal [user_3]
-      expect(User.pro.to_a).must_equal [user_3]
+    expect(Document.with_visibility(:public).to_a).must_equal [document_1]
+  end
 
-      expect(User.not_male.to_set).must_equal [user_1, user_2].to_set
-      expect(User.not_pro.to_set).must_equal [user_1, user_2].to_set
-    end
+  it 'validates uniqueness' do
+    user = User.create(status: :active, sex: "male")
 
-    it 'allows either key or value as valid' do
-      user_1 = User.new(status: :active)
-      user_2 = User.new(status: 1)
-      user_3 = User.new(status: '1')
+    user = UniqStatusUser.new
+    user.sex = "male"
+    user.status = :active
+    expect(user.valid?).must_equal false
 
-      expect(user_1.status).must_equal 'active'
-      expect(user_2.status).must_equal 'active'
-      expect(user_3.status).must_equal 'active'
+    expect(user.errors[:status]).wont_be :empty?
+  end
 
-      expect(user_1).must_be :valid?
-      expect(user_2).must_be :valid?
-      expect(user_3).must_be :valid?
-    end
+  it "doesn't update record" do
+    Document.filter{ true }.delete
 
-    it 'supports defining enumerized attributes on abstract class' do
-      Document.filter{ true }.delete
+    expected = Time.new(2010, 10, 10)
 
-      document = Document.new
-      document.visibility = :protected
-      expect(document.visibility).must_equal 'protected'
-    end
+    document = Document.new
+    document.updated_at = expected
+    document.save
 
-    it 'supports defining enumerized scopes on abstract class' do
-      Document.filter{ true }.delete
+    document = Document.last
+    document.save
 
-      document_1 = Document.create(visibility: :public)
-      document_2 = Document.create(visibility: :private)
+    assert_equal expected, document.updated_at
+  end
 
-      expect(Document.with_visibility(:public).to_a).must_equal [document_1]
-    end
+  it 'changes from dirty should be serialized as scalar values' do
+    user = User.create(:status => :active)
+    user.status = :blocked
 
-    it 'validates uniqueness' do
-      user = User.create(status: :active, sex: "male")
-
-      user = UniqStatusUser.new
-      user.sex = "male"
-      user.status = :active
-      expect(user.valid?).must_equal false
-
-      expect(user.errors[:status]).wont_be :empty?
-    end
-
-    it "doesn't update record" do
-      Document.filter{ true }.delete
-
-      expected = Time.new(2010, 10, 10)
-
-      document = Document.new
-      document.updated_at = expected
-      document.save
-
-      document = Document.last
-      document.save
-
-      assert_equal expected, document.updated_at
-    end
-
-    it 'changes from dirty should be serialized as scalar values' do
-      user = User.create(:status => :active)
-      user.status = :blocked
-
-      expected = { status: [1, 2] }.to_yaml
-      assert_equal expected, user.column_changes.to_yaml
-    end
+    expected = { status: [1, 2] }.to_yaml
+    assert_equal expected, user.column_changes.to_yaml
   end
 end

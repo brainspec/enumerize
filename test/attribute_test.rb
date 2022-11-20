@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-describe Enumerize::Attribute do
+class AttributeTest < MiniTest::Spec
   def attr
     @attr ||= nil
   end

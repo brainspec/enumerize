@@ -4,7 +4,7 @@ require 'test_helper'
 
 if defined?(::ActiveModel::Attributes)
 
-describe Enumerize do
+class ActiveModelTest < MiniTest::Spec
   class ActiveModelUser
     include ActiveModel::Model
     include ActiveModel::Attributes

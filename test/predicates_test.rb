@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-describe Enumerize::Predicates do
+class PredicatesTest < MiniTest::Spec
   let(:kklass) do
     Class.new do
       extend Enumerize
