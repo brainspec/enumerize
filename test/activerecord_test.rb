@@ -8,6 +8,7 @@ db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
   ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.yaml_column_permitted_classes = [Symbol, ActiveSupport::HashWithIndifferentAccess]
   ActiveRecord::Base.logger = Logger.new(nil)
   ActiveRecord::Base.configurations = {
     'sqlite3' => {
@@ -511,7 +512,7 @@ class ActiveRecordTest < MiniTest::Spec
     user = User.create(:status => :active)
     user.status = :blocked
 
-    assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
+    assert_equal [1, 2], YAML.unsafe_load(user.changes.to_yaml)[:status]
   end
 
   it 'does not change by the practical same value' do
@@ -630,7 +631,7 @@ class ActiveRecordTest < MiniTest::Spec
   end
 
   it "doesn't break YAML serialization" do
-    user = YAML.load(User.create(status: :blocked).to_yaml)
+    user = YAML.unsafe_load(User.create(status: :blocked).to_yaml)
     expect(user.status).must_equal 'blocked'
   end
 
