@@ -46,6 +46,14 @@ module MiscHelpers
       I18n.reload!
     end
   end
+
+  def unsafe_yaml_load(yaml)
+    if YAML.respond_to?(:unsafe_load)
+      YAML.unsafe_load(yaml)
+    else
+      YAML.load(yaml)
+    end
+  end
 end
 
 class MiniTest::Spec
