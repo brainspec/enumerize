@@ -8,6 +8,9 @@ db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
   ActiveRecord::Migration.verbose = false
+  if ActiveRecord::Base.respond_to?(:use_yaml_unsafe_load)
+    ActiveRecord::Base.use_yaml_unsafe_load = true
+  end
   ActiveRecord::Base.logger = Logger.new(nil)
   ActiveRecord::Base.configurations = {
     'sqlite3' => {
@@ -151,7 +154,7 @@ class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
   include SkipValidationsLambdaWithParamEnum
 end
 
-describe Enumerize::ActiveRecordSupport do
+class ActiveRecordTest < MiniTest::Spec
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid
@@ -511,7 +514,7 @@ describe Enumerize::ActiveRecordSupport do
     user = User.create(:status => :active)
     user.status = :blocked
 
-    assert_equal [1, 2], YAML.load(user.changes.to_yaml)[:status]
+    assert_equal [1, 2], unsafe_yaml_load(user.changes.to_yaml)[:status]
   end
 
   it 'does not change by the practical same value' do
@@ -630,7 +633,7 @@ describe Enumerize::ActiveRecordSupport do
   end
 
   it "doesn't break YAML serialization" do
-    user = YAML.load(User.create(status: :blocked).to_yaml)
+    user = unsafe_yaml_load(User.create(status: :blocked).to_yaml)
     expect(user.status).must_equal 'blocked'
   end
 
