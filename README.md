@@ -61,7 +61,7 @@ class User
 end
 ```
 
-Note that enumerized values are just identificators so if you want to use multi-word, etc. values then you should use `I18n` feature.
+Note that enumerized values are just identifiers so if you want to use multi-word, etc. values then you should use `I18n` feature.
 
 ---
 
