@@ -1,7 +1,9 @@
-## master
+## 2.6.0 (March 7, 2023)
 
 ### enhancements
 
+* Add `Enumerize::Attribute#value?`. This new method prevents the following breakage 
+  when autocorrecting with Performance/InefficientHashSearch cop. (by [@koic](https://github.com/koic))
 * Allow usage of kwargs with inheritance in Ruby 3.x. Support only Ruby 2.7+. (by [@mortik](https://github.com/mortik))
 
 ## 2.5.0 (December 24, 2021)
