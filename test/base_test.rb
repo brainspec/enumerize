@@ -227,4 +227,28 @@ class BaseTest < MiniTest::Spec
 
     klass.new('arg1', key_word_argument: 'kwargs1')
   end
+
+  it 'allows initializing object without keyword arguments' do
+    parent_klass = Class.new do
+      attr_reader :arguments
+
+      def initialize(arguments)
+        @arguments = arguments
+      end
+    end
+
+    klass = Class.new(parent_klass) do
+      extend Enumerize
+
+      def initialize(arguments)
+        super
+      end
+    end
+
+    params = { 'string_key' => 1, symbol_key: 2 }
+
+    object = klass.new(params)
+
+    expect(object.arguments).must_equal params
+  end
 end
