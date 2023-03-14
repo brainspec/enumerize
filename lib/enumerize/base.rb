@@ -49,7 +49,7 @@ module Enumerize
       end
     end
 
-    def initialize(*args, **kwargs)
+    def initialize(...)
       super
       _set_default_value_for_enumerized_attributes
     end
