@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'rspec/matchers'
 require 'enumerize/integrations/rspec/matcher'
 
 module Enumerize
