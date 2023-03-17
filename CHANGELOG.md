@@ -1,3 +1,10 @@
+## 2.6.1 (March 17, 2023)
+
+### bug fix
+
+* Require rspec/matchers in enumerize matcher to fix rspec extensions load issue.
+* Fix Ruby 2.7 issue with initializer without keyword args.
+
 ## 2.6.0 (March 7, 2023)
 
 ### enhancements
