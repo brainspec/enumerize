@@ -6,6 +6,8 @@ class PredicatesTest < MiniTest::Spec
   let(:kklass) do
     Class.new do
       extend Enumerize
+
+      def self.c?; end
     end
   end
 
@@ -61,5 +63,23 @@ class PredicatesTest < MiniTest::Spec
     kklass.enumerize(:foo, in: %w(a b), predicates: { except: :a })
     expect(object).wont_respond_to :a?
     expect(object).must_respond_to :b?
+  end
+
+  it 'warns if predicate method is already defined' do
+    assert_output(nil, /`c\?` is already defined/) do
+      kklass.enumerize(:bar, in: %w(a b c), predicates: true)
+    end
+  end
+
+  it 'does not warn if predicate has prefix and does not collide with defined method' do
+    assert_output(nil, '') do
+      kklass.enumerize(:bar, in: %w(a b c), predicates: { prefix: 'bar' })
+    end
+  end
+
+  it 'does not warn if predicate method is already defined but enumerize does not generate predicates' do
+    assert_output(nil, '') do
+      kklass.enumerize(:bar, in: %w(a b c))
+    end
   end
 end

@@ -153,9 +153,5 @@ class ValueTest < MiniTest::Spec
     it 'no output if undefined boolean method' do
       assert_silent() { Enumerize::Value.new(attr, 'test_value') }
     end
-
-    it 'error output if defined boolean method' do
-      assert_output(nil, /`empty\?` is defined/) { Enumerize::Value.new(attr, 'empty') }
-    end
   end
 end

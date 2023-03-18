@@ -69,7 +69,21 @@ module Enumerize
       end
 
       def build(klass)
+        warn_on_already_defined_methods
+
         klass.delegate(*names, to: @attr.name, prefix: @options[:prefix], allow_nil: true)
+      end
+
+      def warn_on_already_defined_methods
+        names.each do |name|
+          method_name = [@options[:prefix], name].compact.join('_')
+
+          if @attr.klass.respond_to?(method_name)
+            warn(
+              "Predicate method `#{name}` is already defined as #{@attr.klass.name}##{name}. Use enumerize's :prefix option to avoid it"
+            )
+          end
+        end
       end
     end
   end
