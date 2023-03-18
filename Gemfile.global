@@ -3,7 +3,10 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'rspec', :require => false
+
+if ENV['TEST_FRAMEWORK'] == 'rspec'
+  gem 'rspec', :require => false
+end
 
 gem 'pg', '~> 1.2.3', :platform => [:ruby, :mswin, :mingw]
 gem 'sequel'

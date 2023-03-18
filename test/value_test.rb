@@ -8,6 +8,9 @@ class ValueTest < MiniTest::Spec
   end
 
   class Attr < Struct.new(:values, :name, :i18n_scopes, :klass)
+    def value?(value)
+      values.include?(value)
+    end
   end
 
   let(:attr) { Attr.new([], "attribute_name", [], Model) }
