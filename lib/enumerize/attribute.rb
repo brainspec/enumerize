@@ -12,11 +12,7 @@ module Enumerize
 
       @klass  = klass
       @name   = name.to_sym
-
-      if options[:i18n_scope]
-        raise ArgumentError, ':i18n_scope option accepts only String or Array of strings' unless Array(options[:i18n_scope]).all? { |s| s.is_a?(String) }
-        @i18n_scope = options[:i18n_scope]
-      end
+      @i18n_scope = options[:i18n_scope]
 
       value_class = options.fetch(:value_class, Value)
       @values = Array(options[:in]).map { |v| value_class.new(self, *v).freeze }

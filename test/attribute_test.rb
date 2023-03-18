@@ -37,10 +37,6 @@ class AttributeTest < MiniTest::Spec
       build_attr nil, 'foo', :in => %w[a b], :i18n_scope => %w[bar buzz]
       expect(attr.i18n_scopes).must_equal %w[bar buzz]
     end
-
-    it 'accepts only string scopes' do
-      expect(proc { build_attr nil, 'foo', :in => %w[a b], :i18n_scope => [%w[bar buzz], "bar.buzz"] }).must_raise ArgumentError
-    end
   end
 
   describe 'options for select' do

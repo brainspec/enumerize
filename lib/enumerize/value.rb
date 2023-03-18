@@ -15,7 +15,11 @@ module Enumerize
 
       super(name.to_s)
 
-      @i18n_keys = @attr.i18n_scopes.map { |s| :"#{s}.#{self}" }
+      @i18n_keys = @attr.i18n_scopes.map do |s|
+        scope = Utils.call_if_callable(s, @value)
+
+        :"#{scope}.#{self}"
+      end
       @i18n_keys << :"enumerize.defaults.#{@attr.name}.#{self}"
       @i18n_keys << :"enumerize.#{@attr.name}.#{self}"
       @i18n_keys << ActiveSupport::Inflector.humanize(ActiveSupport::Inflector.underscore(self)) # humanize value if there are no translations
