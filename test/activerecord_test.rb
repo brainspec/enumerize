@@ -249,6 +249,15 @@ class ActiveRecordTest < MiniTest::Spec
     expect(user.interests).must_equal %w[music dancing]
   end
 
+  it 'has enumerized values in active record attributes after reload' do
+    User.delete_all
+    user = User.new
+    user.status = :blocked
+    user.save!
+    user.reload
+    expect(user.attributes["status"]).must_equal 'blocked'
+  end
+
   it 'validates inclusion when using write_attribute with string attribute' do
     user = User.new
     user.send(:write_attribute, 'role', 'wrong')
