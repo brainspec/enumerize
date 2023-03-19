@@ -161,6 +161,7 @@ class Person
 
   enumerize :status, in: %w[student employed retired], i18n_scope: "status"
   enumerize :roles, in: %w[user admin], i18n_scope: ["user.roles", "roles"]
+  enumerize :color, in: %w[green blue], i18n_scope: proc { |value| "color" }
 end
 
 # localization file

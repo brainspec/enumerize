@@ -87,6 +87,14 @@ class ValueTest < MiniTest::Spec
         expect(val.text).must_be :==, "Scope specific translation"
       end
     end
+
+    it 'allows to pass a proc as i18n_scopes param' do
+      attr.i18n_scopes = [proc { |v| "other.scope.#{v}" }]
+
+      store_translations(:en, :other => {:scope => {:"1" => {:test_value => "Scope specific translation"}}}) do
+        expect(val.text).must_be :==, "Scope specific translation"
+      end
+    end
   end
 
   describe 'boolean methods comparison' do
