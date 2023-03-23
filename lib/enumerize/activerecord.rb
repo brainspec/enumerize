@@ -52,11 +52,17 @@ module Enumerize
       # Support multiple enumerized attributes
       def becomes(klass)
         became = super
+        klass = self.class unless klass.respond_to?(:enumerized_attributes)
         klass.enumerized_attributes.each do |attr|
-          # Rescue when column associated to the enum does not exist.
+          # Rescue when column associated to the enum does not exist,
+          # or when destination model does not include Enumerize.
           begin
-            became.send("#{attr.name}=", send(attr.name))
+            if became.respond_to?(setter = "#{attr.name}=")
+              became.send(setter, send(attr.name))
+            end
           rescue ActiveModel::MissingAttributeError
+          rescue ActiveRecord::SerializationTypeMismatch
+            became.send(setter, send(attr.name).to_ary)
           end
         end
 
