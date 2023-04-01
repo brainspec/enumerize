@@ -82,7 +82,7 @@ module Enumerize
   end
 
   begin
-    require 'rspec'
+    require 'rspec/matchers'
   rescue LoadError
   else
     require 'enumerize/integrations/rspec'
