@@ -2,7 +2,7 @@
 
 module Enumerize
   class Attribute
-    attr_reader :klass, :name, :values, :default_value, :i18n_scope, :skip_validations_value
+    attr_reader :klass, :name, :values, :default_value, :i18n_scope, :skip_validations_value, :origin_options
 
     def initialize(klass, name, options={})
       raise ArgumentError, ':in option is required' unless options[:in]
@@ -13,6 +13,7 @@ module Enumerize
       @klass  = klass
       @name   = name.to_sym
       @i18n_scope = options[:i18n_scope]
+      @origin_options = options
 
       value_class = options.fetch(:value_class, Value)
       @values = Array(options[:in]).map { |v| value_class.new(self, *v).freeze }

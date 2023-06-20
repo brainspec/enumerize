@@ -39,6 +39,13 @@ class AttributeTest < MiniTest::Spec
     end
   end
 
+  describe 'origin options' do
+    it 'returns original options' do
+      build_attr nil, :foo, :in => [:a, :b], :scope => true
+      expect(attr.origin_options).must_equal({:is => [:a, :b], :scope => true})
+    end
+  end
+
   describe 'options for select' do
     it 'returns all options for select' do
       store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
