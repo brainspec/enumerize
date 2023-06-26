@@ -42,7 +42,7 @@ class AttributeTest < MiniTest::Spec
   describe 'origin options' do
     it 'returns original options' do
       build_attr nil, :foo, :in => [:a, :b], :scope => true
-      expect(attr.origin_options).must_equal({:is => [:a, :b], :scope => true})
+      expect(attr.origin_options).must_equal({:in => [:a, :b], :scope => true})
     end
   end
 
