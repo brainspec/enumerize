@@ -1,3 +1,19 @@
+## 2.7.0 (July 7, 2023)
+
+### bug fix
+
+* Warn about already defined predicate methods only when we generate predicate methods with `predicate: true` (by [@nashby](https://github.com/nashby))
+* Define `Type#cast` instead of deserialize to fix serialization issue. (by [@nashby](https://github.com/nashby))
+* Fix `Undefined method 'enumerize' for RSpec::ExampleGroups` (by [@softwaregravy](https://github.com/softwaregravy))
+  
+### enchancements
+
+* Add support for procs as `i18n_scope` option value. (by [@nashby](https://github.com/nashby))
+
+  ```ruby
+  enumerize :color, in: %w[green blue], i18n_scope: proc { |value| "color" }
+  ```
+
 ## 2.6.1 (March 17, 2023)
 
 ### bug fix
