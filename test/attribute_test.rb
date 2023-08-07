@@ -39,10 +39,10 @@ class AttributeTest < MiniTest::Spec
     end
   end
 
-  describe 'origin options' do
-    it 'returns original options' do
+  describe 'arguments' do
+    it 'returns arguments' do
       build_attr nil, :foo, :in => [:a, :b], :scope => true
-      expect(attr.origin_options).must_equal({:in => [:a, :b], :scope => true})
+      expect(attr.arguments).must_equal({:in => [:a, :b], :scope => true})
     end
   end
 
