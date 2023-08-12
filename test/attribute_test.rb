@@ -39,6 +39,13 @@ class AttributeTest < MiniTest::Spec
     end
   end
 
+  describe 'arguments' do
+    it 'returns arguments' do
+      build_attr nil, :foo, :in => [:a, :b], :scope => true
+      expect(attr.arguments).must_equal({:in => [:a, :b], :scope => true})
+    end
+  end
+
   describe 'options for select' do
     it 'returns all options for select' do
       store_translations(:en, :enumerize => {:foo => {:a => 'a text', :b => 'b text'}}) do
