@@ -73,3 +73,4 @@ jobs:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
         MYSQL_ROOT_PASSWORD: mysql
+        MT_COMPAT: 1
