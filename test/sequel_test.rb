@@ -5,7 +5,7 @@ require 'sequel'
 require 'logger'
 require 'jdbc/sqlite3' if RUBY_PLATFORM == 'java'
 
-class SequelTest < MiniTest::Spec
+class SequelTest < Minitest::Spec
   silence_warnings do
     DB = if RUBY_PLATFORM == 'java'
       Sequel.connect('jdbc:sqlite::memory:')

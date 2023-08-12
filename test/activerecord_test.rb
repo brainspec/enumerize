@@ -154,7 +154,7 @@ class SkipValidationsLambdaWithParamUser < ActiveRecord::Base
   include SkipValidationsLambdaWithParamEnum
 end
 
-class ActiveRecordTest < MiniTest::Spec
+class ActiveRecordTest < Minitest::Spec
   it 'sets nil if invalid value is passed' do
     user = User.new
     user.sex = :invalid

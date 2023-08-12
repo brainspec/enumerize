@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ModuleAttributesSpec < MiniTest::Spec
+class ModuleAttributesSpec < Minitest::Spec
   it 'inherits attribute from the module' do
     mod = Module.new do
       extend Enumerize

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class BaseTest < MiniTest::Spec
+class BaseTest < Minitest::Spec
   let(:kklass) do
     Class.new do
       extend Enumerize

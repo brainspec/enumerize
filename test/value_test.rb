@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'yaml'
 
-class ValueTest < MiniTest::Spec
+class ValueTest < Minitest::Spec
   class Model
   end
 

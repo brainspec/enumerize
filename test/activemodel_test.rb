@@ -4,7 +4,7 @@ require 'test_helper'
 
 if defined?(::ActiveModel::Attributes)
 
-class ActiveModelTest < MiniTest::Spec
+class ActiveModelTest < Minitest::Spec
   class ActiveModelUser
     include ActiveModel::Model
     include ActiveModel::Attributes

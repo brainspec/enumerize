@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'simple_form/version'
 
-class SimpleFormSpec < MiniTest::Spec
+class SimpleFormSpec < Minitest::Spec
   include ViewTestHelper
   include SimpleForm::ActionViewExtensions::FormHelper
 

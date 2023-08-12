@@ -5,7 +5,7 @@ require 'test_helper'
 Formtastic::FormBuilder.action_class_finder = Formtastic::ActionClassFinder
 Formtastic::FormBuilder.input_class_finder  = Formtastic::InputClassFinder
 
-class FormtasticSpec < MiniTest::Spec
+class FormtasticSpec < Minitest::Spec
   include ViewTestHelper
   include Formtastic::Helpers::FormHelper
 

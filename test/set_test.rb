@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'yaml'
 
-class SetTest < MiniTest::Spec
+class SetTest < Minitest::Spec
   let(:kklass) do
     Class.new do
       extend Enumerize

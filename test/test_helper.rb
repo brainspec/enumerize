@@ -56,6 +56,6 @@ module MiscHelpers
   end
 end
 
-class MiniTest::Spec
+class Minitest::Spec
   include MiscHelpers
 end
