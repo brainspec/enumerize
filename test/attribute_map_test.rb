@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Enumerize
-  class AttributeMapTest < MiniTest::Spec
+  class AttributeMapTest < Minitest::Spec
     subject { AttributeMap.new }
 
     def make_attr(name)
@@ -52,7 +52,7 @@ module Enumerize
 
     it 'updates dependants' do
       attr = make_attr(:a)
-      dependant = MiniTest::Mock.new
+      dependant = Minitest::Mock.new
       dependant.expect(:<<, nil, [attr])
       subject.add_dependant dependant
       subject << attr

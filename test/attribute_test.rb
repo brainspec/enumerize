@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class AttributeTest < MiniTest::Spec
+class AttributeTest < Minitest::Spec
   def attr
     @attr ||= nil
   end

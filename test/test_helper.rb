@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'minitest/spec'
 require 'active_support/core_ext/kernel/reporting'
 require 'active_model'
+require 'active_job'
 require 'rails'
 begin
   require 'mongoid'
@@ -56,6 +57,6 @@ module MiscHelpers
   end
 end
 
-class MiniTest::Spec
+class Minitest::Spec
   include MiscHelpers
 end

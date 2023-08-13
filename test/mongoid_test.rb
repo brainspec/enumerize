@@ -13,7 +13,7 @@ Mongoid.configure do |config|
   config.options = { use_utc: true, include_root_in_json: true }
 end
 
-class MongoidTest < MiniTest::Spec
+class MongoidTest < Minitest::Spec
   class MongoidUser
     include Mongoid::Document
     extend Enumerize

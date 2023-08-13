@@ -8,7 +8,7 @@ if ENV['TEST_FRAMEWORK'] == 'rspec'
   gem 'rspec', :require => false
 end
 
-gem 'pg', '~> 1.2.3', :platform => [:ruby, :mswin, :mingw]
+gem 'pg', '~> 1.5.3', :platform => [:ruby, :mswin, :mingw]
 gem 'sequel'
 gem 'simple_form'
 gem 'formtastic'

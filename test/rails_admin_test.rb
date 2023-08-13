@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class RailsAdminSpec < MiniTest::Spec
+class RailsAdminSpec < Minitest::Spec
   let(:kklass) do
     Class.new do
       extend Enumerize
