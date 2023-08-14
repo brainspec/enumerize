@@ -110,16 +110,14 @@ module Enumerize
 
       def serialize(value)
         v = @attr.find_value(value)
-        (v && v.value) || value
-      end
+        return value unless v
 
-      alias type_cast_for_database serialize
+        v.value
+      end
 
       def cast(value)
         @attr.find_value(value)
       end
-
-      alias type_cast_from_database cast
 
       def as_json(options = nil)
         {attr: @attr.name}.as_json(options)
