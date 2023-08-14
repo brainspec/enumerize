@@ -60,6 +60,9 @@ silence_warnings do
 end
 
 ActiveRecord::Base.connection.instance_eval do
+  ActiveRecord::Migration.drop_table :users, if_exists: true
+  ActiveRecord::Migration.drop_table :documents, if_exists: true
+
   create_table :users do |t|
     t.string :sex
     t.string :role
@@ -71,6 +74,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.integer :skill
     t.string :account_type, :default => :basic
     t.string :foo
+    t.boolean :newsletter_subscribed, default: true
   end
 
   create_table :documents do |t|
@@ -117,6 +121,7 @@ class User < ActiveRecord::Base
   enumerize :skill, :in => { noob: 0, casual: 1, pro: 2 }, scope: :shallow
 
   enumerize :account_type, :in => [:basic, :premium]
+  enumerize :newsletter_subscribed, in: { subscribed: true, unsubscribed: false }
 
   # There is no column for relationship enumeration for testing purposes: model
   # should not be broken even if the associated column does not exist yet.
@@ -653,6 +658,17 @@ class ActiveRecordTest < Minitest::Spec
 
     expect(sql).must_include 'LIKE \'%foo%\''
   end
+
+  it 'supports boolean column as enumerized field' do
+    User.delete_all
+
+    User.create!(newsletter_subscribed: true)
+    expect(User.exists?(newsletter_subscribed: true)).must_equal true
+
+    User.create!(newsletter_subscribed: false)
+    expect(User.exists?(newsletter_subscribed: false)).must_equal true
+  end
+
 
   if Rails::VERSION::MAJOR >= 6
     it 'supports AR#insert_all' do
