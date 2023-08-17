@@ -20,6 +20,15 @@ module Enumerize
 
       @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
       @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
+      # boolean values are represented as 0 and 1 in the database
+      @values.each do |v|
+        case v.value
+        when true
+          @value_hash['1'] = v
+        when false
+          @value_hash['0'] = v
+        end
+      end
 
       if options[:default]
         @default_value = find_default_value(options[:default])

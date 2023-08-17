@@ -664,9 +664,11 @@ class ActiveRecordTest < Minitest::Spec
 
     User.create!(newsletter_subscribed: true)
     expect(User.exists?(newsletter_subscribed: true)).must_equal true
+    expect(User.where(newsletter_subscribed: true).take.newsletter_subscribed).must_equal 'subscribed'
 
     User.create!(newsletter_subscribed: false)
     expect(User.exists?(newsletter_subscribed: false)).must_equal true
+    expect(User.where(newsletter_subscribed: false).take.newsletter_subscribed).must_equal 'unsubscribed'
   end
 
 
