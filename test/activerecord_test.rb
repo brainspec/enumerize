@@ -3,7 +3,6 @@
 require 'test_helper'
 require 'active_record'
 require 'logger'
-
 db = (ENV['DB'] || 'sqlite3').to_sym
 
 silence_warnings do
@@ -663,12 +662,11 @@ class ActiveRecordTest < Minitest::Spec
     User.delete_all
 
     User.create!(newsletter_subscribed: true)
-    expect(User.exists?(newsletter_subscribed: true)).must_equal true
+    expect(User.find_by(newsletter_subscribed: true).newsletter_subscribed).must_equal 'subscribed'
 
     User.create!(newsletter_subscribed: false)
-    expect(User.exists?(newsletter_subscribed: false)).must_equal true
+    expect(User.find_by(newsletter_subscribed: false).newsletter_subscribed).must_equal 'unsubscribed'
   end
-
 
   if Rails::VERSION::MAJOR >= 6
     it 'supports AR#insert_all' do
