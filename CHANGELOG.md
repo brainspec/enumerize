@@ -1,3 +1,15 @@
+## master
+
+### bug fix
+
+* Fix a bug where the value of a false boolean attribute was not properly serialized because it was
+  treated as ruby's false in condition and that condition was never met. (by [@nashby](https://github.com/nashby))
+
+### enchancements
+
+* Support only Ruby 3+ and Rails 6.1+. (by [@nashby](https://github.com/nashby))
+* Allows the original options specified in enumerize to be retrieved from Enumerize::Attribute. (by [@okoshi-f](https://github.com/okoshi-f))
+
 ## 2.7.0 (July 7, 2023)
 
 ### bug fix
