@@ -21,7 +21,13 @@ module Enumerize
           require 'enumerize/hooks/uniqueness'
 
           unless options[:multiple]
-            if ::ActiveRecord.version >= ::Gem::Version.new("7.0.0.alpha")
+            if ::ActiveRecord.version >= ::Gem::Version.new("7.2.0.alpha")
+              attribute(name)
+
+              decorate_attributes([name]) do |_, subtype|
+                Type.new(enumerized_attributes[name], subtype)
+              end
+            elsif ::ActiveRecord.version >= ::Gem::Version.new("7.0.0.alpha")
               attribute(name) do |subtype|
                 Type.new(enumerized_attributes[name], subtype)
               end
