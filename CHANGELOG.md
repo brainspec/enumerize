@@ -4,6 +4,7 @@
 
 * Fix a bug where the value of a false boolean attribute was not properly serialized because it was
   treated as ruby's false in condition and that condition was never met. (by [@nashby](https://github.com/nashby))
+* Make `Enumerize::Value#as_json` return a string, not an instance of `Enumerize::Value` (by [@nashby](https://github.com/nashby))
 
 ### enchancements
 
@@ -17,7 +18,7 @@
 * Warn about already defined predicate methods only when we generate predicate methods with `predicate: true` (by [@nashby](https://github.com/nashby))
 * Define `Type#cast` instead of deserialize to fix serialization issue. (by [@nashby](https://github.com/nashby))
 * Fix `Undefined method 'enumerize' for RSpec::ExampleGroups` (by [@softwaregravy](https://github.com/softwaregravy))
-  
+
 ### enchancements
 
 * Add support for procs as `i18n_scope` option value. (by [@nashby](https://github.com/nashby))

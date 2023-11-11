@@ -162,4 +162,11 @@ class ValueTest < Minitest::Spec
       assert_silent() { Enumerize::Value.new(attr, 'test_value') }
     end
   end
+
+  describe '#as_json' do
+    it 'returns String object, not Value object' do
+      expect(val.as_json.class).must_equal String
+      expect(val.as_json).must_equal 'test_value'
+    end
+  end
 end

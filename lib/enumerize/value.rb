@@ -38,6 +38,10 @@ module Enumerize
       coder.represent_object(self.class.superclass, @value)
     end
 
+    def as_json(*)
+      to_s
+    end
+
     private
 
     def predicate_call(value)
