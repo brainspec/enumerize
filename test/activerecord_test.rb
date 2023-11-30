@@ -668,6 +668,18 @@ class ActiveRecordTest < Minitest::Spec
     expect(User.find_by(newsletter_subscribed: false).newsletter_subscribed).must_equal 'unsubscribed'
   end
 
+  it 'has same value with original object when created by #dup' do
+    user1 = User.new(skill: :casual)
+    user2 = user1.dup
+    expect(user2.skill).must_equal 'casual'
+  end
+
+  it 'has same value with original object when created by #clone' do
+    user1 = User.new(skill: :casual)
+    user2 = user1.clone
+    expect(user2.skill).must_equal 'casual'
+  end
+
   if Rails::VERSION::MAJOR >= 6
     it 'supports AR#insert_all' do
       User.delete_all
