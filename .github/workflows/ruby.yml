@@ -2,7 +2,7 @@ name: Ruby
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, cast ]
   pull_request:
     branches: [ master ]
 
