@@ -122,7 +122,11 @@ module Enumerize
       end
 
       def cast(value)
-        @attr.find_value(@subtype.cast(value))
+        if value.is_a?(::Enumerize::Value)
+          value
+        else
+          @attr.find_value(@subtype.cast(value))
+        end
       end
 
       def as_json(options = nil)
