@@ -80,7 +80,9 @@ module Enumerize
             end
 
             if store_attr.present?
-              reloaded.send("#{attr.name}=", reloaded.send(store_attr).with_indifferent_access[attr.name])
+              unless reloaded.send(store_attr).nil?
+                reloaded.send("#{attr.name}=", reloaded.send(store_attr).with_indifferent_access[attr.name])
+              end
             else
               reloaded.send("#{attr.name}=", reloaded[attr.name])
             end
