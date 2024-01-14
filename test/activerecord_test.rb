@@ -74,6 +74,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :account_type, :default => :basic
     t.string :foo
     t.boolean :newsletter_subscribed, default: true
+    t.json :store_accessor_store_with_no_defaults
   end
 
   create_table :documents do |t|
@@ -122,6 +123,9 @@ class User < ActiveRecord::Base
   enumerize :account_type, :in => [:basic, :premium]
   enumerize :newsletter_subscribed, in: { subscribed: true, unsubscribed: false }
 
+  store_accessor :store_accessor_store_with_no_defaults, [:origin]
+  enumerize :origin, in: [:browser, :app]
+
   # There is no column for relationship enumeration for testing purposes: model
   # should not be broken even if the associated column does not exist yet.
   enumerize :relationship, :in => [:single, :married]
@@ -143,7 +147,7 @@ class SkipValidationsUser < ActiveRecord::Base
   include SkipValidationsEnum
 end
 
-class  DoNotSkipValidationsUser < ActiveRecord::Base
+class DoNotSkipValidationsUser < ActiveRecord::Base
   self.table_name = "users"
   include DoNotSkipValidationsEnum
 end
@@ -196,6 +200,15 @@ class ActiveRecordTest < Minitest::Spec
     user.save!
     user.reload
     expect(user.language).must_equal 'en'
+  end
+
+  it 'returns nil if store column is nil, uses .store_accessor, and has no default values for store\'s attributes' do
+    User.delete_all
+    user = User.create!
+    user.update_column(:store_accessor_store_with_no_defaults, nil)
+    user.reload
+    expect(user.store_accessor_store_with_no_defaults).must_be_nil
+    expect(user.origin).must_be_nil
   end
 
   it 'has default value' do
