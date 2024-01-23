@@ -37,6 +37,7 @@ jobs:
         gemfile:
           - Gemfile.rails61
           - Gemfile.rails70
+          - Gemfile.rails71
           - Gemfile.railsmaster
           - Gemfile.mongo_mapper
         db:
