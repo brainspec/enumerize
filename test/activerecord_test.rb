@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
   enumerize :sex, :in => [:male, :female], scope: :shallow
   enumerize :language, :in => [:en, :jp]
 
-  serialize :interests, Array
+  serialize :interests, type: Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
 
   enumerize :status, :in => { active: 1, blocked: 2 }, scope: true
