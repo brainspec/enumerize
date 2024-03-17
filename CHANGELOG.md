@@ -6,6 +6,8 @@
   treated as ruby's false in condition and that condition was never met. (by [@nashby](https://github.com/nashby))
 * Make `Enumerize::Value#as_json` return a string, not an instance of `Enumerize::Value` (by [@nashby](https://github.com/nashby))
 * Fix attribute type casting when Rails master is used (by [@nashby](https://github.com/nashby))
+* Fix bug with `ActiveRecord#reload` when enumerized attribute is an instance of `ActiveRecord::Store` and it's nil. (by [@4ndypanda](https://github.com/4ndypanda))
+* Fix attribute type casting when `ActiveRecord#dup` is used (by [@mihyaeru21](https://github.com/mihyaeru21))
 
 ### enchancements
 
