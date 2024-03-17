@@ -1,4 +1,4 @@
-## master
+## 2.8.0 (March 17, 2024)
 
 ### bug fix
 
