@@ -58,7 +58,7 @@ jobs:
       DB: "${{ matrix.db }}"
       TEST_FRAMEWORK: "${{ matrix.test }}"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
