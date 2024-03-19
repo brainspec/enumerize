@@ -693,6 +693,15 @@ class ActiveRecordTest < Minitest::Spec
     expect(user2.skill).must_equal 'casual'
   end
 
+  it 'works when child class calls enumerize second time' do
+    class AdminUser < User
+      enumerize :account_type, in: [:basic, :premium, :pro]
+    end
+
+    admin = AdminUser.create(account_type: 'pro')
+    expect(admin.account_type).must_equal 'pro'
+  end
+
   if Rails::VERSION::MAJOR >= 6
     it 'supports AR#insert_all' do
       User.delete_all

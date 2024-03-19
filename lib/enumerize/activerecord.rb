@@ -124,6 +124,8 @@ module Enumerize
       end
 
       def cast(value)
+        return value if @subtype.is_a?(Type)
+
         if value.is_a?(::Enumerize::Value)
           value
         else
