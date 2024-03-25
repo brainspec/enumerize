@@ -1,3 +1,9 @@
+## 2.8.1 (March 25, 2024)
+
+### bug fix
+
+* Support enumerization of the same attribute in child classes. (by [@nashby](https://github.com/nashby))
+
 ## 2.8.0 (March 17, 2024)
 
 ### bug fix
