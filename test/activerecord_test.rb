@@ -104,7 +104,11 @@ module RoleEnum
   enumerize :lambda_role, :in => [:user, :admin], :default => lambda { :admin }
 end
 
-class User < ActiveRecord::Base
+class BaseUser < ActiveRecord::Base
+  self.table_name = 'users'
+end
+
+class User < BaseUser
   extend Enumerize
   include RoleEnum
 
@@ -505,6 +509,18 @@ class ActiveRecordTest < Minitest::Spec
     uniq_user.valid?
 
     expect(uniq_user.errors).must_be_empty
+  end
+
+  it 'allows an object to #becomes a non-Enumerize model' do
+    User.delete_all
+    user = User.new
+    user.sex = :male
+    user.save!
+
+    base_user = User.find(user.id).becomes(BaseUser)
+    base_user.valid?
+
+    expect(base_user.errors).must_be_empty
   end
 
   it 'supports multiple attributes in #becomes' do
