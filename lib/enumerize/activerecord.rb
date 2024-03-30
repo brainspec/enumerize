@@ -58,6 +58,8 @@ module Enumerize
       # Support multiple enumerized attributes
       def becomes(klass)
         became = super
+        return became unless became.respond_to?(:enumerized_attributes)
+
         klass.enumerized_attributes.each do |attr|
           # Rescue when column associated to the enum does not exist.
           begin

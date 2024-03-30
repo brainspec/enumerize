@@ -521,6 +521,25 @@ class ActiveRecordTest < Minitest::Spec
     expect(user.interests).must_equal uniq_user.interests
   end
 
+  it 'allows an object to #becomes a non-Enumerize model' do
+    class NonEnumerizeUser < ActiveRecord::Base
+      self.table_name = "users"
+    end
+
+    class EnumerizeUser < NonEnumerizeUser
+      extend Enumerize
+
+      enumerize :role, in: [:admin, :ghost]
+    end
+    EnumerizeUser.delete_all
+
+    user = EnumerizeUser.create(role: :admin)
+    expect(user.role).must_equal 'admin'
+
+    non_enumerize_user = user.becomes(NonEnumerizeUser)
+    expect(non_enumerize_user).must_be :valid?
+  end
+
   it "doesn't update record" do
     Document.delete_all
 
