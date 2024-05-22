@@ -108,10 +108,11 @@ class User < ActiveRecord::Base
   extend Enumerize
   include RoleEnum
 
-  store :settings, accessors: [:language]
+  store :settings, accessors: [:language, 'country_code']
 
   enumerize :sex, :in => [:male, :female], scope: :shallow
   enumerize :language, :in => [:en, :jp]
+  enumerize :country_code, :in => [:us, :ca]
 
   serialize :interests, type: Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
@@ -209,6 +210,15 @@ class ActiveRecordTest < Minitest::Spec
     user.reload
     expect(user.store_accessor_store_with_no_defaults).must_be_nil
     expect(user.origin).must_be_nil
+  end
+
+  it 'saves stored attribute value for store accessor with string key' do
+    User.delete_all
+    user = User.new
+    user.country_code = :us
+    user.save!
+    user.reload
+    expect(user.country_code).must_equal 'us'
   end
 
   it 'has default value' do
