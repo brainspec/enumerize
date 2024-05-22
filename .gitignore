@@ -3,6 +3,7 @@
 .bundle
 .config
 .ruby-version
+.tool-versions
 .yardoc
 .idea/
 enumerize.iml

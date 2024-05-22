@@ -5,4 +5,4 @@ gem 'rails',    github: 'rails/rails', branch: '7-1-stable', require: false
 
 gem 'mongoid',  github: 'mongodb/mongoid'
 
-gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]
+gem 'sqlite3', platforms: [:ruby, :mswin, :mingw]
