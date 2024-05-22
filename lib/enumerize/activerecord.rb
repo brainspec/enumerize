@@ -78,7 +78,7 @@ module Enumerize
           begin
             # Checks first if the enumerized attribute is in ActiveRecord::Store
             store_attr, _ = reloaded.class.stored_attributes.detect do |_store_attr, keys|
-              keys.map(&:to_sym).include?(attr.name.to_sym)
+              keys.map(&:to_sym).include?(attr.name)
             end
 
             if store_attr.present?
