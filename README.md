@@ -306,7 +306,7 @@ It's also possible to store enumerized attribute value using custom values (e.g.
 class User < ActiveRecord::Base
   extend Enumerize
 
-  enumerize :role, in: {:user => 1, :admin => 2}
+  enumerize :role, in: { user: 1, admin: 2 }
 end
 
 user = User.new
@@ -325,8 +325,8 @@ User.role.find_value(:admin).value #=> 2
 ```ruby
 class User < ActiveRecord::Base
   extend Enumerize
-  enumerize :role, :in => [:user, :admin], scope: true
-  enumerize :status, :in => { student: 1, employed: 2, retired: 3 }, scope: :having_status
+  enumerize :role, in: [:user, :admin], scope: true
+  enumerize :status, in: { student: 1, employed: 2, retired: 3 }, scope: :having_status
 end
 
 User.with_role(:admin)
@@ -346,8 +346,8 @@ Adds named scopes to the class directly.
 ```ruby
 class User < ActiveRecord::Base
   extend Enumerize
-  enumerize :status, :in => [:student, :employed, :retired], scope: :shallow
-  enumerize :role, :in => { user: 1, admin: 2 }, scope: :shallow
+  enumerize :status, in: [:student, :employed, :retired], scope: :shallow
+  enumerize :role, in: { user: 1, admin: 2 }, scope: :shallow
 end
 
 User.student
@@ -422,7 +422,7 @@ and if you want it as radio buttons:
 
 ```erb
 <%= simple_form_for @user do |f| %>
-  <%= f.input :status, :as => :radio_buttons %>
+  <%= f.input :status, as: :radio_buttons %>
 <% end %>
 ```
 
@@ -442,7 +442,7 @@ and if you want it as radio buttons:
 
 ```erb
 <%= semantic_form_for @user do |f| %>
-  <%= f.input :status, :as => :radio %>
+  <%= f.input :status, as: :radio %>
 <% end %>
 ```
 
