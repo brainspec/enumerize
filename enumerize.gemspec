@@ -15,7 +15,13 @@ Gem::Specification.new do |gem|
   gem.name          = "enumerize"
   gem.require_paths = ["lib"]
   gem.version       = Enumerize::VERSION
-
+  gem.metadata      = {
+    "homepage_uri"      => "https://github.com/brainspec/enumerize",
+    "changelog_uri"     => "https://github.com/brainspec/enumerize/blob/main/CHANGELOG.md",
+    "source_code_uri"   => "https://github.com/brainspec/enumerize",
+    "bug_tracker_uri"   => "https://github.com/brainspec/enumerize/issues",
+    "wiki_uri"          => "https://github.com/brainspec/enumerize/wiki"
+  }
   gem.required_ruby_version = '>= 2.7'
 
   gem.add_dependency('activesupport', '>= 3.2')
