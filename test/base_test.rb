@@ -32,7 +32,6 @@ class BaseTest < Minitest::Spec
       object.foo = :a
       expect(object.foo.text).must_equal 'a text'
       expect(object.foo_text).must_equal 'a text'
-      expect(object.foo_text).must_equal 'a text'
     end
   end
 
