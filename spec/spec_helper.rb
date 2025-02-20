@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'rails'
 require 'enumerize'
 require 'rspec/matchers/fail_matchers'
