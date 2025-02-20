@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'minitest/autorun'
 require 'minitest/spec'
 require 'active_support/core_ext/kernel/reporting'
