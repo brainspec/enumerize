@@ -731,6 +731,22 @@ class ActiveRecordTest < Minitest::Spec
     expect(admin.account_type).must_equal 'pro'
   end
 
+  it 'has correct value in _was attribute' do
+    user = User.create(status: 'active')
+    user.status = 'blocked'
+    expect(user.status_was).must_equal 'active'
+  end
+
+  it 'has correct value in _was attribute in child class' do
+    class AdminUser < User
+      enumerize :status, :in => { active: 1, blocked: 2, inactive: 3 }, scope: true
+    end
+
+    admin = AdminUser.create(status: 'active')
+    admin.status = 'blocked'
+    expect(admin.status_was).must_equal 'active'
+  end
+
   if Rails::VERSION::MAJOR >= 6
     it 'supports AR#insert_all' do
       User.delete_all
