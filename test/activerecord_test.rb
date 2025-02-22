@@ -731,29 +731,27 @@ class ActiveRecordTest < Minitest::Spec
     expect(admin.account_type).must_equal 'pro'
   end
 
-  if Rails::VERSION::MAJOR >= 6
-    it 'supports AR#insert_all' do
-      User.delete_all
+  it 'supports AR#insert_all' do
+    User.delete_all
 
-      User.insert_all([{ sex: :male }])
-      User.insert_all([{ status: :active }])
-      User.insert_all([{ interests: [:music, :sports] }])
+    User.insert_all([{ sex: :male }])
+    User.insert_all([{ status: :active }])
+    User.insert_all([{ interests: [:music, :sports] }])
 
-      expect(User.exists?(sex: :male)).must_equal true
-      expect(User.exists?(status: :active)).must_equal true
-      expect(User.exists?(interests: [:music, :sports])).must_equal true
-    end
+    expect(User.exists?(sex: :male)).must_equal true
+    expect(User.exists?(status: :active)).must_equal true
+    expect(User.exists?(interests: [:music, :sports])).must_equal true
+  end
 
-    it 'supports AR#upsert_all' do
-      User.delete_all
+  it 'supports AR#upsert_all' do
+    User.delete_all
 
-      User.upsert_all([{ sex: :male }])
-      User.upsert_all([{ status: :active }])
-      User.upsert_all([{ interests: [:music, :sports] }])
+    User.upsert_all([{ sex: :male }])
+    User.upsert_all([{ status: :active }])
+    User.upsert_all([{ interests: [:music, :sports] }])
 
-      expect(User.exists?(sex: :male)).must_equal true
-      expect(User.exists?(status: :active)).must_equal true
-      expect(User.exists?(interests: [:music, :sports])).must_equal true
-    end
+    expect(User.exists?(sex: :male)).must_equal true
+    expect(User.exists?(status: :active)).must_equal true
+    expect(User.exists?(interests: [:music, :sports])).must_equal true
   end
 end

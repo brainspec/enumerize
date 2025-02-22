@@ -1,3 +1,11 @@
+## master
+
+### bug fix
+
+### enchancements
+
+* Support only Ruby 3.1+ and Rails 7.0+. (by [@nashby](https://github.com/nashby))
+
 ## 2.8.1 (March 25, 2024)
 
 ### bug fix

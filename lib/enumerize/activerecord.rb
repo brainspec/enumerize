@@ -31,10 +31,6 @@ module Enumerize
               attribute(name) do |subtype|
                 Type.new(enumerized_attributes[name], subtype)
               end
-            elsif ::ActiveRecord.version >= ::Gem::Version.new("6.1.0.alpha")
-              decorate_attribute_type(name.to_s) do |subtype|
-                Type.new(enumerized_attributes[name], subtype)
-              end
             else
               decorate_attribute_type(name, :enumerize) do |subtype|
                 Type.new(enumerized_attributes[name], subtype)

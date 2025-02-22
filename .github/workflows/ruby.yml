@@ -32,12 +32,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ['3.0', '3.1', '3.2', '3.3']
+        ruby-version: ['3.1', '3.2', '3.3']
         test: ['minitest', 'rspec']
         gemfile:
-          - Gemfile.rails61
           - Gemfile.rails70
           - Gemfile.rails71
+          - Gemfile.rails80
           - Gemfile.railsmaster
           - Gemfile.mongo_mapper
         db:
@@ -47,11 +47,9 @@ jobs:
         exclude:
           - gemfile: Gemfile.mongo_mapper
             db: postgresql
-          - ruby-version: '3.0'
-            gemfile: Gemfile.mongo_mapper
           - ruby-version: '3.1'
             gemfile: Gemfile.mongo_mapper
-          - ruby-version: '3.0'
+          - ruby-version: '3.1'
             gemfile: Gemfile.railsmaster
     env:
       BUNDLE_GEMFILE: "${{ matrix.gemfile }}"

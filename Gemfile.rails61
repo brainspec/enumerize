@@ -1,9 +1,0 @@
-eval_gemfile('Gemfile.global')
-
-gem 'minitest', '~> 5.8'
-gem 'rails',    github: 'rails/rails', branch: '6-1-stable', require: false
-gem 'mongoid',  github: 'mongodb/mongoid'
-
-# This Rails version has a pessimistic version constraint on sqlite3:
-# https://github.com/rails/rails/blob/6-1-stable/Gemfile#L143
-gem 'sqlite3', '~> 1.4', platforms: [:ruby, :mswin, :mingw]
