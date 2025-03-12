@@ -759,7 +759,6 @@ class ActiveRecordTest < Minitest::Spec
     expect(User.exists?(interests: [:music, :sports])).must_equal true
   end
 
-  # Commenting out `normalizes :locale, ...` will make these tests green
   it 'supports AR#normalizes class methods' do
     User.delete_all
     User.create!(locale: 'de')
