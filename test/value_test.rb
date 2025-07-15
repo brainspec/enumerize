@@ -95,6 +95,37 @@ class ValueTest < Minitest::Spec
         expect(val.text).must_be :==, "Scope specific translation"
       end
     end
+
+    context 'allows to pass a proc as i18n_scopes param with dynamic scope' do
+      let(:translations) do
+        [:en, :other => {:scope => {:"foo" => {:test_value => "Foo translation"}, :"bar" => {:test_value => "Bar translation"}}}]
+      end
+
+      before do
+        @value = nil
+        attr.i18n_scopes = [proc { "other.scope.#{@value}" }, :"other.scope.foo"]
+      end
+
+      it 'returns default with nil value' do
+        store_translations(translations) do
+          expect(val.text).must_be :==, "Foo translation"
+        end
+      end
+
+      it 'returns foo translation with foo value' do
+        store_translations(translations) do
+          @value = "foo"
+          expect(val.text).must_be :==, "Foo translation"
+        end
+      end
+
+      it 'returns bar translation with bar value' do
+        store_translations(translations) do
+          @value = "bar"
+          expect(val.text).must_be :==, "Bar translation"
+        end
+      end
+    end
   end
 
   describe 'boolean methods comparison' do

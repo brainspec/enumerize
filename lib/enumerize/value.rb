@@ -15,19 +15,22 @@ module Enumerize
 
       super(name.to_s)
 
-      @i18n_keys = @attr.i18n_scopes.map do |s|
+      @default_i18n_keys = []
+      @default_i18n_keys << :"enumerize.defaults.#{@attr.name}.#{self}"
+      @default_i18n_keys << :"enumerize.#{@attr.name}.#{self}"
+      @default_i18n_keys << ActiveSupport::Inflector.humanize(ActiveSupport::Inflector.underscore(self)) # humanize value if there are no translations
+    end
+
+    def i18n_keys
+      @attr.i18n_scopes.map do |s|
         scope = Utils.call_if_callable(s, @value)
 
         :"#{scope}.#{self}"
-      end
-      @i18n_keys << :"enumerize.defaults.#{@attr.name}.#{self}"
-      @i18n_keys << :"enumerize.#{@attr.name}.#{self}"
-      @i18n_keys << ActiveSupport::Inflector.humanize(ActiveSupport::Inflector.underscore(self)) # humanize value if there are no translations
-      @i18n_keys
+      end.push(*@default_i18n_keys)
     end
 
     def text
-      I18n.t(@i18n_keys[0], :default => @i18n_keys[1..-1]) if @i18n_keys
+      I18n.t(i18n_keys[0], :default => i18n_keys[1..-1])
     end
 
     def ==(other)
