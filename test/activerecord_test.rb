@@ -754,4 +754,106 @@ class ActiveRecordTest < Minitest::Spec
     expect(User.exists?(status: :active)).must_equal true
     expect(User.exists?(interests: [:music, :sports])).must_equal true
   end
+
+  it 'Type#cast returns Enumerize::Value for valid symbols' do
+    type = User.type_for_attribute('status')
+    result = type.cast(:active)
+
+    expect(result).must_be_instance_of Enumerize::Value
+    expect(result.to_s).must_equal 'active'
+    expect(result.value).must_equal 1
+  end
+
+  it 'Type#cast returns Enumerize::Value for integers' do
+    type = User.type_for_attribute('status')
+    result = type.cast(1)
+
+    expect(result).must_be_instance_of Enumerize::Value
+    expect(result.to_s).must_equal 'active'
+    expect(result.value).must_equal 1
+  end
+
+  it 'Type#cast returns Enumerize::Value for valid string keys' do
+    type = User.type_for_attribute('status')
+    result = type.cast('active')
+
+    expect(result).must_be_instance_of Enumerize::Value
+    expect(result.to_s).must_equal 'active'
+    expect(result.value).must_equal 1
+  end
+
+  it 'Type#cast returns nil for invalid values' do
+    type = User.type_for_attribute('status')
+    result = type.cast(:invalid)
+
+    expect(result).must_be_nil
+  end
+
+  it 'Type#cast preserves existing Enumerize::Value objects' do
+    type = User.type_for_attribute('status')
+    original_value = User.enumerized_attributes[:status].find_value(:active)
+    result = type.cast(original_value)
+
+    expect(result).must_equal original_value
+  end
+
+  it 'insert_all with mixed value types works correctly' do
+    User.delete_all
+
+    User.insert_all([
+      { sex: :male, status: :active },
+      { sex: 'female', status: 2 },
+      { sex: :male, status: 'blocked' }
+    ])
+
+    users = User.all.to_a
+    expect(users.size).must_equal 3
+    
+    expect(users[0].sex).must_equal 'male'
+    expect(users[0].status).must_equal 'active'
+    
+    expect(users[1].sex).must_equal 'female'
+    expect(users[1].status).must_equal 'blocked'
+    
+    expect(users[2].sex).must_equal 'male'
+    expect(users[2].status).must_equal 'blocked'
+  end
+
+  it 'insert_all handles invalid enum values gracefully' do
+    User.delete_all
+
+    User.insert_all([
+      { sex: :invalid_sex, status: 999 }  # Use invalid integer for status
+    ])
+
+    user = User.first
+    expect(user.sex).must_be_nil
+    expect(user.status).must_be_nil
+  end
+
+  it 'upsert_all with different value formats works correctly' do
+    User.delete_all
+
+    User.upsert_all([
+      { id: 1, sex: :male, status: 1 },
+      { id: 2, sex: 'female', status: :blocked }
+    ])
+
+    User.upsert_all([
+      { id: 1, sex: 'male', status: :active },
+      { id: 3, sex: :female, status: 2 }
+    ])
+
+    users = User.order(:id).to_a
+    expect(users.size).must_equal 3
+    
+    expect(users[0].sex).must_equal 'male'
+    expect(users[0].status).must_equal 'active'
+    
+    expect(users[1].sex).must_equal 'female'
+    expect(users[1].status).must_equal 'blocked'
+    
+    expect(users[2].sex).must_equal 'female'
+    expect(users[2].status).must_equal 'blocked'
+  end
 end
