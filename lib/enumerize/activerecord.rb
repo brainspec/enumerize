@@ -123,12 +123,14 @@ module Enumerize
 
       def cast(value)
         return value if @subtype.is_a?(Type)
+        return value if value.is_a?(::Enumerize::Value)
 
-        if value.is_a?(::Enumerize::Value)
-          value
-        else
-          @attr.find_value(@subtype.cast(value))
-        end
+        # First try to find the enumerize value directly
+        enumerize_value = @attr.find_value(value)
+        return enumerize_value if enumerize_value
+
+        # If not found, delegate to subtype then try to find value
+        @attr.find_value(@subtype.cast(value))
       end
 
       def as_json(options = nil)
