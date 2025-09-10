@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       mongodb:
         image: mongo:latest
@@ -49,6 +49,8 @@ jobs:
             db: postgresql
           - ruby-version: '3.1'
             gemfile: Gemfile.mongo_mapper
+          - ruby-version: '3.1'
+            gemfile: Gemfile.rails80
           - ruby-version: '3.1'
             gemfile: Gemfile.railsmaster
     env:
