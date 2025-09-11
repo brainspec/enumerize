@@ -107,14 +107,14 @@ RSpec.describe Enumerize::Integrations::RSpec::Matcher do
       end
 
       it 'rejects wrong keys' do
-        message = 'Expected Model to define enumerize :sex in: "{:boy=>0, :girl=>1}"'
+        message = "Expected Model to define enumerize :sex in: \"#{{boy: 0, girl: 1}.inspect}\""
         expect do
           expect(subject).to enumerize(:sex).in(boy: 0, girl: 1)
         end.to fail_with(message)
       end
 
       it 'rejects wrong values' do
-        message = 'Expected Model to define enumerize :sex in: "{:male=>2, :female=>3}"'
+        message = "Expected Model to define enumerize :sex in: \"#{{male: 2, female: 3}.inspect}\""
         expect do
         expect(subject).to enumerize(:sex).in(male: 2, female: 3)
         end.to fail_with(message)
