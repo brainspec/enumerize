@@ -90,6 +90,7 @@ module Enumerize
 
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+        alias_method "#{name}", "#{name}" if method_defined?("#{name}")
         def #{name}
           if defined?(super)
             self.class.enumerized_attributes[:#{name}].find_value(super)
@@ -104,6 +105,7 @@ module Enumerize
           end
         end
 
+        alias_method "#{name}=", "#{name}=" if method_defined?("#{name}=")
         def #{name}=(new_value)
           allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(new_value)
           allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
@@ -121,10 +123,12 @@ module Enumerize
           allowed_value_or_nil
         end
 
+        alias_method "#{name}_text", "#{name}_text" if method_defined?("#{name}_text")
         def #{name}_text
           self.#{name} && self.#{name}.text
         end
 
+        alias_method "#{name}_value", "#{name}_value" if method_defined?("#{name}_value")
         def #{name}_value
           self.#{name} && self.#{name}.value
         end
