@@ -88,6 +88,15 @@ module Enumerize
       @value_hash.include?(method.to_s) || super
     end
 
+    # Defines getter and setter methods for the enumerated attribute.
+    #
+    # The setter method behavior:
+    # - Valid enum values: Stores the underlying value
+    # - Empty strings: Converts to nil (historically consistent behavior, now explicitly maintained)
+    # - Invalid values: Passes through to allow Rails processing (e.g., normalizes, type casting)
+    #
+    # Note: Empty string to nil conversion was implicit in previous versions but is now
+    # explicitly implemented to ensure consistent behavior across all ORMs.
     def define_methods!(mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{name}
@@ -105,20 +114,27 @@ module Enumerize
         end
 
         def #{name}=(new_value)
-          allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(new_value)
-          allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
+          allowed_value = self.class.enumerized_attributes[:#{name}].find_value(new_value)
+
+          value_to_assign = if allowed_value
+            allowed_value.value
+          elsif new_value == ''
+            nil
+          else
+            new_value
+          end
 
           if defined?(super)
-            super allowed_value_or_nil
+            super value_to_assign
           elsif respond_to?(:write_attribute, true)
-            write_attribute '#{name}', allowed_value_or_nil
+            write_attribute '#{name}', value_to_assign
           else
-            @#{name} = allowed_value_or_nil
+            @#{name} = value_to_assign
           end
 
           _enumerized_values_for_validation['#{name}'] = new_value.nil? ? nil : new_value.to_s
 
-          allowed_value_or_nil
+          value_to_assign
         end
 
         def #{name}_text

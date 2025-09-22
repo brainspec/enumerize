@@ -115,10 +115,19 @@ module Enumerize
       end
 
       def serialize(value)
-        v = @attr.find_value(value)
-        return value unless v
+        # First try to find the enumerize value directly
+        enumerize_value = @attr.find_value(value)
 
-        v.value
+        # If not found and we have a subtype, delegate to it for transformation
+        # (e.g., normalization) and try again
+        if !enumerize_value && @subtype
+          casted_value = @subtype.cast(value)
+          enumerize_value = @attr.find_value(casted_value)
+        end
+
+        return value unless enumerize_value
+
+        enumerize_value.value
       end
 
       def cast(value)
@@ -127,10 +136,15 @@ module Enumerize
 
         # First try to find the enumerize value directly
         enumerize_value = @attr.find_value(value)
-        return enumerize_value if enumerize_value
 
-        # If not found, delegate to subtype then try to find value
-        @attr.find_value(@subtype.cast(value))
+        # If not found and we have a subtype, delegate to it for transformation
+        # (e.g., normalization) and try again
+        if !enumerize_value && @subtype
+          casted_value = @subtype.cast(value)
+          enumerize_value = @attr.find_value(casted_value)
+        end
+
+        enumerize_value
       end
 
       def as_json(options = nil)
