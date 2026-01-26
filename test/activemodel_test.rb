@@ -107,6 +107,82 @@ class ActiveModelTest < Minitest::Spec
 
     expect(user.errors[:interests]).must_be_empty
   end
+
+  describe 'Type#deserialize' do
+    it 'deserializes single value' do
+      type = model.attribute_types['sex']
+      result = type.deserialize('male')
+      expect(result).must_be_instance_of Enumerize::Value
+      expect(result.to_s).must_equal 'male'
+    end
+
+    it 'returns nil for nil single value' do
+      type = model.attribute_types['sex']
+      result = type.deserialize(nil)
+      expect(result).must_be_nil
+    end
+
+    it 'returns nil for invalid single value' do
+      type = model.attribute_types['sex']
+      result = type.deserialize('invalid')
+      expect(result).must_be_nil
+    end
+
+    it 'treats array as invalid for non-multiple attribute' do
+      type = model.attribute_types['sex']
+      result = type.deserialize(['male', 'female'])
+      expect(result).must_be_nil
+    end
+
+    it 'deserializes array of valid values for multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.deserialize(['music', 'sports'])
+      expect(result).must_be_instance_of Array
+      expect(result.map(&:to_s)).must_equal ['music', 'sports']
+    end
+
+    it 'deserializes empty array for multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.deserialize([])
+      expect(result).must_equal []
+    end
+
+    it 'filters out invalid values from array' do
+      type = model.attribute_types['interests']
+      result = type.deserialize(['music', 'invalid', 'sports'])
+      expect(result.map(&:to_s)).must_equal ['music', 'sports']
+    end
+
+    it 'returns nil for nil array value' do
+      type = model.attribute_types['interests']
+      result = type.deserialize(nil)
+      expect(result).must_be_nil
+    end
+
+    it 'preserves values through serialize/deserialize cycle for single value' do
+      type = model.attribute_types['sex']
+      user = model.new(sex: 'female')
+
+      serialized = type.serialize(user.sex)
+      expect(serialized).must_equal 'female'
+
+      deserialized = type.deserialize(serialized)
+      expect(deserialized.to_s).must_equal 'female'
+    end
+
+    it 'preserves values through serialize/deserialize cycle for multiple values' do
+      type = model.attribute_types['interests']
+      user = model.new(interests: ['music', 'programming'])
+
+      # Serialize the entire set
+      serialized = user.interests.map { |v| type.serialize(v) }
+      expect(serialized).must_equal ['music', 'programming']
+
+      # Deserialize back
+      deserialized = type.deserialize(serialized)
+      expect(deserialized.map(&:to_s)).must_equal ['music', 'programming']
+    end
+  end
 end
 
 else
