@@ -109,7 +109,24 @@ module Enumerize
           allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
 
           if defined?(super)
-            super allowed_value_or_nil
+            # Pass the original value if not found and value is present (allows ActiveRecord normalizations to process it)
+            # For blank values, pass nil to maintain existing behavior
+            value_for_super = if allowed_value_or_nil.nil? && new_value.present?
+              new_value
+            else
+              allowed_value_or_nil
+            end
+            super(value_for_super)
+
+            # If we didn't find a value initially, check if ActiveRecord normalization produced a valid value
+            if allowed_value_or_nil.nil? && respond_to?(:read_attribute) && respond_to?(:write_attribute, true)
+              normalized = read_attribute(:#{name})
+              if !normalized.nil?
+                allowed_value_or_nil = self.class.enumerized_attributes[:#{name}].find_value(normalized)
+                allowed_value_or_nil = allowed_value_or_nil.value unless allowed_value_or_nil.nil?
+                write_attribute(:#{name}, allowed_value_or_nil) if allowed_value_or_nil
+              end
+            end
           elsif respond_to?(:write_attribute, true)
             write_attribute '#{name}', allowed_value_or_nil
           else

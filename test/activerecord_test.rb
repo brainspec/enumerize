@@ -75,6 +75,7 @@ ActiveRecord::Base.connection.instance_eval do
     t.string :foo
     t.boolean :newsletter_subscribed, default: true
     t.json :store_accessor_store_with_no_defaults
+    t.string :locale
   end
 
   create_table :documents do |t|
@@ -113,6 +114,9 @@ class User < ActiveRecord::Base
   enumerize :sex, :in => [:male, :female], scope: :shallow
   enumerize :language, :in => [:en, :jp]
   enumerize :country_code, :in => [:us, :ca]
+
+  normalizes :locale, with: ->(value) { value.downcase.strip.presence }
+  enumerize :locale, :in => [:de, :en, :pl]
 
   serialize :interests, type: Array
   enumerize :interests, :in => [:music, :sports, :dancing, :programming], :multiple => true
@@ -855,5 +859,16 @@ class ActiveRecordTest < Minitest::Spec
     
     expect(users[2].sex).must_equal 'female'
     expect(users[2].status).must_equal 'blocked'
+  end
+
+  it 'supports AR#normalizes class methods' do
+    User.delete_all
+    User.create!(locale: 'de')
+    expect(User.exists?(locale: ' DE ')).must_equal true
+  end
+
+  it 'supports AR#normalizes instance methods' do
+    user = User.new(locale: ' DE ')
+    expect(user.locale).must_equal 'de'
   end
 end

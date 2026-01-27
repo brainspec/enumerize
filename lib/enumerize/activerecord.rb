@@ -115,10 +115,18 @@ module Enumerize
       end
 
       def serialize(value)
+        # First try to find the value directly
         v = @attr.find_value(value)
-        return value unless v
+        return v.value if v
 
-        v.value
+        # If not found, try normalizing via subtype (handles ActiveRecord normalizations)
+        normalized = @subtype.serialize(value)
+        if normalized != value
+          v = @attr.find_value(normalized)
+          return v.value if v
+        end
+
+        value
       end
 
       def cast(value)
