@@ -1,7 +1,7 @@
 eval_gemfile('Gemfile.global')
 
 gem 'minitest', '~> 5.8'
-gem 'rails',    github: 'rails/rails', branch: '7-1-stable', require: false
+gem 'rails',    github: 'rails/rails', branch: '8-1-stable', require: false
 
 gem 'mongoid',  github: 'mongodb/mongoid'
 
