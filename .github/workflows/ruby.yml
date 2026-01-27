@@ -47,6 +47,8 @@ jobs:
         exclude:
           - gemfile: Gemfile.mongo_mapper
             db: postgresql
+          - ruby-version: '3.2'
+            gemfile: Gemfile.railsmaster
     env:
       BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
       DB: "${{ matrix.db }}"
