@@ -2,6 +2,8 @@
 
 ### bug fix
 
+* Fixed `Enumerize::ActiveModelAttributesSupport::Type#deserialize` to properly handle arrays for `multiple: true` attributes. Previously, deserializing an array would return `nil` instead of the enumerated values. This bug only affected ActiveModel::Attributes usage (not ActiveRecord) and was exposed when used with gems like store_model v2.0.0+ that call `deserialize` during load.
+
 ### enchancements
 
 * Support only Ruby 3.1+ and Rails 7.0+. (by [@nashby](https://github.com/nashby))

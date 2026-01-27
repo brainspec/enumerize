@@ -40,7 +40,15 @@ module Enumerize
       end
 
       def deserialize(value)
-        @attr.find_value(value)
+        return nil if value.nil?
+
+        # Use find_values for arrays on multiple: true attributes
+        # Otherwise use find_value for single values
+        if value.is_a?(Array) && @attr.arguments[:multiple]
+          @attr.find_values(*value)
+        else
+          @attr.find_value(value)
+        end
       end
     end
   end
