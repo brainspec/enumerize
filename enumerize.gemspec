@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
     "bug_tracker_uri"   => "https://github.com/brainspec/enumerize/issues",
     "wiki_uri"          => "https://github.com/brainspec/enumerize/wiki"
   }
-  gem.required_ruby_version = '>= 2.7'
+  gem.required_ruby_version = '>= 3.2'
 
   gem.add_dependency('activesupport', '>= 3.2')
 end
