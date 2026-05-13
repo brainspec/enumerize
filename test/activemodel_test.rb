@@ -183,6 +183,58 @@ class ActiveModelTest < Minitest::Spec
       expect(deserialized.map(&:to_s)).must_equal ['music', 'programming']
     end
   end
+
+  describe 'Type#cast' do
+    it 'casts single valid value to Enumerize::Value' do
+      type = model.attribute_types['sex']
+      result = type.cast('male')
+      expect(result).must_be_instance_of Enumerize::Value
+      expect(result.to_s).must_equal 'male'
+    end
+
+    it 'returns nil for nil single value' do
+      type = model.attribute_types['sex']
+      result = type.cast(nil)
+      expect(result).must_be_nil
+    end
+
+    it 'returns original value for invalid single value' do
+      type = model.attribute_types['sex']
+      result = type.cast('invalid')
+      expect(result).must_equal 'invalid'
+    end
+
+    it 'casts array of valid values for multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.cast(['music', 'sports'])
+      expect(result).must_be_instance_of Array
+      expect(result.map(&:to_s)).must_equal ['music', 'sports']
+    end
+
+    it 'returns empty array as-is for multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.cast([])
+      expect(result).must_equal []
+    end
+
+    it 'filters out invalid values when at least one is valid' do
+      type = model.attribute_types['interests']
+      result = type.cast(['music', 'invalid', 'sports'])
+      expect(result.map(&:to_s)).must_equal ['music', 'sports']
+    end
+
+    it 'returns array as-is when all values are invalid for multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.cast(['invalid1', 'invalid2'])
+      expect(result).must_equal ['invalid1', 'invalid2']
+    end
+
+    it 'returns nil for nil value on multiple attribute' do
+      type = model.attribute_types['interests']
+      result = type.cast(nil)
+      expect(result).must_be_nil
+    end
+  end
 end
 
 else
