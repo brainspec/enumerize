@@ -834,26 +834,30 @@ class ActiveRecordTest < Minitest::Spec
   it 'upsert_all with different value formats works correctly' do
     User.delete_all
 
-    User.upsert_all([
-      { id: 1, sex: :male, status: 1 },
-      { id: 2, sex: 'female', status: :blocked }
-    ])
+    begin
+      User.upsert_all([
+        { id: 1, sex: :male, status: 1 },
+        { id: 2, sex: 'female', status: :blocked }
+      ])
 
-    User.upsert_all([
-      { id: 1, sex: 'male', status: :active },
-      { id: 3, sex: :female, status: 2 }
-    ])
+      User.upsert_all([
+        { id: 1, sex: 'male', status: :active },
+        { id: 3, sex: :female, status: 2 }
+      ])
 
-    users = User.order(:id).to_a
-    expect(users.size).must_equal 3
-    
-    expect(users[0].sex).must_equal 'male'
-    expect(users[0].status).must_equal 'active'
-    
-    expect(users[1].sex).must_equal 'female'
-    expect(users[1].status).must_equal 'blocked'
-    
-    expect(users[2].sex).must_equal 'female'
-    expect(users[2].status).must_equal 'blocked'
+      users = User.order(:id).to_a
+      expect(users.size).must_equal 3
+
+      expect(users[0].sex).must_equal 'male'
+      expect(users[0].status).must_equal 'active'
+
+      expect(users[1].sex).must_equal 'female'
+      expect(users[1].status).must_equal 'blocked'
+
+      expect(users[2].sex).must_equal 'female'
+      expect(users[2].status).must_equal 'blocked'
+    ensure
+      User.connection.reset_pk_sequence!(User.table_name) if User.connection.respond_to?(:reset_pk_sequence!)
+    end
   end
 end
