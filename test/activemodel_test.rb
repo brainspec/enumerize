@@ -20,6 +20,19 @@ class ActiveModelTest < Minitest::Spec
     validates :interests, presence: true
   end
 
+  # No plain `attribute` is declared before `enumerize` here. On Rails 8.1 the
+  # ActiveModel-generated attribute-method module then outranks enumerize's own
+  # reader module in the ancestor chain, so reads resolve through the type's
+  # #cast. This model reproduces the raw-value regression that #cast fixes.
+  class CastActiveModelUser
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+    extend Enumerize
+
+    enumerize :sex, :in => %w[male female]
+    enumerize :role, :in => %w[admin user], :default => 'user'
+  end
+
   let(:model) { ActiveModelUser }
 
   it 'initialize value' do
@@ -233,6 +246,54 @@ class ActiveModelTest < Minitest::Spec
       type = model.attribute_types['interests']
       result = type.cast(nil)
       expect(result).must_be_nil
+    end
+  end
+
+  describe 'Type#cast (model reader)' do
+    # Regression coverage for the Rails 8.1 attribute-method module ordering
+    # change: when no plain `attribute` precedes `enumerize`, the generated
+    # reader outranks enumerize's module, so reads go through #cast and must
+    # still return an Enumerize::Value. Without the #cast override the first
+    # two examples fail on Rails 8.1 (raw String/Symbol instead of a value).
+    it 'wraps a user-assigned value so predicate methods work' do
+      user = CastActiveModelUser.new(sex: 'male')
+      expect(user.sex).must_be_instance_of Enumerize::Value
+      expect(user.sex.male?).must_equal true
+      expect(user.sex.female?).must_equal false
+    end
+
+    it 'wraps a value assigned after initialization' do
+      user = CastActiveModelUser.new
+      user.sex = :female
+      expect(user.sex).must_be_instance_of Enumerize::Value
+      expect(user.sex.female?).must_equal true
+    end
+
+    it 'wraps the default value' do
+      user = CastActiveModelUser.new
+      expect(user.role).must_be_instance_of Enumerize::Value
+      expect(user.role.user?).must_equal true
+    end
+
+    it 'returns nil when nil is assigned' do
+      user = CastActiveModelUser.new(sex: 'male')
+      user.sex = nil
+      expect(user.sex).must_be_nil
+    end
+
+    it 'keeps an invalid value assignable so inclusion validation still rejects it' do
+      # The reader's return for an invalid value is ordering-dependent (nil when
+      # enumerize's writer wins on Rails <= 8.0, the raw value when the generated
+      # reader wins on Rails 8.1); the portable guarantee is that validation fails.
+      user = CastActiveModelUser.new(sex: 'invalid')
+      expect(user).wont_be :valid?
+      expect(user.errors[:sex]).wont_be :empty?
+    end
+
+    it 'leaves multiple: true attributes as an unmangled Enumerize::Set' do
+      user = ActiveModelUser.new(interests: [:music, :programming])
+      expect(user.interests).must_be_instance_of Enumerize::Set
+      expect(user.interests.to_a).must_equal %w[music programming]
     end
   end
 end
