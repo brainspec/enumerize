@@ -50,6 +50,20 @@ module Enumerize
           @attr.find_value(value)
         end
       end
+
+      def cast(value)
+        case value
+        when nil
+          return super
+        when Array
+          if @attr.arguments[:multiple]
+            found = @attr.find_values(*value)
+            return found.presence || super
+          end
+        end
+
+        @attr.find_value(value) || value
+      end
     end
   end
 end

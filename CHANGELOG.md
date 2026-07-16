@@ -2,6 +2,7 @@
 
 ### bug fix
 
+* Fixed `Enumerize::ActiveModelAttributesSupport::Type` to wrap values in `#cast` so enumerized readers on plain `ActiveModel::Attributes` objects return an `Enumerize::Value` (and value predicates keep working) on Rails 8.1. Rails 8.1 reordered attribute-method module inclusion so the generated reader can outrank enumerize's module; assignment reads go through `#cast`, which previously returned the raw value. See #482.
 * Fixed `Enumerize::ActiveModelAttributesSupport::Type#deserialize` to properly handle arrays for `multiple: true` attributes. Previously, deserializing an array would return `nil` instead of the enumerated values. This bug only affected ActiveModel::Attributes usage (not ActiveRecord) and was exposed when used with gems like store_model v2.0.0+ that call `deserialize` during load.
 
 ### enchancements
