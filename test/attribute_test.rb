@@ -39,6 +39,29 @@ class AttributeTest < Minitest::Spec
     end
   end
 
+  describe 'i18n keys' do
+    it 'builds the keys via the block on a miss' do
+      build_attr nil, 'foo', :in => %w[a b]
+      keys = attr.i18n_keys(attr.find_value('a')) { [:built] }
+      expect(keys).must_equal [:built]
+    end
+
+    it 'memoizes per value and does not rebuild on a hit' do
+      build_attr nil, 'foo', :in => %w[a b]
+      first = attr.i18n_keys(attr.find_value('a')) { [:built] }
+      second = attr.i18n_keys(attr.find_value('a')) { raise 'should not rebuild' }
+      expect(second).must_be_same_as first
+    end
+
+    it 'caches each value independently' do
+      build_attr nil, 'foo', :in => %w[a b]
+      a_keys = attr.i18n_keys(attr.find_value('a')) { [:a] }
+      b_keys = attr.i18n_keys(attr.find_value('b')) { [:b] }
+      expect(a_keys).must_equal [:a]
+      expect(b_keys).must_equal [:b]
+    end
+  end
+
   describe 'arguments' do
     it 'returns arguments' do
       build_attr nil, :foo, :in => [:a, :b], :scope => true

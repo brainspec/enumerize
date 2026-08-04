@@ -27,6 +27,11 @@ module Enumerize
       end
 
       @skip_validations_value = options.fetch(:skip_validations, false)
+
+      # Lazily populated cache of i18n lookup keys, keyed by value name. Values
+      # whose #text is never rendered never build (or retain) their keys, while
+      # rendered values build them once and reuse them on subsequent calls.
+      @i18n_keys_cache = {}
     end
 
     def find_default_value(value)
@@ -60,6 +65,26 @@ module Enumerize
         ["enumerize.#{@klass.model_name.i18n_key}.#{name}"]
       else
         []
+      end
+    end
+
+    # Returns the cached i18n lookup keys for +value+, building them via the
+    # given block on a miss. Memoizing here (rather than on the frozen Value)
+    # means a value's keys are composed at most once, recovering the cost of
+    # rebuilding them on every #text call, while values whose #text is never
+    # rendered never build or retain any keys.
+    #
+    # The cache is updated copy-on-write: readers always see a fully built hash
+    # and never a half-mutated one, so concurrent #text calls stay safe without
+    # locking. A race between two builds is last-writer-wins — the result is
+    # always correct; at worst a clobbered entry is rebuilt on its next call.
+    def i18n_keys(value)
+      key = value.to_s
+      cache = @i18n_keys_cache
+      cache[key] || begin
+        keys = yield
+        @i18n_keys_cache = cache.merge(key => keys)
+        keys
       end
     end
 

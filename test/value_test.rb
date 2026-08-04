@@ -11,6 +11,11 @@ class ValueTest < Minitest::Spec
     def value?(value)
       values.include?(value)
     end
+
+    # Caching is the real Attribute's concern; the double just composes.
+    def i18n_keys(_value)
+      yield
+    end
   end
 
   let(:attr) { Attr.new([], "attribute_name", [], Model) }
