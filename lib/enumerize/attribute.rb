@@ -18,8 +18,12 @@ module Enumerize
       value_class = options.fetch(:value_class, Value)
       @values = Array(options[:in]).map { |v| value_class.new(self, *v).freeze }
 
-      @value_hash = Hash[@values.map { |v| [v.value.to_s, v] }]
-      @value_hash.merge! Hash[@values.map { |v| [v.to_s, v] }]
+      # Two passes (value keys first, then name keys) so that name keys win on
+      # collision, matching the previous Hash#merge! behavior, without building
+      # the intermediate arrays and hashes that merge! required.
+      @value_hash = {}
+      @values.each { |v| @value_hash[v.value.to_s] = v }
+      @values.each { |v| @value_hash[v.to_s] = v }
 
       if options[:default]
         @default_value = find_default_value(options[:default])

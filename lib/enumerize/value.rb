@@ -11,7 +11,11 @@ module Enumerize
 
     def initialize(attr, name, value=nil)
       @attr  = attr
-      @value = value.nil? ? name.to_s : value
+      # Deduplicate the frozen string for plain-symbol enums so every value
+      # named e.g. "active" across the whole app shares one String object. It
+      # stays a plain (non-Value) String, so it's still safe to feed to
+      # write_attribute and friends.
+      @value = value.nil? ? -name.to_s : value
 
       super(name.to_s)
 
