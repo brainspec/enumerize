@@ -78,7 +78,9 @@ module Enumerize
         names.each do |name|
           method_name = [@options[:prefix], name].compact.join('_')
 
-          if @attr.klass.respond_to?(method_name)
+          if @attr.klass.respond_to?(method_name) ||
+             @attr.klass.method_defined?(method_name) ||
+             @attr.klass.private_method_defined?(method_name)
             warn(
               "Predicate method `#{name}` is already defined as #{@attr.klass.name}##{name}. Use enumerize's :prefix option to avoid it"
             )
