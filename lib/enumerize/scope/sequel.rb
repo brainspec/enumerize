@@ -26,7 +26,7 @@ module Enumerize
         scope_name = options[:scope] == true ? "with_#{name}" : options[:scope]
 
         def_dataset_method scope_name do |*values|
-          values = values.map { |value| klass.enumerized_attributes[name].find_value(value).value }
+          values = klass.enumerized_attributes[name].find_values(*values).map(&:value)
           values = values.first if values.size == 1
 
           where(name => values)
@@ -34,7 +34,7 @@ module Enumerize
 
         if options[:scope] == true
           def_dataset_method "without_#{name}" do |*values|
-            values = values.map { |value| klass.enumerized_attributes[name].find_value(value).value }
+            values = klass.enumerized_attributes[name].find_values(*values).map(&:value)
             exclude(name => values)
           end
         end
