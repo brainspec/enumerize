@@ -43,11 +43,11 @@ module Enumerize
       def _define_sequel_shallow_scopes!(attribute_name)
         enumerized_attributes[attribute_name].each_value do |value_obj|
           def_dataset_method(value_obj) do
-            where(attribute_name => value_obj.value.to_s)
+            where(attribute_name => value_obj.value)
           end
 
           def_dataset_method("not_#{value_obj}") do
-            exclude(attribute_name => value_obj.value.to_s)
+            exclude(attribute_name => value_obj.value)
           end
         end
       end
