@@ -35,6 +35,10 @@ module Enumerize
       end
 
       def serialize(value)
+        if @attr.arguments[:multiple] && value.respond_to?(:map)
+          return @attr.find_values(*value).map(&:value)
+        end
+
         v = @attr.find_value(value)
         v && v.value
       end
