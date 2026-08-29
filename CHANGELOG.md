@@ -9,7 +9,7 @@
 
 ### enchancements
 
-* Support only Ruby 3.1+ and Rails 7.0+. (by [@nashby](https://github.com/nashby))
+* Support only Ruby 3.2+ and Rails 7.2+. (by [@nashby](https://github.com/nashby))
 * Ensure that `enumerize` is agnostic to whether the key to a store accessor is a `String` or `Symbol`. (by [@4ndypanda](https://github.com/4ndypanda))
 
 ## 2.8.1 (March 25, 2024)
